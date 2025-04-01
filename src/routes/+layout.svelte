@@ -195,7 +195,7 @@
 <style>
 	.gradient-bg {
 		background:
-			linear-gradient(to bottom, #0f172a, #0b1320);  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
+		linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg') ;  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
 		background-size: cover;
 		background-position: center;
 		background-blend-mode: multiply;
