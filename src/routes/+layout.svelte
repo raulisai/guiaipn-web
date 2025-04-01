@@ -65,18 +65,18 @@
 					<h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Enlaces rápidos</h3>
 					<ul>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors">Inicio</a>
+							<a href="/" class="text-white/70 hover:text-white transition-colors">Inicio</a>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors">Materias</a>
+							<a href="/materias" class="text-white/70 hover:text-white transition-colors">Materias</a>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors"
+							<a href="/examen" class="text-white/70 hover:text-white transition-colors"
 								>Exámenes de práctica</a
 							>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors"
+							<a href="/" class="text-white/70 hover:text-white transition-colors"
 								>Recursos gratuitos</a
 							>
 						</li>

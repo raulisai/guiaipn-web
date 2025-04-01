@@ -39,7 +39,7 @@
                         <button class="w-full py-3 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg transition-all">
                             Ingresar
                         </button>
-                        <p class="text-center text-white/60 text-sm">¿Olvidaste tu contraseña? <a href="#" class="text-red-400 hover:text-red-300">Recuperar</a></p>
+                        <p class="text-center text-white/60 text-sm">¿Olvidaste tu contraseña? <a href="/" class="text-red-400 hover:text-red-300">Recuperar</a></p>
                     </div>
                 </div>
             </div>
@@ -58,8 +58,8 @@
                             <span class="bg-blue-900/60 text-blue-400 px-3 py-1 rounded-full text-sm">15 exámenes</span>
                         </div>
                         <div class="flex gap-3">
-                            <a href="#" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mi perfil</a>
-                            <a href="#" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mis resultados</a>
+                            <a href="/" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mi perfil</a>
+                            <a href="/" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mis resultados</a>
                             <button id="logoutBtn" class="py-2 px-4 bg-red-800/50 hover:bg-red-800 text-white rounded-lg transition-all">Cerrar sesión</button>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                     </li>
                 </ul>
                 
-                <a href="#" class="block text-center py-4 px-6 bg-red-800 hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 border border-white/20">
+                <a href="/" class="block text-center py-4 px-6 bg-red-800 hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 border border-white/20">
                     Comenzar ahora
                 </a>
             </div>
@@ -193,7 +193,7 @@
                     </li>
                 </ul>
                 
-                <a href="#" class="block text-center py-4 px-6 bg-gradient-to-r from-yellow-600 to-red-600 hover:from-yellow-500 hover:to-red-500 text-white font-bold rounded-lg transition-all duration-300 shadow-lg border border-white/20">
+                <a href="/" class="block text-center py-4 px-6 bg-gradient-to-r from-yellow-600 to-red-600 hover:from-yellow-500 hover:to-red-500 text-white font-bold rounded-lg transition-all duration-300 shadow-lg border border-white/20">
                     ¡Obtén Premium Ahora!
                 </a>
             </div>
