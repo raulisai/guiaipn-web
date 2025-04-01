@@ -1,3 +1,17 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover, .card.selected {
+    transform: scale(1.05);
+    border-color: #22d3ee !important;
+}
+.timer-container {
+    background-color: #216271;
+    box-shadow: inset 4px 4px 10px #2a7986, inset -4px -4px 10px #2a7986;
+    backdrop-filter: blur(8px);
+}

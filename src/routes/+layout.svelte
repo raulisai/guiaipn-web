@@ -49,7 +49,7 @@
 	{@render children()}
 
 	<!-- Footer -->
-	<footer class="gradient-bg text-white py-12">
+	<footer class="text-white py-12">
 		<div class="container mx-auto px-4">
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 				<!-- Logo y descripción -->
@@ -195,7 +195,7 @@
 <style>
 	.gradient-bg {
 		background:
-			linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
+			linear-gradient(to bottom, #0f172a, #0b1320);  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
 		background-size: cover;
 		background-position: center;
 		background-blend-mode: multiply;
