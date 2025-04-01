@@ -2,26 +2,7 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-  /*
-.gradient-bg {
-    background: linear-gradient(to bottom, #0F172A, #0B1320);
-    url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo 
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    min-height: 100vh;
-}
-    */
-.menu-hidden {
-    display: none;
-    opacity: 0;
-    transform: translateY(-10px);
-}
-.menu-visible {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
+
 .card {
     transition: all 0.3s ease;
 }
