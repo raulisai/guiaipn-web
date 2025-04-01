@@ -49,7 +49,7 @@
 	{@render children()}
 
 	<!-- Footer -->
-	<footer class="gradient-bg text-white py-12">
+	<footer class="text-white py-12">
 		<div class="container mx-auto px-4">
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 				<!-- Logo y descripción -->
@@ -65,18 +65,18 @@
 					<h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Enlaces rápidos</h3>
 					<ul>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors">Inicio</a>
+							<a href="" class="text-white/70 hover:text-white transition-colors">Inicio</a>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors">Materias</a>
+							<a href="" class="text-white/70 hover:text-white transition-colors">Materias</a>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors"
+							<a href="" class="text-white/70 hover:text-white transition-colors"
 								>Exámenes de práctica</a
 							>
 						</li>
 						<li class="mb-2">
-							<a href="#" class="text-white/70 hover:text-white transition-colors"
+							<a href="" class="text-white/70 hover:text-white transition-colors"
 								>Recursos gratuitos</a
 							>
 						</li>
@@ -195,7 +195,7 @@
 <style>
 	.gradient-bg {
 		background:
-			linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
+			linear-gradient(to bottom, #0f172a, #0b1320);  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
 		background-size: cover;
 		background-position: center;
 		background-blend-mode: multiply;

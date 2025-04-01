@@ -40,7 +40,7 @@
 
 
         <!-- Sección de "Cómo funciona" -->
-        <section class="py-16 bg-gradient-to-b from-red-900/30 to-black/60 backdrop-blur-sm">
+        <section class="w-full py-16 bg-gradient-to-b from-red-900/30 to-black/60 backdrop-blur-sm">
             <div class="container mx-auto px-4">
                 <h2 class="text-5xl font-bold text-white text-center mb-12">Cómo funciona</h2>
                 
