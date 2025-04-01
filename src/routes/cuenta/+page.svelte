@@ -1,0 +1,217 @@
+
+
+<div>
+
+
+      <!-- Sección de usuario -->
+      <div class="max-w-5xl mx-auto mb-12 pt-8">
+        <!-- Contenedor para información de usuario o login -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 transition-all duration-300 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-red-700/20 rounded-full blur-2xl"></div>
+            
+            <!-- Estado cuando no hay sesión iniciada -->
+            <div id="loginSection" class="block">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-white mb-4">¡Bienvenido a Guía IPN!</h2>
+                    <p class="text-white/80 mb-6">Inicia sesión para acceder a todos tus recursos de estudio</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-center mt-8">
+                        <button id="loginBtn" class="py-3 px-8 bg-red-800 hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 border border-white/20">
+                            Iniciar Sesión
+                        </button>
+                        <button id="registerBtn" class="py-3 px-8 bg-white/20 hover:bg-white/30 text-white font-bold rounded-lg transition-all duration-300 border border-white/20">
+                            Registrarse
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Formulario de login (oculto por defecto) -->
+                <div id="loginForm" class="hidden mt-6 max-w-md mx-auto">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="email" class="block text-white mb-1">Correo electrónico</label>
+                            <input type="email" id="email" class="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white" placeholder="tucorreo@ejemplo.com">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-white mb-1">Contraseña</label>
+                            <input type="password" id="password" class="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white" placeholder="••••••••">
+                        </div>
+                        <button class="w-full py-3 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg transition-all">
+                            Ingresar
+                        </button>
+                        <p class="text-center text-white/60 text-sm">¿Olvidaste tu contraseña? <a href="#" class="text-red-400 hover:text-red-300">Recuperar</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estado cuando hay sesión iniciada (oculto por defecto) -->
+            <div id="userInfoSection" class="hidden">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="w-24 h-24 rounded-full bg-red-800 flex items-center justify-center text-white text-3xl font-bold">
+                        JP
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-3xl font-bold text-white">¡Hola, Juan Pérez!</h2>
+                        <p class="text-white/80 mb-2">Plan Premium · Vence: 15 de Diciembre, 2023</p>
+                        <div class="flex gap-2 mb-4">
+                            <span class="bg-green-900/60 text-green-400 px-3 py-1 rounded-full text-sm">70% completado</span>
+                            <span class="bg-blue-900/60 text-blue-400 px-3 py-1 rounded-full text-sm">15 exámenes</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mi perfil</a>
+                            <a href="#" class="py-2 px-4 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all">Mis resultados</a>
+                            <button id="logoutBtn" class="py-2 px-4 bg-red-800/50 hover:bg-red-800 text-white rounded-lg transition-all">Cerrar sesión</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad básica para alternar entre formularios
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+        });
+        
+        // Simulación de inicio de sesión - para demostración
+        document.querySelector('#loginForm button').addEventListener('click', function() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('userInfoSection').classList.remove('hidden');
+        });
+        
+        // Simulación de cierre de sesión - para demostración
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('userInfoSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+        });
+    </script>
+
+
+
+
+        <!-- Encabezado de planes -->
+        <div class="max-w-5xl mx-auto text-center mb-16 pt-12">
+            <h1 class="text-6xl font-bold text-white mb-4">Planes de <span class="text-red-500">Estudio</span></h1>
+            <p class="text-xl text-white/80 max-w-3xl mx-auto">
+                Elige el plan perfecto para ti y prepárate para ingresar al IPN con el apoyo de nuestra 
+                plataforma educativa respaldada por inteligencia artificial.
+            </p>
+        </div>
+
+        <!-- Tarjetas de planes -->
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 px-4">
+            
+            <!-- Plan Básico -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-red-700/20 rounded-full blur-2xl"></div>
+                
+                <h2 class="text-3xl font-bold text-white mb-2">Plan Básico</h2>
+                <div class="text-5xl font-bold text-white mb-6">$299 <span class="text-lg font-normal text-white/60">MXN/mes</span></div>
+                
+                <div class="border-t border-white/20 my-6"></div>
+                
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Acceso a guías básicas de estudio</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">2 exámenes de práctica mensuales</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Banco de 500 preguntas</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Soporte por correo electrónico</span>
+                    </li>
+                </ul>
+                
+                <a href="#" class="block text-center py-4 px-6 bg-red-800 hover:bg-red-700 text-white font-bold rounded-lg transition-all duration-300 border border-white/20">
+                    Comenzar ahora
+                </a>
+            </div>
+            
+            <!-- Plan Premium -->
+            <div class="bg-gradient-to-br from-red-950 to-black/80 backdrop-blur-sm rounded-2xl border border-red-500/30 p-8 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-red-500/30 rounded-full blur-2xl"></div>
+                <div class="absolute right-4 top-4 bg-yellow-500 text-black text-sm font-bold px-3 py-1 rounded-full">Recomendado</div>
+                
+                <h2 class="text-3xl font-bold text-white mb-2">Plan Premium</h2>
+                <div class="text-5xl font-bold text-white mb-6">$499 <span class="text-lg font-normal text-white/60">MXN/mes</span></div>
+                
+                <div class="border-t border-red-500/30 my-6"></div>
+                
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Acceso completo a todas las guías de estudio</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Exámenes de práctica ilimitados</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Banco de 2,000+ preguntas actualizadas</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Tutor IA personalizado 24/7</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Sesiones grupales con profesores en vivo</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-white">Estadísticas detalladas de progreso</span>
+                    </li>
+                </ul>
+                
+                <a href="#" class="block text-center py-4 px-6 bg-gradient-to-r from-yellow-600 to-red-600 hover:from-yellow-500 hover:to-red-500 text-white font-bold rounded-lg transition-all duration-300 shadow-lg border border-white/20">
+                    ¡Obtén Premium Ahora!
+                </a>
+            </div>
+        </div>
+
+        <!-- Garantía y testimonios -->
+        <div class="max-w-4xl mx-auto mt-16 text-center">
+            <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                <h3 class="text-2xl font-bold text-white mb-3">Garantía de satisfacción 100%</h3>
+                <p class="text-white/80">
+                    Si no estás satisfecho con tu plan en los primeros 7 días, te devolvemos tu dinero sin preguntas.
+                    Estamos seguros de que nuestra plataforma te ayudará a lograr tu objetivo de ingresar al IPN.
+                </p>
+                <div class="mt-6 flex justify-center">
+                    <span class="inline-block bg-red-950 text-white text-lg font-bold px-6 py-3 rounded-lg">
+                        +5,000 estudiantes aprobados
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
