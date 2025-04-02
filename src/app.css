@@ -2,7 +2,9 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-
+html {
+background: #0F1729;
+}
 .card {
     transition: all 0.3s ease;
 }
@@ -15,3 +17,5 @@
     box-shadow: inset 4px 4px 10px #2a7986, inset -4px -4px 10px #2a7986;
     backdrop-filter: blur(8px);
 }
+
+
