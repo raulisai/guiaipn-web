@@ -42,7 +42,7 @@
 	}
 </script>
 
-<div class=" mb-56 mt-36">
+<div class=" mb-20 mt-36">
 	<div class="max-w-6xl text-center space-y-8">
 		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
 			<span
