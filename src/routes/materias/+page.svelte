@@ -33,7 +33,7 @@
                                 <span class="bg-blue-600/30 text-blue-100 text-xs py-1 px-3 rounded-full">Geometría</span>
                                 <span class="bg-blue-600/30 text-blue-100 text-xs py-1 px-3 rounded-full">Cálculo</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -56,7 +56,7 @@
                                 <span class="bg-purple-600/30 text-purple-100 text-xs py-1 px-3 rounded-full">Lectura</span>
                                 <span class="bg-purple-600/30 text-purple-100 text-xs py-1 px-3 rounded-full">Redacción</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -79,7 +79,7 @@
                                 <span class="bg-green-600/30 text-green-100 text-xs py-1 px-3 rounded-full">Electricidad</span>
                                 <span class="bg-green-600/30 text-green-100 text-xs py-1 px-3 rounded-full">Óptica</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -102,7 +102,7 @@
                                 <span class="bg-red-600/30 text-red-100 text-xs py-1 px-3 rounded-full">Inorgánica</span>
                                 <span class="bg-red-600/30 text-red-100 text-xs py-1 px-3 rounded-full">Analítica</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -125,7 +125,7 @@
                                 <span class="bg-yellow-600/30 text-yellow-100 text-xs py-1 px-3 rounded-full">Universal</span>
                                 <span class="bg-yellow-600/30 text-yellow-100 text-xs py-1 px-3 rounded-full">Contemporánea</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>

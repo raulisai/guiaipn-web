@@ -1,82 +1,271 @@
-<script>
+<script lang="ts">
+	import { reactivos } from '$lib/reactivos';
+	import ExamProgress from './Examprogres.svelte';
+	import Timer from './Timer.svelte';
+	import { onMount } from 'svelte';
 
+	let currentQuestion = 1;
+	const totalQuestions = 140;
+	let Pregunta = 'cuanto es 2+2';
+	let answers: { [key: number]: string } = {};
+	let idreactivoActual = 'exm2024V1Math04';
+	let iscorrectQuestion = false;
+	let respuestas;
+	let respuestaCorrecta = '';
 
+	onMount(() => {
+		// Inicializar el temporizador
+		let idRandom = Math.floor(Math.random() * 18);
+		console.log(reactivos[idRandom]);
 
-    function toggleCard(card) {
-        
+		respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
+		Pregunta = reactivos[idRandom].pregunta;
+		respuestas = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
+			key,
+			value
+		}));
 
-        console.log(card);
-    }
+		console.log(respuestas);
+	});
 
-
+	function selectOption(resp) {
+		//validar la respuesta
+		if (resp === respuestaCorrecta) {
+			iscorrectQuestion = true;
+			document.getElementById('btn-' + resp).classList.add('bg-green-500');
+			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+		} else {
+			iscorrectQuestion = false;
+			document.getElementById('btn-' + resp).classList.add('bg-red-500');
+			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+		}
+	}
 </script>
 
-<div>
+<div class=" mb-20 mt-36">
+	<div class="max-w-6xl text-center space-y-8">
+		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
+			<span
+				class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-red-950 to-pink-500"
+			>
+				Examen del IPN
+			</span>
+			<span class="block text-3xl mt-1 text-cyan-300 font-light tracking-wider"
+				>Asistido por IA</span
+			>
+			<div class="absolute -left-2 top-1/2 w-4 h-8 bg-cyan-400/30 blur-sm"></div>
+			<div
+				class="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-cyan-500 to-transparent"
+			></div>
+		</h1>
 
+		<!-- Separador -->
+		<div class="border-t border-white/20 w-24 mx-auto"></div>
 
-    
-    <div class="max-w-3xl text-center space-y-8">
-        <h1 class="text-5xl font-bold text-white mb-6">
-            Examen del IPN Asistido por IA 
-        </h1>
+		<ExamProgress {currentQuestion} {totalQuestions} {answers} />
 
-        <!-- Separador -->
-        <div class="border-t border-white/20 w-24 mx-auto"></div>
+		<!-- Pregunta -->
+		<div
+			class="w-full px-6 py-4 rounded-md backdrop-blur-sm
+            border border-white/30 text-white"
+		>
+			<div class="question-container">
+				<div class="question-header">
+					<span class="question-number">Pregunta {currentQuestion}</span>
+					<span class="question-badge">Matemáticas</span>
+				</div>
+				<div class="question-content">
+					<svg
+						class="question-icon"
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+						></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg
+					>
+					<p id="question" class="question-text">{Pregunta}</p>
+				</div>
+			</div>
+		</div>
+		<!-- Respuesta -->
+		<div class="relative mt-12 mx-auto">
+			<!-- Contenedor de tarjetas -->
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
+				{#each respuestas as respuesta, index}
+					<button
+						class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4
+                hover:shadow-lg cursor-pointer transition-all duration-300
+                min-h-[100px] flex items-center justify-center"
+						onclick={() => selectOption(respuesta.key)}
+						id="btn-{respuesta.key}"
+						aria-label="Respuesta {respuesta.key}"
+					>
+						<div class="w-full h-full flex flex-col justify-center">
+							<span class="text-white font-bold text-lg mb-1">{respuesta.key}</span>
+							<p class="text-white/90 text-sm sm:text-base line-clamp-3 overflow-hidden">
+								{respuesta.value}
+							</p>
+						</div>
+					</button>
+				{/each}
+			</div>
+		</div>
+	</div>
 
-        <!-- Pregunta -->
-        <div class="w-full px-6 py-4 rounded-md  backdrop-blur-sm 
-            border border-white/30 text-white">
-            <p id="question"></p>
-        </div>
+	<!-- Temporizador y Estadísticas -->
+	<div
+		class="flex flex-col mt-16 md:flex-row items-center justify-between gap-6 bg-white/5 rounded-lg p-4 backdrop-blur-sm border border-white/20"
+	>
+		<!-- Temporizador circular -->
+		<div class="timer-circle flex-shrink-0">
+			<Timer initialSeconds={0} />
+		</div>
 
-        <!-- Respuesta -->
-        <div class="relative mt-12 max-w-md mx-auto">
-            <!-- Contenedor de tarjetas -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mt-12">
-                <!-- Tarjeta 1 -->
-                <div class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 
-                         hover:shadow-lg cursor-pointer transition-all duration-300
-                         min-h-[100px] flex items-center justify-center" on:click={(e) => toggleCard(e.currentTarget)}>
-                    <p class="text-white font-medium" id="response-a">4</p>
-                </div>
+		<!-- Estadísticas de habilidades con trapecios -->
+		<div class="w-full">
+			<h3 class="text-white text-lg font-medium mb-3">Estadísticas de habilidades</h3>
+			<div class="grid grid-cols-2 gap-3">
+				<div class="skill-bar">
+					<div class="flex justify-between mb-1">
+						<span class="text-sm text-white/80">Matemáticas</span>
+						<span class="text-sm text-white/80">75%</span>
+					</div>
+					<div class="h-6 relative">
+						<div
+							class="absolute inset-0 bg-white/10"
+							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
+						></div>
+						<div
+							class="absolute inset-0 bg-blue-500"
+							style="clip-path: polygon(0% 0%, 75% 20%, 75% 80%, 0% 100%)"
+						></div>
+					</div>
+				</div>
+				<div class="skill-bar">
+					<div class="flex justify-between mb-1">
+						<span class="text-sm text-white/80">Física</span>
+						<span class="text-sm text-white/80">60%</span>
+					</div>
+					<div class="h-6 relative">
+						<div
+							class="absolute inset-0 bg-white/10"
+							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
+						></div>
+						<div
+							class="absolute inset-0 bg-green-500"
+							style="clip-path: polygon(0% 0%, 60% 20%, 60% 80%, 0% 100%)"
+						></div>
+					</div>
+				</div>
+				<div class="skill-bar">
+					<div class="flex justify-between mb-1">
+						<span class="text-sm text-white/80">Química</span>
+						<span class="text-sm text-white/80">80%</span>
+					</div>
+					<div class="h-6 relative">
+						<div
+							class="absolute inset-0 bg-white/10"
+							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
+						></div>
+						<div
+							class="absolute inset-0 bg-purple-500"
+							style="clip-path: polygon(0% 0%, 80% 20%, 80% 80%, 0% 100%)"
+						></div>
+					</div>
+				</div>
+				<div class="skill-bar">
+					<div class="flex justify-between mb-1">
+						<span class="text-sm text-white/80">Biología</span>
+						<span class="text-sm text-white/80">45%</span>
+					</div>
+					<div class="h-6 relative">
+						<div
+							class="absolute inset-0 bg-white/10"
+							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
+						></div>
+						<div
+							class="absolute inset-0 bg-yellow-500"
+							style="clip-path: polygon(0% 0%, 45% 20%, 45% 80%, 0% 100%)"
+						></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                <!-- Tarjeta 2 -->
-                <div class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 
-                         hover:shadow-lg cursor-pointer transition-all duration-300
-                         min-h-[100px] flex items-center justify-center" on:click={(e) => toggleCard(e.currentTarget)}>
-                    <p class="text-white font-medium" id="response-b">2</p>
-                </div>
-
-                <!-- Tarjeta 3 -->
-                <div class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 
-                         hover:shadow-lg cursor-pointer transition-all duration-300
-                         min-h-[100px] flex items-center justify-center" on:click={(e) => toggleCard(e.currentTarget)}>
-                    <p class="text-white font-medium" id="response-c">5</p>
-                </div>
-
-                <!-- Tarjeta 4 -->
-                <div class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 
-                         hover:shadow-lg cursor-pointer transition-all duration-300
-                         min-h-[100px] flex items-center justify-center" on:click={(e) => toggleCard(e.currentTarget)}>
-                    <p class="text-white font-medium" id="response-d">8</p>
-                </div>
-            </div>
-            <div class="flex justify-center items-center overflow-hidden w-full mt-8">
-                <div
-                    class="timer-container rounded relative  w-[170px] h-[60px] flex justify-center items-center backdrop-blur-sm ">
-                    <div id="timer" class="text-3xl font-bold text-custom-teal"></div>
-                </div>
-            </div>
-            <div class="fixed top-4 left-4 z-50">
-                <a href="./index.html" class="flex items-center justify-center">
-                    <img src="./images/logoipnburrito.png" alt="Logo de la guia del IPN" class="w-[150px]">
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Símbolo decorativo -->
-    <div class="absolute bottom-8 right-8 text-white/50 text-2xl">
-        ※
-    </div>
+	<!-- Símbolo decorativo -->
+	<div class="absolute bottom-8 right-8 text-white/50 text-2xl">※dj</div>
 </div>
+
+<style>
+	.card {
+		transition: all 0.3s ease;
+	}
+
+	.question-container {
+		padding: 1.5rem;
+		border-radius: 0.5rem;
+		background-color: rgba(255, 255, 255, 0.05);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		margin-bottom: 1.5rem;
+		animation: fadeIn 0.5s ease-out;
+	}
+
+	.question-header {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		padding-bottom: 0.5rem;
+	}
+
+	.question-number {
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.question-badge {
+		background-color: rgba(59, 130, 246, 0.3);
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		font-size: 0.75rem;
+		font-weight: 600;
+	}
+
+	.question-content {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.question-icon {
+		flex-shrink: 0;
+		color: rgba(255, 255, 255, 0.7);
+		margin-top: 0.25rem;
+	}
+
+	.question-text {
+		font-size: 1.25rem;
+		line-height: 1.6;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.95);
+		text-align: left;
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>
