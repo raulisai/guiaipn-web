@@ -1,5 +1,6 @@
         <!-- Hero Section -->
-        <section class="gradient-bg min-h-[50vh] flex flex-col items-center justify-center p-8">
+         
+        <section class="hero gradient-bg min-h-[50vh] flex flex-col items-center justify-center p-8">
             <h1 class="text-6xl font-bold text-white text-center drop-shadow-lg mb-4">
                 Explora tus <span class="text-amber-300">Materias</span>
             </h1>
@@ -11,7 +12,7 @@
         </section>
 
         <!-- Materias Cards -->
-        <section class="py-16 bg-gradient-to-b from-black/60 to-red-900/30 min-h-screen">
+        <section class="py-16 min-h-screen">
             <div class="container mx-auto px-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     
@@ -32,7 +33,7 @@
                                 <span class="bg-blue-600/30 text-blue-100 text-xs py-1 px-3 rounded-full">Geometría</span>
                                 <span class="bg-blue-600/30 text-blue-100 text-xs py-1 px-3 rounded-full">Cálculo</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -55,7 +56,7 @@
                                 <span class="bg-purple-600/30 text-purple-100 text-xs py-1 px-3 rounded-full">Lectura</span>
                                 <span class="bg-purple-600/30 text-purple-100 text-xs py-1 px-3 rounded-full">Redacción</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -78,7 +79,7 @@
                                 <span class="bg-green-600/30 text-green-100 text-xs py-1 px-3 rounded-full">Electricidad</span>
                                 <span class="bg-green-600/30 text-green-100 text-xs py-1 px-3 rounded-full">Óptica</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -101,7 +102,7 @@
                                 <span class="bg-red-600/30 text-red-100 text-xs py-1 px-3 rounded-full">Inorgánica</span>
                                 <span class="bg-red-600/30 text-red-100 text-xs py-1 px-3 rounded-full">Analítica</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
@@ -124,17 +125,18 @@
                                 <span class="bg-yellow-600/30 text-yellow-100 text-xs py-1 px-3 rounded-full">Universal</span>
                                 <span class="bg-yellow-600/30 text-yellow-100 text-xs py-1 px-3 rounded-full">Contemporánea</span>
                             </div>
-                            <a href="#" class="block w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
+                            <a href="/" class="block w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
                                 Comenzar aprendizaje
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- CTA Section -->
-        <section class="py-16 bg-gradient-to-b from-red-900/30 to-black/90 text-white">
+        <section class="py-16 text-white">
             <div class="container mx-auto px-4 max-w-4xl">
                 <div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-3xl p-10 border border-white/10 backdrop-blur-sm shadow-2xl">
                     <h2 class="text-4xl font-bold mb-4 text-center">¿Listo para dominar todas las materias?</h2>
@@ -152,3 +154,11 @@
                 </div>
             </div>
         </section>
+        <style>
+
+          @media (max-width: 768px) {
+            .hero {
+              margin-top: 60px;
+            }
+          }
+          </style>

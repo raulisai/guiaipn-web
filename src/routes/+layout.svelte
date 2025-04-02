@@ -28,11 +28,22 @@
 			<button
 				id="menuBtn"
 				bind:this={menuBtn}
-				onclick={toogleMenu}
-				class="p-2 rounded-xl bg-white/30 hover:bg-white/50 backdrop-blur-sm
-                          transition-all text-white border border-white/30 shadow-md flex items-center justify-center"
+				on:click={toogleMenu}
+				aria-labelledby="menuBtn"
+				aria-haspopup="true"
+				class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md
+					   transition-all duration-300 text-white border border-white/10 
+					   shadow-lg hover:shadow-white/20 flex items-center justify-center
+					   w-12 h-12 group relative overflow-hidden"
 			>
-				<span class="material-symbols-outlined">menu</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+					 class="transform transition-transform duration-300 group-hover:scale-110">
+					<line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round" />
+					<line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round" />
+					<line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round" />
+				</svg>
+				<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10 
+							opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 			</button>
 
 			<div
@@ -66,18 +77,18 @@
 					<h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Enlaces rápidos</h3>
 					<ul>
 						<li class="mb-2">
-							<a href="" class="text-white/70 hover:text-white transition-colors">Inicio</a>
+							<a href="/" class="text-white/70 hover:text-white transition-colors">Inicio</a>
 						</li>
 						<li class="mb-2">
-							<a href="" class="text-white/70 hover:text-white transition-colors">Materias</a>
+							<a href="/materias" class="text-white/70 hover:text-white transition-colors">Materias</a>
 						</li>
 						<li class="mb-2">
-							<a href="" class="text-white/70 hover:text-white transition-colors"
+							<a href="/examen" class="text-white/70 hover:text-white transition-colors"
 								>Exámenes de práctica</a
 							>
 						</li>
 						<li class="mb-2">
-							<a href="" class="text-white/70 hover:text-white transition-colors"
+							<a href="/" class="text-white/70 hover:text-white transition-colors"
 								>Recursos gratuitos</a
 							>
 						</li>
@@ -196,7 +207,7 @@
 <style>
 	.gradient-bg {
 		background:
-			linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
+		linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg') ;  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
 		background-size: cover;
 		background-position: center;
 		background-blend-mode: multiply;
