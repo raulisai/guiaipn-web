@@ -15,7 +15,7 @@
 	}
 </script>
 
-<div class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4">
+<div class="gradient-bg min-h-screen flex flex-col items-center justify-center py-4">
 
 	<!-- Menú flotante -->
 	<div class="flex flex-col fixed top-4 left-4 z-50">

@@ -34,20 +34,19 @@
     </div>
     <!--  Right section with image -->
     <div class="mt-6 md:mt-8 text-centerw-full md:w-1/2 flex justify-center items-center px-4">
-        <img src="/logoipnGuia.png" alt="Logo de la guia del IPN" class="max-w-full h-auto">
+        <img src="/logoipnGuia.png" alt="Logo de la guia del IPN" class="max-w-l h-auto">
     </div>
 </section>
 
 
         <!-- Sección de "Cómo funciona" -->
-        <section class="w-full py-16 bg-gradient-to-b from-blue-900/10 to-black/60 backdrop-blur-2xl">
-            <div class="container mx-auto px-4">
+        <section class="w-full py-16 bg-gradient-to-b from-[#030e27] via-[#030e28]/70 to-black/60 backdrop-blur-2xl">
+            <div class="container mx-auto px-4 ">
                 <h2 class="text-5xl font-bold text-white text-center mb-12">¿Cómo funciona?</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto py-4 h-1/3">
                     <!-- Paso 1 -->
-                    <div class="bg-[#1e293b] backdrop-blur-2xl rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-white/20">
-                        <div class="bg-red-950 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-blue-card backdrop-blur-2xl rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-cyan">
+                        <div class="bg-red-950 rounded-full w-13 h-13 flex items-center justify-center mx-auto mb-4">
                             <span class="text-white text-2xl font-bold">1</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white text-center mb-3">Regístrate</h3>
@@ -55,8 +54,8 @@
                     </div>
                     
                     <!-- Paso 2 -->
-                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-white/20">
-                        <div class="bg-red-950 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-blue-card backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-cyan">
+                        <div class="bg-red-950 rounded-full w-13 h-13 flex items-center justify-center mx-auto mb-4">
                             <span class="text-white text-2xl font-bold">2</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white text-center mb-3">Estudia</h3>
@@ -64,8 +63,8 @@
                     </div>
                     
                     <!-- Paso 3 -->
-                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-white/20">
-                        <div class="bg-red-950 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-blue-card backdrop-blur-sm rounded-xl p-6 transform hover:scale-105 transition-all duration-300 border border-cyan">
+                        <div class="bg-red-950 rounded-full w-13 h-13 flex items-center justify-center mx-auto mb-4">
                             <span class="text-white text-2xl font-bold">3</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white text-center mb-3">¡Aprueba!</h3>
@@ -74,3 +73,12 @@
                 </div>
             </div>
         </section>
+<style>
+    .border-cyan {
+        border: #3a4c50 .5px solid;
+    }
+
+    .bg-blue-card {
+        background: #0b1a32a3;
+    }
+</style>
