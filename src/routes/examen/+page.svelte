@@ -1,43 +1,66 @@
 <script lang="ts">
 	import { reactivos } from '$lib/reactivos';
 	import ExamProgress from './Examprogres.svelte';
-	import Timer from './Timer.svelte';
+	import Estadisticas from './Estadisticas.svelte';
+	import Modal from './Modal.svelte';
 	import { onMount } from 'svelte';
 
-	let currentQuestion = 1;
 	const totalQuestions = 140;
-	let Pregunta = 'cuanto es 2+2';
 	let answers: { [key: number]: string } = {};
-	let idreactivoActual = 'exm2024V1Math04';
-	let iscorrectQuestion = false;
-	let respuestas;
-	let respuestaCorrecta = '';
+	let respuesta;
+	let currentQuestion = 0;
+	
+	let modalRef ; // Referencia al componente hijo
+
+  
+
+	let reactivo = $state({
+		id: 'exm2024V1Math04',
+		currentQuestion: '1',
+		pregunta: 'cuanto es 2+2',
+		iscorrectQuestion: false,
+		opciones: [],
+		respuestaCorrecta: 'A'
+	});
 
 	onMount(() => {
 		// Inicializar el temporizador
+		getQuestionRandom();
+	});
+
+	function UpdateResponseOfModal(resp) {
+		let opcionSeleccionada = reactivo.opciones.find(opcion => opcion.key === resp);
+        if (modalRef) {
+            modalRef.updateData(opcionSeleccionada.value); // Llama a la función del hijo
+        }
+    }
+
+	function getQuestionRandom() {
 		let idRandom = Math.floor(Math.random() * 18);
 		console.log(reactivos[idRandom]);
 
-		respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
-		Pregunta = reactivos[idRandom].pregunta;
-		respuestas = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
+		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
+		reactivo.pregunta = reactivos[idRandom].pregunta;
+		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
 			key,
 			value
 		}));
 
-		console.log(respuestas);
-	});
+		console.log(reactivo.opciones);
+	}
 
 	function selectOption(resp) {
+		respuesta = resp;
 		//validar la respuesta
-		if (resp === respuestaCorrecta) {
-			iscorrectQuestion = true;
-			document.getElementById('btn-' + resp).classList.add('bg-green-500');
-			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+		if (resp === reactivo.respuestaCorrecta) {
+			reactivo.iscorrectQuestion = true;
+			alert('Correcto!');
+			getQuestionRandom();
 		} else {
-			iscorrectQuestion = false;
-			document.getElementById('btn-' + resp).classList.add('bg-red-500');
-			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+			reactivo.iscorrectQuestion = false;
+			modalRef.toogleModal(); // Abre el modal
+			UpdateResponseOfModal(resp);
+			getQuestionRandom();
 		}
 	}
 </script>
@@ -71,7 +94,7 @@
 		>
 			<div class="question-container">
 				<div class="question-header">
-					<span class="question-number">Pregunta {currentQuestion}</span>
+					<span class="question-number">Pregunta {reactivo.currentQuestion}</span>
 					<span class="question-badge">Matemáticas</span>
 				</div>
 				<div class="question-content">
@@ -89,7 +112,7 @@
 						><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
 						></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg
 					>
-					<p id="question" class="question-text">{Pregunta}</p>
+					<p id="question" class="question-text">{reactivo.pregunta}</p>
 				</div>
 			</div>
 		</div>
@@ -97,7 +120,7 @@
 		<div class="relative mt-12 mx-auto">
 			<!-- Contenedor de tarjetas -->
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
-				{#each respuestas as respuesta, index}
+				{#each reactivo.opciones as respuesta, index}
 					<button
 						class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4
                 hover:shadow-lg cursor-pointer transition-all duration-300
@@ -117,90 +140,10 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Temporizador y Estadísticas -->
-	<div
-		class="flex flex-col mt-16 md:flex-row items-center justify-between gap-6 bg-white/5 rounded-lg p-4 backdrop-blur-sm border border-white/20"
-	>
-		<!-- Temporizador circular -->
-		<div class="timer-circle flex-shrink-0">
-			<Timer initialSeconds={0} />
-		</div>
-
-		<!-- Estadísticas de habilidades con trapecios -->
-		<div class="w-full">
-			<h3 class="text-white text-lg font-medium mb-3">Estadísticas de habilidades</h3>
-			<div class="grid grid-cols-2 gap-3">
-				<div class="skill-bar">
-					<div class="flex justify-between mb-1">
-						<span class="text-sm text-white/80">Matemáticas</span>
-						<span class="text-sm text-white/80">75%</span>
-					</div>
-					<div class="h-6 relative">
-						<div
-							class="absolute inset-0 bg-white/10"
-							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
-						></div>
-						<div
-							class="absolute inset-0 bg-blue-500"
-							style="clip-path: polygon(0% 0%, 75% 20%, 75% 80%, 0% 100%)"
-						></div>
-					</div>
-				</div>
-				<div class="skill-bar">
-					<div class="flex justify-between mb-1">
-						<span class="text-sm text-white/80">Física</span>
-						<span class="text-sm text-white/80">60%</span>
-					</div>
-					<div class="h-6 relative">
-						<div
-							class="absolute inset-0 bg-white/10"
-							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
-						></div>
-						<div
-							class="absolute inset-0 bg-green-500"
-							style="clip-path: polygon(0% 0%, 60% 20%, 60% 80%, 0% 100%)"
-						></div>
-					</div>
-				</div>
-				<div class="skill-bar">
-					<div class="flex justify-between mb-1">
-						<span class="text-sm text-white/80">Química</span>
-						<span class="text-sm text-white/80">80%</span>
-					</div>
-					<div class="h-6 relative">
-						<div
-							class="absolute inset-0 bg-white/10"
-							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
-						></div>
-						<div
-							class="absolute inset-0 bg-purple-500"
-							style="clip-path: polygon(0% 0%, 80% 20%, 80% 80%, 0% 100%)"
-						></div>
-					</div>
-				</div>
-				<div class="skill-bar">
-					<div class="flex justify-between mb-1">
-						<span class="text-sm text-white/80">Biología</span>
-						<span class="text-sm text-white/80">45%</span>
-					</div>
-					<div class="h-6 relative">
-						<div
-							class="absolute inset-0 bg-white/10"
-							style="clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%)"
-						></div>
-						<div
-							class="absolute inset-0 bg-yellow-500"
-							style="clip-path: polygon(0% 0%, 45% 20%, 45% 80%, 0% 100%)"
-						></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Símbolo decorativo -->
-	<div class="absolute bottom-8 right-8 text-white/50 text-2xl">※dj</div>
+	<Estadisticas />
+	 <Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+	 
+	
 </div>
 
 <style>
