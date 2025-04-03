@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import { onMount } from 'svelte';
 
 	let menuBtn;
 	let activo = $state(false);
@@ -13,6 +14,20 @@
 
 		console.log(activo);
 	}
+
+	onMount(() => {
+		function handleClickOutside(event) {
+			if (menuBtn && !menuBtn.contains(event.target)) {
+				activo = false;
+			}
+		}
+
+		document.addEventListener('click', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+		};
+	});
 </script>
 
 <div class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4">
@@ -27,7 +42,7 @@
 			<button
 				id="menuBtn"
 				bind:this={menuBtn}
-				on:click={toogleMenu}
+				onclick={toogleMenu}
 				aria-labelledby="menuBtn"
 				aria-haspopup="true"
 				class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md
