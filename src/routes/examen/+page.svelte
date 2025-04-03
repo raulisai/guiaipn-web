@@ -2,44 +2,61 @@
 	import { reactivos } from '$lib/reactivos';
 	import ExamProgress from './Examprogres.svelte';
 	import Timer from './Timer.svelte';
+	import Modal from './Modal.svelte';
 	import { onMount } from 'svelte';
 
-	let currentQuestion = 1;
+	
 	const totalQuestions = 140;
-	let Pregunta = 'cuanto es 2+2';
 	let answers: { [key: number]: string } = {};
-	let idreactivoActual = 'exm2024V1Math04';
-	let iscorrectQuestion = false;
-	let respuestas;
-	let respuestaCorrecta = '';
+	let respuesta;
+	let currentQuestion = 0;
+
+	let reactivo = $state({
+		id: 'exm2024V1Math04',
+		currentQuestion: "1",
+		pregunta: 'cuanto es 2+2',
+		iscorrectQuestion: false,
+		opciones: [],
+		respuestaCorrecta: 'A'
+	});
 
 	onMount(() => {
 		// Inicializar el temporizador
+		getQuestionRandom()
+		
+	});
+
+
+	function getQuestionRandom() {
 		let idRandom = Math.floor(Math.random() * 18);
 		console.log(reactivos[idRandom]);
 
-		respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
-		Pregunta = reactivos[idRandom].pregunta;
-		respuestas = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
+		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
+		reactivo.pregunta = reactivos[idRandom].pregunta;
+		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
 			key,
 			value
 		}));
 
-		console.log(respuestas);
-	});
+		console.log(reactivo.opciones);
+	}
 
 	function selectOption(resp) {
+
+		respuesta = resp;
 		//validar la respuesta
-		if (resp === respuestaCorrecta) {
-			iscorrectQuestion = true;
-			document.getElementById('btn-' + resp).classList.add('bg-green-500');
-			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+		if (resp === reactivo.respuestaCorrecta) {
+			reactivo.iscorrectQuestion = true;
+			
 		} else {
-			iscorrectQuestion = false;
-			document.getElementById('btn-' + resp).classList.add('bg-red-500');
-			document.getElementById('btn-' + resp).classList.remove('bg-white/10');
+			reactivo.iscorrectQuestion = false;
+			
 		}
+		getQuestionRandom()
 	}
+
+
+	
 </script>
 
 <div class=" mb-20 mt-36">
@@ -71,7 +88,7 @@
 		>
 			<div class="question-container">
 				<div class="question-header">
-					<span class="question-number">Pregunta {currentQuestion}</span>
+					<span class="question-number">Pregunta {reactivo.currentQuestion}</span>
 					<span class="question-badge">Matemáticas</span>
 				</div>
 				<div class="question-content">
@@ -89,7 +106,7 @@
 						><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
 						></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg
 					>
-					<p id="question" class="question-text">{Pregunta}</p>
+					<p id="question" class="question-text">{reactivo.pregunta}</p>
 				</div>
 			</div>
 		</div>
@@ -97,7 +114,7 @@
 		<div class="relative mt-12 mx-auto">
 			<!-- Contenedor de tarjetas -->
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
-				{#each respuestas as respuesta, index}
+				{#each reactivo.opciones as respuesta, index}
 					<button
 						class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4
                 hover:shadow-lg cursor-pointer transition-all duration-300
@@ -201,6 +218,9 @@
 
 	<!-- Símbolo decorativo -->
 	<div class="absolute bottom-8 right-8 text-white/50 text-2xl">※dj</div>
+
+	<Modal/>
+	
 </div>
 
 <style>
