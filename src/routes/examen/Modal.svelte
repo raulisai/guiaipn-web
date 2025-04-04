@@ -15,9 +15,11 @@
 		respuesta = resp;
 		isLoading = true; // Activar el estado de carga
 
+	
+
 		try {
 			explication = await enviarRespuesta(pregunta, respuesta);
-			console.log('Explicación:', explication);
+			//console.log('Explicación:', explication);
 		} catch (error) {
 			console.error('Error al obtener la explicación:', error);
 		} finally {
@@ -45,7 +47,7 @@
 			}
 
 			const data = await response.json();
-			console.log('resp:', data);
+			//console.log('resp:', data);
 			return data;
 		} catch (error) {
 			console.error('There was a problem with the fetch operation:', error);
@@ -77,7 +79,7 @@
 					Respuesta seleccionada: <span class="font-semibold">{respuesta}</span>
 				</h3>
 				<button
-					on:click={closeModal}
+					onclick={closeModal}
 					class="text-white/70 hover:text-white transition-colors text-3xl"
 				>
 					✕
