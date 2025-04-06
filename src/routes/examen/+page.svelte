@@ -37,7 +37,7 @@
 
 	function getQuestionRandom() {
 		let idRandom = Math.floor(Math.random() * 18);
-		console.log(reactivos[idRandom]);
+		//console.log(reactivos[idRandom]);
 
 		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
 		reactivo.pregunta = reactivos[idRandom].pregunta;
@@ -46,7 +46,7 @@
 			value
 		}));
 
-		console.log(reactivo.opciones);
+		//console.log(reactivo.opciones);
 	}
 
 	function selectOption(resp) {
