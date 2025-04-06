@@ -2,9 +2,26 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
+
 html {
-background: #0F1729;
+    background: 
+        linear-gradient(to bottom, #0f172a, #0b1320),
+        url(/malla.jpg);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
 }
+        /* Opcional: Añadir animación de movimiento al fondo */
+        @media (min-width: 1024px) {
+            html {
+                animation: moveBackground 30s linear infinite;
+            }
+            @keyframes moveBackground {
+                0% { background-position: center top; }
+                50% { background-position: center 20%; }
+                100% { background-position: center top; }
+            }
+        }
 .card {
     transition: all 0.3s ease;
 }

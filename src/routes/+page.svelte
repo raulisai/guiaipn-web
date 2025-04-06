@@ -1,5 +1,4 @@
-<section class="gradient-bg min-h-screen flex flex-col md:flex-row items-center justify-between p-4 md:p-8 sm:mt-2 sm:pb-6">
-    <!-- Left section with text and button -->
+<section class="min-w-full min-h-screen flex flex-col md:flex-row items-center justify-between p-4 sm:pb-6 overflow-x-hidden">    <!-- Left section with text and button -->
     <div class="md:w-1/2 flex flex-col items-center justify-center text-center md:text-left mb-8 md:mb-0">
         <h1 class="
         text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
@@ -33,14 +32,14 @@
         </button>
     </div>
     <!--  Right section with image -->
-    <div class="mt-6 md:mt-8 text-centerw-full md:w-1/2 flex justify-center items-center px-4">
+    <div class="content_guiaIPN mt-6 md:mt-4 text-center w-full md:w-1/2 flex justify-center items-center px-4">
         <img src="/logoipnGuia.png" alt="Logo de la guia del IPN" class="max-w-l h-auto">
     </div>
 </section>
 
 
         <!-- Sección de "Cómo funciona" -->
-        <section class="w-full py-16 bg-gradient-to-b from-[#030e27] via-[#030e28]/70 to-black/60 backdrop-blur-2xl">
+        <section class="w-screen py-16 bg-gradient-to-b from-[#030e27] via-[#030e28]/70 to-black/60 backdrop-blur-2xl">
             <div class="container mx-auto px-4 ">
                 <h2 class="text-5xl font-bold text-white text-center mb-12">¿Cómo funciona?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto py-4 h-1/3">
@@ -74,6 +73,8 @@
             </div>
         </section>
 <style>
+
+
     .border-cyan {
         border: #3a4c50 .5px solid;
     }
@@ -81,4 +82,15 @@
     .bg-blue-card {
         background: #0b1a32a3;
     }
+
+    @media (max-width: 430px) {
+        section {
+              margin-top: 100px;
+                gap: 1px;
+            }
+          }
+          .content_guiaIPN{
+            margin-top: -100;
+            margin-bottom: 50px;
+          }
 </style>
