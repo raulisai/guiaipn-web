@@ -30,9 +30,10 @@
 	});
 </script>
 
-<div class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4">
+<div class="min-h-screen flex flex-col items-center justify-center py-4">
+
 	<!-- Menú flotante -->
-	<div class="fixed top-4 left-4 z-50">
+	<div class="flex flex-col fixed top-4 left-4 z-50">
 		<a href="/" class="flex items-center justify-center">
 			<img src="logoipnburrito.png" alt="Logo de la guia del IPN" class="w-[150px]" />
 		</a>
@@ -219,13 +220,7 @@
 </div>
 
 <style>
-	.gradient-bg {
-		background:
-		linear-gradient(to bottom, #0f172a, #0b1320), url('/malla.jpg') ;  /* Ajusta, url('/malla.jpg'); /* Ajusta la ruta y nombre de archivo */
-		background-size: cover;
-		background-position: center;
-		background-blend-mode: multiply;
-	}
+
 	.menu-hidden {
 		display: none;
 		opacity: 0;
