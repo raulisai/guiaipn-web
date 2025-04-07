@@ -1,29 +1,41 @@
 <script>
 	let { pregunta, id, iscorrect } = $props();
 
-	let respuesta = $state('');
+	let respuesta = $state({
+		correcta: '',
+		usuario: ''
+	});
 	let showModal = $state(false);
 	let explication = $state();
 	let isLoading = $state(false); // Nueva variable para controlar el estado de carga
+	let preguntaAct = pregunta; // Inicializar preguntaAct como un estado
+    let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
 
 	export function toogleModal() {
 		showModal = !showModal;
-		console.log('Modal abierto:', showModal);
+
+		if (!showModal) {
+			// Si el modal se cierra, restablece la clase a su valor inicial
+			classTopic = 'margin-top: 0px;';
+		}
 	}
 
-	export async function updateData(resp) {
-		respuesta = resp;
+	export async function updateData(respUser, resCorrect) {
+		preguntaAct = pregunta;
+		respuesta.usuario = respUser;
+		respuesta.correcta = resCorrect;
 		isLoading = true; // Activar el estado de carga
 
 	
 
 		try {
-			explication = await enviarRespuesta(pregunta, respuesta);
-			//console.log('Explicación:', explication);
+			explication = await enviarRespuesta(pregunta, respuesta.correcta);
+			console.log('Explicación:', explication);
 		} catch (error) {
 			console.error('Error al obtener la explicación:', error);
 		} finally {
 			isLoading = false; // Desactivar el estado de carga
+			classTopic ='margin-top: 400px;';
 		}
 	}
 
@@ -72,24 +84,46 @@
 		class="fixed inset-0 bg-custom-modal backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-auto"
 	>
 		<div
-			class="bg-white/20 backdrop-blur-sm rounded-xl max-w-3xl w-full p-8 border border-white/30"
+			class= "basemodal bg-white/20 backdrop-blur-sm rounded-xl max-w-3xl w-full p-8 border border-white/30"
+			style={classTopic}
 		>
-			<div class="flex justify-between items-center mb-6">
-				<h3 class="text-2xl font-bold text-white">
-					Respuesta seleccionada: <span class="font-semibold">{respuesta}</span>
-				</h3>
-				<button
-					onclick={closeModal}
-					class="text-white/70 hover:text-white transition-colors text-3xl"
-				>
-					✕
-				</button>
+			<div class="mb-6">
+				<!-- Header with close button -->
+				<div class="flex justify-between items-center mb-4">
+					<h3 class="text-xl font-bold text-white/90">Análisis de respuesta</h3>
+					<button
+						onclick={closeModal}
+						class="text-white/70 hover:text-white transition-colors text-xl h-8 w-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
+					>
+						✕
+					</button>
+				</div>
+				
+				<!-- Question and answers container -->
+				<div class="bg-white/10 rounded-lg p-4 border border-white/20 mb-4">
+					<div class="mb-3">
+						<h4 class="text-white/60 text-sm uppercase mb-1">Pregunta</h4>
+						<p class="text-white text-base">{preguntaAct}</p>
+					</div>
+					
+					<div class="grid grid-cols-2 gap-3">
+						<div class="bg-blue-900/30 p-3 rounded border border-blue-400/30">
+							<h4 class="text-blue-300/80 text-sm uppercase mb-1">Tu respuesta</h4>
+							<p class="text-white text-base">{respuesta.usuario}</p>
+						</div>
+						
+						<div class="bg-green-900/30 p-3 rounded border border-green-400/30">
+							<h4 class="text-green-300/80 text-sm uppercase mb-1">Respuesta correcta</h4>
+							<p class="text-white text-base">{respuesta.correcta}</p>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="space-y-6">
 				{#if isLoading}
 					<!-- Futuristic loading indicator with holographic effect -->
 					<div class="flex flex-col justify-center items-center h-80">
-						<div class="cyberpulse-loader relative w-40 h-40">
+						<div class="cyberpulse-loader relative w-80 h-40">
 							<!-- Holographic rings -->
 							<div class="absolute inset-0 rings">
 								<span class="ring ring-1"></span>
@@ -118,13 +152,13 @@
 					<!-- Problem description -->
 					<div class="bg-white/10 rounded-lg p-6 border border-white/30">
 						<h4 class="text-white/80 text-lg uppercase mb-3">Problema</h4>
-						<p class="text-white text-lg">{explication.shortDescripcionDelProblema}</p>
+						<p class="text-white text-lg">{explication.explicacionRespuesta}</p>
 					</div>
 
 					<!-- Explanation -->
 					<div class="bg-white/10 rounded-lg p-6 border border-white/30">
 						<h4 class="text-white/80 text-lg uppercase mb-3">Explicación</h4>
-						<p class="text-white text-lg">{explication.explicacionRespuesta}</p>
+						<p class="text-white text-lg">{explication.Tip}</p>
 					</div>
 
 					<!-- Solution steps -->
@@ -132,12 +166,24 @@
 						<h4 class="text-white/80 text-lg uppercase mb-3">Pasos para resolver</h4>
 						<div class="text-white text-lg">
 							<ol class="list-decimal pl-6 space-y-3">
-								{#each explication.pasoParResolverElProblema as paso, i}
+								{#each explication.pasosParaResolverElProblema as paso, i}
 									<li class="leading-relaxed">{paso}</li>
 								{/each}
 							</ol>
 						</div>
+						
 					</div>
+					<div class="bg-white/10 rounded-lg p-6 border border-white/30">
+						<h4 class="text-white/80 text-lg uppercase mb-3">Recordatorios</h4>
+						<p class="text-white text-lg">{explication.conceptosORecordatorios}</p>
+					</div>
+					<!-- ejemplos similares -->
+					<div class="bg-white/10 rounded-lg p-6 border border-white/30">
+						<h4 class="text-white/80 text-lg uppercase mb-3">Ejemplos similares</h4>
+						<p class="text-white text-lg">{explication.ejemploSimilar}</p>
+					</div>
+
+
 				{/if}
 			</div>
 		</div>
@@ -289,6 +335,40 @@
 	@keyframes blink {
 		50% {
 			border-color: transparent;
+		}
+	}
+
+	.basemodal {
+		animation: slideIn 0.4s ease;
+		animation-fill-mode: forwards;
+		transform-origin: center;
+	}
+
+	@keyframes slideIn {
+		from {
+			transform: translateX(100%);
+			opacity: 0;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	/* Modal exit animation */
+	.modal-out .basemodal {
+		animation: slideOut 0.3s ease;
+		animation-fill-mode: forwards;
+	}
+
+	@keyframes slideOut {
+		from {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		to {
+			transform: translateX(-100%);
+			opacity: 0;
 		}
 	}
 </style>

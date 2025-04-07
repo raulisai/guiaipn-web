@@ -28,10 +28,11 @@
 		getQuestionRandom();
 	});
 
-	function UpdateResponseOfModal(resp) {
+	function UpdateResponseOfModal(resp, resCorrect){
 		let opcionSeleccionada = reactivo.opciones.find(opcion => opcion.key === resp);
+		let opcionCorrecta = reactivo.opciones.find(opcion => opcion.key === resCorrect); // Correct answer
         if (modalRef) {
-            modalRef.updateData(opcionSeleccionada.value); // Llama a la función del hijo
+            modalRef.updateData(opcionSeleccionada.value, opcionCorrecta.value); // Llama a la función del hijo
         }
     }
 
@@ -59,7 +60,7 @@
 		} else {
 			reactivo.iscorrectQuestion = false;
 			modalRef.toogleModal(); // Abre el modal
-			UpdateResponseOfModal(resp);
+			UpdateResponseOfModal(resp, reactivo.respuestaCorrecta); // Pass the correct answer
 			getQuestionRandom();
 		}
 	}
