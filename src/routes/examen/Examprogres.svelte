@@ -5,6 +5,14 @@
   
     $: progress = (currentQuestion / totalQuestions) * 100;
     $: answeredQuestions = Object.keys(answers).length;
+
+    //hacer un  console log dinamico
+    $: console.log(Object.keys(answers).length);
+
+    
+
+
+    
 </script>
   
 <div class="progress-container">
@@ -27,6 +35,7 @@
           class:current={i + 1 === currentQuestion}
           class:answered={answers[i + 1]}
           class:unanswered={!answers[i + 1] && i + 1 !== currentQuestion}
+         
         ></div>
       {/each}
     </div>
