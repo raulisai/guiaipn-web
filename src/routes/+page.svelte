@@ -1,5 +1,5 @@
-<section class="min-w-full min-h-screen flex flex-col md:flex-row items-center justify-between p-4 sm:pb-6 overflow-x-hidden">    <!-- Left section with text and button -->
-    <div class="md:w-1/2 flex flex-col items-center justify-center text-center md:text-left mb-8 md:mb-0">
+<section class="min-w-full min-h-screen flex flex-col md:flex-row items-center justify-center py-4 px-8 sm:pb-6 overflow-x-hidden">    <!-- Left section with text and button -->
+    <div class="md:w-1/2 flex flex-col items-center justify-center text-center px-6 md:text-left mb-8 md:mb-0">
         <h1 class="
         text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">
             Ingresa al <span class="text-red-950 block md:inline-block text-6xl md:text-8xl lg:text-9xl mt-2">IPN</span>
