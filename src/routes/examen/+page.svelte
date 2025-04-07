@@ -66,8 +66,8 @@
 	}
 </script>
 
-<div class=" mb-20 mt-36">
-	<div class="max-w-6xl text-center space-y-8">
+<div class="mb-20 mt-36">
+	<div class="max-w-6xl px-6 text-center space-y-8">
 		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
 			<span
 				class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-red-950 to-pink-500"
