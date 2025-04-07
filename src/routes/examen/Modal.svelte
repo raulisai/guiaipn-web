@@ -8,6 +8,7 @@
 	let showModal = $state(false);
 	let explication = $state();
 	let isLoading = $state(false); // Nueva variable para controlar el estado de carga
+	// svelte-ignore non_reactive_update
 	let preguntaAct = pregunta; // Inicializar preguntaAct como un estado
     let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
 
@@ -353,12 +354,6 @@
 			transform: translateX(0);
 			opacity: 1;
 		}
-	}
-
-	/* Modal exit animation */
-	.modal-out .basemodal {
-		animation: slideOut 0.3s ease;
-		animation-fill-mode: forwards;
 	}
 
 	@keyframes slideOut {
