@@ -6,43 +6,45 @@
 	$: progress = (currentQuestion / totalQuestions) * 100;
 	$: answeredQuestions = Object.keys(answers).length;
 </script>
-
-<div class="progress-container">
-	<div class="progress-header">
-		<span>Pregunta {currentQuestion} de {totalQuestions}</span>
-		<span>{answeredQuestions} respondidas</span>
-	</div>
-
-	<div class="progress-bar-container">
-		<div class="progress-bar" style="width: {progress}%"></div>
-	</div>
-
-	<div class="question-indicators">
-		{#each Array(totalQuestions) as _, i}
-			<div
-				class="indicator"
-				class:current={i + 1 === currentQuestion}
-				class:answeredCorrect={answers[i + 1] === 'true'}
-				class:answeredIncorrect={answers[i + 1] === 'false'}
-				class:unanswered={!answers[i + 1] && i + 1 !== currentQuestion}
-			></div>
-		{/each}
-	</div>
+  
+<div class="progress-container glow-effect card_color">
+    <div class="progress-header">
+      <span>Pregunta {currentQuestion} de {totalQuestions}</span>
+      <span>{answeredQuestions} respondidas</span>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div 
+        class="progress-bar"
+        style="width: {progress}%"
+      ></div>
+    </div>
+    
+    <div class="question-indicators">
+      {#each Array(totalQuestions) as _, i}
+        <div 
+          class="indicator"
+          class:current={i + 1 === currentQuestion}
+          class:answeredCorrect={answers[i + 1] === 'true'}
+          class:answeredIncorrect={answers[i + 1] === 'false'}
+          class:unanswered={!answers[i + 1] && i + 1 !== currentQuestion}
+         
+        ></div>
+      {/each}
+    </div>
 </div>
 
 <style>
-	.progress-container {
-		margin-bottom: 1.5rem;
-		background-color: rgba(255, 255, 255, 0.1);
-		padding: 1rem;
-		border-radius: 0.5rem;
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		color: white;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		width: 100%;
-		max-width: 100%;
-	}
+  .progress-container {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 100%;
+    max-width: 100%;
+  }
 
 	.progress-header {
 		display: flex;
