@@ -1,0 +1,112 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js"
+    ]
+  },
+  "_client.js": {
+    "file": "chunks/client.js",
+    "name": "client",
+    "imports": [
+      "_exports.js",
+      "_equality.js"
+    ]
+  },
+  "_equality.js": {
+    "file": "chunks/equality.js",
+    "name": "equality"
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports",
+    "imports": [
+      "_equality.js"
+    ]
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index"
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_equality.js",
+      "_index.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_exports.js"
+    ]
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.BTWRyxPi.css"
+    ]
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "css": [
+      "_app/immutable/assets/_page.DD5nKVv1.css"
+    ]
+  },
+  "src/routes/cuenta/+page.svelte": {
+    "file": "entries/pages/cuenta/_page.svelte.js",
+    "name": "entries/pages/cuenta/_page.svelte",
+    "src": "src/routes/cuenta/+page.svelte",
+    "isEntry": true
+  },
+  "src/routes/examen/+page.svelte": {
+    "file": "entries/pages/examen/_page.svelte.js",
+    "name": "entries/pages/examen/_page.svelte",
+    "src": "src/routes/examen/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_equality.js",
+      "_client.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.CX6mIyNR.css"
+    ]
+  },
+  "src/routes/materias/+page.svelte": {
+    "file": "entries/pages/materias/_page.svelte.js",
+    "name": "entries/pages/materias/_page.svelte",
+    "src": "src/routes/materias/+page.svelte",
+    "isEntry": true,
+    "css": [
+      "_app/immutable/assets/_page.C8vkUQEj.css"
+    ]
+  }
+}
