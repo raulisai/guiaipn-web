@@ -134,12 +134,12 @@
             {:else}
                 <!-- Contenido responsivo -->
                 <div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
-                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Problema</h4>
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3"> Explicacion Problema</h4>
                     <p class="text-white text-sm md:text-base lg:text-lg">{explication.explicacionRespuesta}</p>
                 </div>
 
                 <div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
-                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Explicación</h4>
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Tips</h4>
                     <p class="text-white text-sm md:text-base lg:text-lg">{explication.Tip}</p>
                 </div>
 
@@ -152,6 +152,14 @@
                             {/each}
                         </ol>
                     </div>
+                </div>
+				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Formulas</h4>
+                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.conceptosORecordatorios}</p>
+                </div>
+				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Ejemplo</h4>
+                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.ejemploSimilar}</p>
                 </div>
                 
                 <!-- Resto de secciones con el mismo patrón responsive -->

@@ -153,7 +153,8 @@
 			</div>
 		</div>
 	</div>
-	<Estadisticas />
+	<!--<Estadisticas />  -->
+	
 	 <Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
 	 
 	
