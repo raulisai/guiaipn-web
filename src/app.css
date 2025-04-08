@@ -25,14 +25,28 @@ html {
 .card {
     transition: all 0.3s ease;
 }
+
+.card_color {
+    background-image: linear-gradient(
+      to bottom,         
+      #04153a,           
+      rgba(3, 14, 40, 0.7) 70%  
+    );
+  }
 .card:hover, .card.selected {
     transform: scale(1.05);
     border-color: #22d3ee !important;
+}
+
+.glow-effect {
+    box-shadow: 0 0 40px rgba(34, 211, 238, 0.15),
+                0 0 60px rgba(236, 72, 153, 0.1);
 }
 .timer-container {
     background-color: #216271;
     box-shadow: inset 4px 4px 10px #2a7986, inset -4px -4px 10px #2a7986;
     backdrop-filter: blur(8px);
+    border-color: #22d3ee;
 }
 
 

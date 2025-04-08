@@ -4,7 +4,7 @@
 
 <!-- Temporizador y Estadísticas -->
 <div
-	class="flex flex-col mt-16 md:flex-row items-center justify-between gap-6 bg-white/5 rounded-lg p-4 backdrop-blur-sm border border-white/20"
+	class="flex flex-col mt-16 md:flex-row items-center justify-between gap-6 card_color glow-effect rounded-lg backdrop-blur-sm border border-white/20 py-6 px-4"
 >
 	<!-- Temporizador circular -->
 	<div class="timer-circle flex-shrink-0">

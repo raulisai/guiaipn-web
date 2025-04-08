@@ -35,7 +35,7 @@
 			console.error('Error al obtener la explicación:', error);
 		} finally {
 			isLoading = false; // Desactivar el estado de carga
-			classTopic ='margin-top: 400px;';
+			classTopic ='margin-modal';
 		}
 	}
 
@@ -81,10 +81,10 @@
 <!-- Modal -->
 <div
     id="modal"
-    class="fixed inset-0 bg-custom-modal backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-auto"
+    class="fixed inset-0 bg-custom-modal w-full backdrop-blur-md z-50 flex items-center justify-center p-4"
 >
     <div
-        class="basemodal bg-white/20 backdrop-blur-sm rounded-xl max-w-[95%] md:max-w-3xl w-full p-4 md:p-6 lg:p-8 border border-white/30"
+        class="basemodal bg-gradient-to-b from-[#04153a] via-[#04153a]/70 to-blue-950 backdrop-blur-sm rounded-xl max-w-[90%]  p-4 md:p-6 lg:p-8 border border-white/30"
         style={classTopic}
     >
         <div class="mb-4 md:mb-6">
@@ -100,51 +100,69 @@
             </div>
             
             <!-- Question and answers container -->
-            <div class="bg-white/10 rounded-lg p-3 md:p-4 border border-white/20 mb-4">
+            <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-3 md:p-4 border border-white/20 mb-4">
                 <div class="mb-3">
-                    <h4 class="text-white/60 text-xs md:text-sm uppercase mb-1">Pregunta</h4>
-                    <p class="text-white text-sm md:text-base">{preguntaAct}</p>
+                    <p class="text-white/80 text-sm md:text-md uppercase mb-1">Pregunta</p>
+                    <p class="text-white text-secondary">{preguntaAct}</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                    <div class="bg-blue-900/30 p-2 md:p-3 rounded border border-blue-400/30">
-                        <h4 class="text-blue-300/80 text-xs md:text-sm uppercase mb-1">Tu respuesta</h4>
-                        <p class="text-white text-sm md:text-base">{respuesta.usuario}</p>
+                    <div class="bg-blue-900/30 py-2 md:py-3 rounded border border-blue-400/30">
+                        <p class="text-blue-300/80 text-sm md:text-sm uppercase mb-1">Tu respuesta</p>
+                        <p class="text-white text-secondary">{respuesta.usuario}</p>
                     </div>
                     
-                    <div class="bg-green-900/30 p-2 md:p-3 rounded border border-green-400/30">
-                        <h4 class="text-green-300/80 text-xs md:text-sm uppercase mb-1">Respuesta correcta</h4>
-                        <p class="text-white text-sm md:text-base">{respuesta.correcta}</p>
+                    <div class="bg-green-900/30 py-2 md:py-3 rounded border border-green-400/30">
+                        <p class="text-green-300/80 text-sm md:text-sm uppercase mb-1">Respuesta correcta</p>
+                        <p class="text-white text-secondary">{respuesta.correcta}</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="space-y-4 md:space-y-6">
             {#if isLoading}
-                <!-- Loading indicator responsive adjustments -->
-                <div class="flex flex-col justify-center items-center h-48 md:h-64 lg:h-80">
-                    <div class="cyberpulse-loader relative w-full max-w-80 h-32 md:h-40">
-                        <!-- ... (mismo contenido del loader) ... -->
-                    </div>
-                    <p class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mt-4 md:mt-8 text-base md:text-lg font-medium tracking-wider glow-text">
-                        <span class="typing-text">Creando explicacion...</span>
-                    </p>
-                </div>
+           <!-- Futuristic loading indicator with holographic effect -->
+					<div class="flex flex-col justify-center items-center h-80">
+						<div class="cyberpulse-loader relative w-80 h-40">
+							<!-- Holographic rings -->
+							<div class="absolute inset-0 flex items-center justify-center">
+								<span class="ring ring-1"></span>
+								<span class="ring ring-2"></span>
+								<span class="ring ring-3"></span>
+							</div>
+							<!-- Central core -->
+							<div class="core absolute inset-0 flex items-center justify-center">
+								<div class="pulse-core"></div>
+								<div class="scan-line"></div>
+							</div>
+							<!-- Orbiting particles -->
+							<div class="orbital-particles">
+								{#each Array(8) as _, i}
+									<div class="particle" style="--particle-index: {i}"></div>
+								{/each}
+							</div>
+						</div>
+						<p
+							class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mt-8 text-lg font-medium tracking-wider glow-text"
+						>
+							<span class="typing-text">Creando explicacion...</span>
+						</p>
+					</div>
             {:else}
                 <!-- Contenido responsivo -->
-                <div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
-                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Problema</h4>
-                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.explicacionRespuesta}</p>
+                <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
+                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Problema</p>
+                    <p class="text-white text-secondary">{explication.explicacionRespuesta}</p>
                 </div>
 
-                <div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
-                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Explicación</h4>
-                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.Tip}</p>
+                <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
+                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Explicación</p>
+                    <p class="text-white text-secondary">{explication.Tip}</p>
                 </div>
 
-                <div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
-                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Pasos para resolver</h4>
-                    <div class="text-white text-sm md:text-base lg:text-lg">
+                <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
+                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Pasos para resolver</p>
+                    <div class="text-white text-secondary">
                         <ol class="list-decimal pl-4 md:pl-6 space-y-2 md:space-y-3">
                             {#each explication.pasosParaResolverElProblema as paso, i}
                                 <li class="leading-relaxed">{paso}</li>
@@ -153,7 +171,6 @@
                     </div>
                 </div>
                 
-                <!-- Resto de secciones con el mismo patrón responsive -->
                 {/if}
         </div>
     </div>
@@ -173,7 +190,7 @@
 
 	/* Futuristic loader styles */
 	.cyberpulse-loader {
-		perspective: 800px;
+		perspective: 80rem;
 	}
 
 	.ring {
@@ -247,13 +264,23 @@
 
 	.typing-text {
 		display: inline-block;
-		overflow: hidden;
 		border-right: 2px solid rgba(32, 216, 255, 0.8);
 		white-space: nowrap;
 		animation:
 			typing 3s steps(30) infinite alternate-reverse,
 			blink 1s step-end infinite;
 	}
+
+	.text-secondary{
+		font-size:16px;
+	}
+	
+	@media screen and (max-width: 768px) {
+		.text-secondary{
+			font-size:12px;
+		}
+	}
+
 
 	@keyframes ring-rotate {
 		0% {
@@ -341,4 +368,5 @@
 			opacity: 0;
 		}
 	}
+	
 </style>

@@ -7,7 +7,7 @@
     $: answeredQuestions = Object.keys(answers).length;
 </script>
   
-<div class="progress-container">
+<div class="progress-container glow-effect card_color">
     <div class="progress-header">
       <span>Pregunta {currentQuestion} de {totalQuestions}</span>
       <span>{answeredQuestions} respondidas</span>
@@ -35,13 +35,11 @@
 <style>
   .progress-container {
     margin-bottom: 1.5rem;
-    background-color: rgba(255, 255, 255, 0.1);
     padding: 1rem;
     border-radius: 0.5rem;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 100%;
   }

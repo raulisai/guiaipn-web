@@ -70,11 +70,11 @@
 	<div class="max-w-6xl px-6 text-center space-y-8">
 		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
 			<span
-				class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-red-950 to-pink-500"
+				class="cyberpunk-title text-transparent bg-clip-text texto-rojo"
 			>
 				Examen del IPN
 			</span>
-			<span class="block text-3xl mt-1 text-cyan-300 font-light tracking-wider"
+			<span class="block text-3xl mt-1 text-cyan-300 font-light tracking-widest"
 				>Asistido por IA</span
 			>
 			<div class="absolute -left-2 top-1/2 w-4 h-8 bg-cyan-400/30 blur-sm"></div>
@@ -91,9 +91,9 @@
 		<!-- Pregunta -->
 		<div
 			class="w-full px-6 py-4 rounded-md backdrop-blur-sm
-            border border-white/30 text-white"
+            border border-white/30 text-white card_color glow-effect"
 		>
-			<div class="question-container">
+			<div class="question-container ">
 				<div class="question-header">
 					<span class="question-number">Pregunta {reactivo.currentQuestion}</span>
 					<span class="question-badge">Matemáticas</span>
@@ -123,7 +123,7 @@
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
 				{#each reactivo.opciones as respuesta, index}
 					<button
-						class="card bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4
+						class="card card_color glow-effect backdrop-blur-sm border border-white/20 rounded-lg p-4
                 hover:shadow-lg cursor-pointer transition-all duration-300
                 min-h-[100px] flex items-center justify-center"
 						onclick={() => selectOption(respuesta.key)}
@@ -140,10 +140,11 @@
 				{/each}
 			</div>
 		</div>
+		<Estadisticas />
+		<Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+		
 	</div>
-	<Estadisticas />
-	 <Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
-	 
+
 	
 </div>
 
@@ -157,7 +158,6 @@
 		border-radius: 0.5rem;
 		background-color: rgba(255, 255, 255, 0.05);
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		margin-bottom: 1.5rem;
 		animation: fadeIn 0.5s ease-out;
 	}
 
@@ -212,4 +212,33 @@
 			transform: translateY(0);
 		}
 	}
+
+
+    .animate-text-glow {
+        animation: text-glow 2s ease-in-out infinite alternate;
+    }
+
+    .animate-line-glow {
+        animation: line-glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes text-glow {
+        from {
+            filter: drop-shadow(0 0 5px rgba(32, 74, 44, 0.3));
+        }
+        to {
+            filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.6));
+        }
+    }
+
+    @keyframes line-glow {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+
+	.texto-rojo {
+	    text-shadow: 0 0 10px #512a2aaa, 0 0 20px #82585855, 0 0 2px #ddc8c8;
+    color: #e30000;
+}
 </style>
