@@ -159,15 +159,14 @@
 			</div>
 		</div>
 		<Estadisticas />
-		<Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+		<ModalResponse bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+		{#if finish}
+		<ModalFinish  {answers}/>
+		{/if}
+	   
 		
 	</div>
-	<!--<Estadisticas/> -->
 	
-	 <ModalResponse bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
-	 {#if finish}
-	 <ModalFinish  {answers}/>
-	 {/if}
 	
 	
 </div>
