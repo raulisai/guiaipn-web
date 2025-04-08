@@ -85,7 +85,7 @@
     class="fixed inset-0 bg-custom-modal w-full backdrop-blur-md z-50 flex items-center justify-center p-4"
 >
     <div
-        class="basemodal bg-gradient-to-b from-[#04153a] via-[#04153a]/70 to-blue-950 backdrop-blur-sm rounded-xl max-w-[90%]  p-4 md:p-6 lg:p-8 border border-white/30"
+        class="basemodal bg-gradient-to-b from-[#04153a] via-[#04153a]/70 to-blue-950 backdrop-blur-sm rounded-xl max-w-[80%] max-h-[90vh] overflow-y-auto p-4 md:p-6 lg:p-8 border border-white/30"
         style={classTopic}
     >
         <div class="mb-4 md:mb-6">
@@ -108,12 +108,12 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                    <div class="bg-blue-900/30 py-2 md:py-3 rounded border border-blue-400/30">
+                    <div class="bg-blue-900/30 py-2 px-2 md:py-3 rounded border border-blue-400/30">
                         <p class="text-blue-300/80 text-sm md:text-sm uppercase mb-1">Tu respuesta</p>
                         <p class="text-white text-secondary">{respuesta.usuario}</p>
                     </div>
                     
-                    <div class="bg-green-900/30 py-2 md:py-3 rounded border border-green-400/30">
+                    <div class="bg-green-900/30 py-2 px-2 md:py-3 rounded border border-green-400/30">
                         <p class="text-green-300/80 text-sm md:text-sm uppercase mb-1">Respuesta correcta</p>
                         <p class="text-white text-secondary">{respuesta.correcta}</p>
                     </div>
@@ -171,11 +171,11 @@
                         </ol>
                     </div>
                 </div>
-				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+				<div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60  rounded-lg p-4 md:p-6 border border-white/30">
                     <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Formulas</h4>
                     <p class="text-white text-sm md:text-base lg:text-lg">{explication.conceptosORecordatorios}</p>
                 </div>
-				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+				<div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
                     <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Ejemplo</h4>
                     <p class="text-white text-sm md:text-base lg:text-lg">{explication.ejemploSimilar}</p>
                 </div>
