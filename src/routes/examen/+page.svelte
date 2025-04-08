@@ -6,17 +6,20 @@
 	import { onMount } from 'svelte';
 
 	const totalQuestions = 140;
-	let answers: { [key: number]: string } = {};
+	let answers = $state<{ [key: number]: string }>({});
 	let respuesta;
-	let currentQuestion = 0;
+	let currentQuestion = $state(0);
 	
 	let modalRef ; // Referencia al componente hijo
 
+
+
+	console.log(answers);
   
 
 	let reactivo = $state({
 		id: 'exm2024V1Math04',
-		currentQuestion: '1',
+		currentQuestion: '0',
 		pregunta: 'cuanto es 2+2',
 		iscorrectQuestion: false,
 		opciones: [],
@@ -38,6 +41,9 @@
 
 	function getQuestionRandom() {
 		let idRandom = Math.floor(Math.random() * 18);
+		currentQuestion = currentQuestion + 1;
+
+		
 		//console.log(reactivos[idRandom]);
 
 		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
@@ -46,6 +52,8 @@
 			key,
 			value
 		}));
+		reactivo.currentQuestion = currentQuestion.toString();
+		
 
 		//console.log(reactivo.opciones);
 	}
@@ -55,14 +63,18 @@
 		//validar la respuesta
 		if (resp === reactivo.respuestaCorrecta) {
 			reactivo.iscorrectQuestion = true;
+			answers[currentQuestion] ="true"; // Store correct answer
 			alert('Correcto!');
-			getQuestionRandom();
+			
 		} else {
 			reactivo.iscorrectQuestion = false;
+			answers[currentQuestion] ="false"; // Store correct answer
 			modalRef.toogleModal(); // Abre el modal
 			UpdateResponseOfModal(resp, reactivo.respuestaCorrecta); // Pass the correct answer
-			getQuestionRandom();
+			
 		}
+
+		getQuestionRandom();
 	}
 </script>
 
@@ -144,7 +156,10 @@
 		<Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
 		
 	</div>
-
+	<!--<Estadisticas/> -->
+	
+	 <Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+	 
 	
 </div>
 

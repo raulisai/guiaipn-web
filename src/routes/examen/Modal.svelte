@@ -8,6 +8,7 @@
 	let showModal = $state(false);
 	let explication = $state();
 	let isLoading = $state(false); // Nueva variable para controlar el estado de carga
+	// svelte-ignore non_reactive_update
 	let preguntaAct = pregunta; // Inicializar preguntaAct como un estado
     let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
 
@@ -151,12 +152,12 @@
             {:else}
                 <!-- Contenido responsivo -->
                 <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
-                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Problema</p>
+                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Explicacion Problema</p>
                     <p class="text-white text-secondary">{explication.explicacionRespuesta}</p>
                 </div>
 
                 <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-4 md:p-6 border border-white/30">
-                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Explicación</p>
+                    <p class="text-white/80 text-sm md:text-lg uppercase mb-2 md:mb-3">Tips</p>
                     <p class="text-white text-secondary">{explication.Tip}</p>
                 </div>
 
@@ -169,6 +170,14 @@
                             {/each}
                         </ol>
                     </div>
+                </div>
+				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Formulas</h4>
+                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.conceptosORecordatorios}</p>
+                </div>
+				<div class="bg-white/10 rounded-lg p-4 md:p-6 border border-white/30">
+                    <h4 class="text-white/80 text-base md:text-lg uppercase mb-2 md:mb-3">Ejemplo</h4>
+                    <p class="text-white text-sm md:text-base lg:text-lg">{explication.ejemploSimilar}</p>
                 </div>
                 
                 {/if}
@@ -350,12 +359,6 @@
 			transform: translateX(0);
 			opacity: 1;
 		}
-	}
-
-	/* Modal exit animation */
-	.modal-out .basemodal {
-		animation: slideOut 0.3s ease;
-		animation-fill-mode: forwards;
 	}
 
 	@keyframes slideOut {

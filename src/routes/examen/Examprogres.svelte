@@ -5,6 +5,14 @@
   
     $: progress = (currentQuestion / totalQuestions) * 100;
     $: answeredQuestions = Object.keys(answers).length;
+
+    //hacer un  console log dinamico
+    $: console.log('new',answers[1]);
+
+    
+
+
+    
 </script>
   
 <div class="progress-container glow-effect card_color">
@@ -25,8 +33,10 @@
         <div 
           class="indicator"
           class:current={i + 1 === currentQuestion}
-          class:answered={answers[i + 1]}
+          class:answeredCorrect={answers[i + 1] === 'true'}
+          class:answeredIncorrect={answers[i + 1] === 'false'}
           class:unanswered={!answers[i + 1] && i + 1 !== currentQuestion}
+         
         ></div>
       {/each}
     </div>
@@ -93,9 +103,13 @@
     box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
   }
 
-  .answered {
-    background-color: #3b82f6;
+  .answeredCorrect {
+    background-color: #aaee6a;
     box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
+  }
+  .answeredIncorrect {
+    background-color: #ef4444;
+    box-shadow: 0 0 4px rgba(239, 68, 68, 0.4);
   }
 
   .unanswered {
