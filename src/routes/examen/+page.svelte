@@ -2,20 +2,18 @@
 	import { reactivos } from '$lib/reactivos';
 	import ExamProgress from './Examprogres.svelte';
 	import Estadisticas from './Estadisticas.svelte';
-	import Modal from './Modal.svelte';
+	import ModalResponse from './ModalResponse.svelte';
+	import ModalFinish from './ModalFinish.svelte';
 	import { onMount } from 'svelte';
 
-	const totalQuestions = 140;
+	const totalQuestions = 4;
 	let answers = $state<{ [key: number]: string }>({});
 	let respuesta;
 	let currentQuestion = $state(0);
+
+	let finish = $state(false); // Estado para controlar el modal de finalización
 	
 	let modalRef ; // Referencia al componente hijo
-
-
-
-	console.log(answers);
-  
 
 	let reactivo = $state({
 		id: 'exm2024V1Math04',
@@ -31,6 +29,12 @@
 		getQuestionRandom();
 	});
 
+	function finishExam() {
+		finish = true; // Cambia el estado para mostrar el modal de finalización
+	}
+
+	
+
 	function UpdateResponseOfModal(resp, resCorrect){
 		let opcionSeleccionada = reactivo.opciones.find(opcion => opcion.key === resp);
 		let opcionCorrecta = reactivo.opciones.find(opcion => opcion.key === resCorrect); // Correct answer
@@ -43,8 +47,11 @@
 		let idRandom = Math.floor(Math.random() * 18);
 		currentQuestion = currentQuestion + 1;
 
-		
-		//console.log(reactivos[idRandom]);
+
+		if (currentQuestion > totalQuestions) {
+			finishExam(); // Llama a la función para finalizar el examen
+			return;
+		}
 
 		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
 		reactivo.pregunta = reactivos[idRandom].pregunta;
@@ -54,7 +61,6 @@
 		}));
 		reactivo.currentQuestion = currentQuestion.toString();
 		
-
 		//console.log(reactivo.opciones);
 	}
 
@@ -155,8 +161,11 @@
 	</div>
 	<!--<Estadisticas />  -->
 	
-	 <Modal bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
-	 
+	 <ModalResponse bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
+	 {#if finish}
+	 <ModalFinish  {answers}/>
+	 {/if}
+	
 	
 </div>
 

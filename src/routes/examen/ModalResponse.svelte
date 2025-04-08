@@ -31,7 +31,7 @@
 
 		try {
 			explication = await enviarRespuesta(pregunta, respuesta.correcta);
-			console.log('Explicación:', explication);
+			//console.log('Explicación:', explication);
 		} catch (error) {
 			console.error('Error al obtener la explicación:', error);
 		} finally {
