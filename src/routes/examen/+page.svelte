@@ -11,6 +11,7 @@
 	let answers = $state<{ [key: number]: string }>({});
 	let respuesta;
 	let currentQuestion = $state(0);
+    let apiImg = 'https://img-reactivos.s3.us-east-2.amazonaws.com/'; // URL de la imagen
 
 	let finish = $state(false); // Estado para controlar el modal de finalización
 
@@ -22,7 +23,9 @@
 		pregunta: 'cuanto es 2+2',
 		iscorrectQuestion: false,
 		opciones: [],
-		respuestaCorrecta: 'A'
+		respuestaCorrecta: 'A',
+		pathImg: apiImg+'2024Algebra03.png',
+		altIMg: 'guia ipn Imagen de reactivo'
 	});
 
 	onMount(() => {
@@ -50,9 +53,10 @@
 			finishExam(); // Llama a la función para finalizar el examen
 			return;
 		}
-
+        let id = reactivos[idRandom].id;
 		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
 		reactivo.pregunta = reactivos[idRandom].pregunta;
+		reactivo.pathImg = apiImg+id+'.png'; // Actualiza la ruta de la imagen
 		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
 			key,
 			value
@@ -131,6 +135,7 @@
 						
 					</div>
 				</div>
+				<img src={reactivo.pathImg} alt="">
 			</div>
 		</div>
 		<!-- Respuesta -->
