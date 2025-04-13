@@ -1,7 +1,17 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+/* Asegúrate de importar los estilos de KaTeX */
+@import "katex/dist/katex.min.css";
 
+/* Estilos opcionales para espaciado */
+.math-block {
+  margin: 1em 0;
+}
+
+.math-inline {
+  margin: 0 0.2em;
+}
 
 html {
     background: 
