@@ -54,7 +54,7 @@
 			return;
 		}
         let id = reactivos[idRandom].id;
-		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
+		reactivo.respuestaCorrecta = reactivos[idRandom].resuesta;
 		reactivo.pregunta = reactivos[idRandom].pregunta;
 		
 		reactivo.pathImg = apiImg+id+'.png'; // Actualiza la ruta de la imagen
