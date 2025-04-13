@@ -27,7 +27,6 @@
   
   $: if (container && content) {
     renderMath();
-    console.log("KaTeX content updated:", content);
   }
 </script>
 

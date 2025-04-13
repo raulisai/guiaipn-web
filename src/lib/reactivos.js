@@ -877,7 +877,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Ordenar ascendentemente los conjuntos de números según su mediana: } \\begin{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
+      "\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\begin{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",

@@ -58,14 +58,13 @@
 		reactivo.pregunta = reactivos[idRandom].pregunta;
 		
 		reactivo.pathImg = apiImg+id+'.png'; // Actualiza la ruta de la imagen
-		console.log(reactivo.pathImg);
 		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
 			key,
 			value
 		}));
 		reactivo.currentQuestion = currentQuestion.toString();
 
-		//console.log(reactivo.opciones);
+		
 	}
 
 	function selectOption(resp) {
