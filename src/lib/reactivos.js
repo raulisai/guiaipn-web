@@ -86,7 +86,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Completar el producto: } \\left(2\\sqrt{3}-\\_\\_\\_ right)\\left(2\\sqrt{3}+\\_\\_ right)=12-2x",
+      "\\text{Completar el producto: } (2\\sqrt{3}- \\_\\_\\_) \\ (2\\sqrt{3}+ \\_\\_ )=12-2x",
     opciones: {
       a: "2x\\sqrt{\\frac{x}{3}}\\sqrt{3x}",
       b: "\\sqrt{3x},\\sqrt{3x}",
@@ -706,7 +706,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan simultáneamente una moneda y una pirinola de 8 lados } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
+      "\\text{Se lanzan simultáneamente una moneda y un dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
     opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
     id: "2024Estadistica12",
     resuesta: "a",

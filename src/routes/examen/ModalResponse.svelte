@@ -1,5 +1,7 @@
 <script>
+	import Math from './Math.svelte';
 	let { pregunta, id, iscorrect } = $props();
+	import MathForm from './Math.svelte';
 
 	let respuesta = $state({
 		correcta: '',
@@ -104,18 +106,18 @@
             <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-3 md:p-4 border border-white/20 mb-4">
                 <div class="mb-3">
                     <p class="text-white/80 text-sm md:text-md uppercase mb-1">Pregunta</p>
-                    <p class="text-white text-secondary">{preguntaAct}</p>
+                    <p class="text-white text-secondary"> <MathForm isBlock={false} content={preguntaAct}  /></p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                     <div class="bg-blue-900/30 py-2 px-2 md:py-3 rounded border border-blue-400/30">
                         <p class="text-blue-300/80 text-sm md:text-sm uppercase mb-1">Tu respuesta</p>
-                        <p class="text-white text-secondary">{respuesta.usuario}</p>
+                        <p class="text-white text-secondary"><MathForm isBlock={false} content={respuesta.usuario} /></p>
                     </div>
                     
                     <div class="bg-green-900/30 py-2 px-2 md:py-3 rounded border border-green-400/30">
                         <p class="text-green-300/80 text-sm md:text-sm uppercase mb-1">Respuesta correcta</p>
-                        <p class="text-white text-secondary">{respuesta.correcta}</p>
+                        <p class="text-white text-secondary"><MathForm isBlock={false} content={respuesta.correcta} /></p>
                     </div>
                 </div>
             </div>
