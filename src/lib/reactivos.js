@@ -60,7 +60,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\frac{x^2-4}{x-2}\\cdot\\frac{x+3}{x^2+4x+4}\\cdot\\frac{4x+8}{3x+9}",
+      "\\text{La expresion } \\frac{x^2-4}{x-2}\\cdot\\frac{x+3}{x^2+4x+4}\\cdot\\frac{4x+8}{3x+9} \\ text{es equivalente a:}",
     opciones: {
       a: "\\frac{5}{3}",
       b: "\\frac{4}{5}",
@@ -98,7 +98,7 @@ export const reactivos = [
     explicacion: "void",
   },
   {
-    pregunta: "\\frac{x-5+\\frac{24}{x+5}}{x+1}",
+    pregunta: "\\text{Simplificar la expresión: } \\frac{x-5+\\frac{24}{x+5}}{x+1}",
     opciones: {
       a: "\\frac{x-1}{x+5}",
       b: "\\frac{x-5}{x+1}",
@@ -111,7 +111,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "9x^4-3x^3z+x^2z^2-9x^2z^2+3xz^3-z^4=(9x^2+(\\_\\_\\_)+z^2)(\\_\\_\\_) -z^2)",
+      "\\text{Completar la factorización: } \\9x^4-3x^3z+x^2z^2-9x^2z^2+3xz^3-z^4=(9x^2+(\\_\\_\\_)+z^2)(\\_\\_\\_) -z^2)",
     opciones: { a: "-3xz, 2x^2", b: "-3xz, x^2", c: "3xz, 2x", d: "3x^2z, x" },
     id: "2024Algebra23",
     resuesta: "b",
@@ -126,7 +126,7 @@ export const reactivos = [
     explicacion: "void",
   },
   {
-    pregunta: "x^3z-x^2y^2-2x^2yz+2xy^3",
+    pregunta: "\\text{Factoriza la expresión: } \\ x^3z-x^2y^2-2x^2yz+2xy^3",
     opciones: {
       a: "x(2y-x)(y^2-xz)",
       b: "x(y-2x)(y^2+xz)",
@@ -151,8 +151,13 @@ export const reactivos = [
   },
   {
     pregunta:
-      "f(x)-\\alpha g(x)+h(x)\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
-    opciones: { a: "5x^2-4xy", b: "-5x^2-8xy", c: "x^2+y^2-4x", d: "x^2-2x-4" },
+      "\\text{Realizar la operación: } \\ f(x)-alpha g(x)+h(x)\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
+    opciones: { 
+      a: "5x^2-4xy", 
+      b: "-5x^2-8xy", 
+      c: "x^2+y^2-4x", 
+      d: "x^2-2x-4" 
+    },
     id: "2024Algebra26",
     resuesta: "b",
     explicacion: "void",
@@ -209,7 +214,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Resolver el sistema de ecuaciones lineales si se sabe que } z=2 \\quad \\begin{align*} -x+y+z&=2 \\ \\ x-3y-4z&=5 \\end{align*}",
+      "\\text{Resolver el sistema de ecuaciones lineales si se sabe que } z=2 \\quad \\{align} -x+y+z=2 \\ \\ x-3y-4z=5 \\end{align}",
     opciones: {
       a: "x=\\frac{11}{2}, y=\\frac{11}{2}",
       b: "x=\\frac{13}{2}, y=\\frac{13}{2}",
@@ -224,10 +229,10 @@ export const reactivos = [
     pregunta:
       '\\text{Identificar el sistema de ecuaciones que corresponde al siguiente planteamiento: "En un edificio inteligente de dos niveles (N1, N2) se arma una red para 170 usuarios en total. La velocidad de transferencia es de 590 Gbps, mismos que se reparten en cada nivel como sigue: 3 Gbps para cada usuario del primer nivel N1 y 4 Gbps para cada usuario del nivel N2."}',
     opciones: {
-      a: "\\begin{align*} N1+N2&=590 \\ \\ 3N1+4N2&=170 \\end{align*}",
-      b: "\\begin{align*} N1+N2&=170 \\ \\ 4N1+3N2&=590 \\end{align*}",
-      c: "\\begin{align*} N1+N2&=170 \\ \\ 3N1+4N2&=590 \\end{align*}",
-      d: "\\begin{align*} N1+N2&=590 \\ \\ 4N1+3N2&=170 \\end{align*}",
+      a: "\\ N1+N2&=590 \\ \\ 3N1+4N2&=170 \\",
+      b: "\\ N1+N2&=170 \\ \\ 4N1+3N2&=590 \\",
+      c: "\\ N1+N2&=170 \\ \\ 3N1+4N2&=590 \\",
+      d: "\\ N1+N2&=590 \\ \\ 4N1+3N2&=170 \\",
     },
     id: "2024Algebra37",
     resuesta: "c",
@@ -247,7 +252,7 @@ export const reactivos = [
     explicacion: "void",
   },
   {
-    pregunta: "\\frac{x}{x-4}=6-\\frac{x}{x+4}",
+    pregunta: "\\text{Indicar las soluciones de la ecuación: } \\frac{x}{x-4}=6-\\frac{x}{x+4}",
     opciones: {
       a: "3\\sqrt{2},\\;-3\\sqrt{2}",
       b: "2\\sqrt{3},\\;-2\\sqrt{3}",
@@ -273,7 +278,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\sqrt{18}+\\sqrt{12}-\\frac{8}{9}-\\frac{3}{4}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
+      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\sqrt{18}+\\sqrt{12}-\\sqrt{frac{8}{9}}-\\sqrt{frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
     opciones: {
       a: "Conmutativa para el producto",
       b: "Inverso para la suma",
@@ -299,7 +304,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Elegir la opción que presenta el orden de los números reales de menor a mayor: } 3\\sqrt{2},\\;\\frac{1}{\\sqrt{2}},\\;\\sqrt[3]{2},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt{2}",
+      "\\text{Elegir la opción que presenta el orden de los números reales de menor a mayor: } 3\\sqrt{2},\\;\\frac{1}{\\sqrt{2}},\\;\\sqrt{frac{2}{3}},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt{2}",
     opciones: {
       a: "\\frac{1}{\\sqrt{2}},\\;\\frac{2}{3}\\sqrt[3]{2},\\;\\frac{2}{3}\\sqrt{3},\\;3\\sqrt{2}",
       b: "\\frac{1}{\\sqrt{2}},\\;\\sqrt{2},\\;3\\sqrt{2},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt[3]{2}",
@@ -311,7 +316,7 @@ export const reactivos = [
     explicacion: "void",
   },
   {
-    pregunta: "s=\\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
+    pregunta: "\\text{Realizar la siguiente operación con números decimales:} \\s=\\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
     opciones: {
       a: "\\frac{9}{2}",
       b: "\\frac{7}{2}",
@@ -405,10 +410,10 @@ export const reactivos = [
     pregunta:
       "\\text{Identificar la contención correcta de los conjuntos de números:}",
     opciones: {
-      a: "N \\subset Z,\\; Q=\\mathbb{Q}\\cup\\mathbb{I}",
-      b: "N \\subset Z \\subset \\mathbb{Q},\\; R=\\mathbb{Q}\\cup\\mathbb{I}",
-      c: "N \\subset Z,\\; \\mathbb{R}=\\mathbb{Q}\\cup\\mathbb{I}",
-      d: "N \\subset Z,\\; \\mathbb{R}=\\mathbb{Q}",
+      a: "a",
+      b: "b",
+      c: "c",
+      d: "d",
     },
     id: "2024Algebra01",
     resuesta: "b",
@@ -604,7 +609,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Determinar la probabilidad de la intersección de eventos independientes } A \\text{ y } B.",
+      "\\text{Determinar la probabilidad de la intersección de eventos independientes } A \\text{ y } B",
     opciones: {
       a: "P(A)\\cdot P(B)",
       b: "P(A)+P(B)",
@@ -643,7 +648,12 @@ export const reactivos = [
   },
   {
     pregunta: "\\text{¿Cuál es el valor de la mediana?}",
-    opciones: { a: "61", b: "62", c: "63", d: "64" },
+    opciones: { 
+      a: "61", 
+      b: "62", 
+      c: "63", 
+      d: "64" 
+    },
     id: "2024Estadistica29",
     resuesta: "c",
     explicacion: "void",
@@ -651,7 +661,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{En una fábrica, si el 30\\% de la producción se concentra en la máquina M1 (con 2\\% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?}",
-    opciones: { a: "0.3", b: "0.4", c: "0.6", d: "0.7" },
+    opciones: { 
+      a: "0.3", 
+      b: "0.4", 
+      c: "0.6", 
+      d: "0.7" 
+    },
     id: "2024Estadistica26",
     resuesta: "a",
     explicacion: "void",
@@ -659,7 +674,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 \\text{ kg}?}",
-    opciones: { a: "5 \\%", b: "10 \\%", c: "15 \\%", d: "20 \\%" },
+    opciones: { 
+      a: "5 \\%", 
+      b: "10 \\%", 
+      c: "15 \\%", 
+      d: "20 \\%" 
+    },
     id: "2024Estadistica30",
     resuesta: "c",
     explicacion: "void",
@@ -667,7 +687,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.}",
-    opciones: { a: "1, 3, 2", b: "1, 2, 3", c: "3, 1, 2", d: "3, 2, 1" },
+    opciones: { 
+      a: "1, 3, 2", 
+      b: "1, 2, 3", 
+      c: "3, 1, 2", 
+      d: "3, 2, 1" 
+    },
     id: "2024Estadistica36",
     resuesta: "b",
     explicacion: "void",
@@ -675,7 +700,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Determinar la media geométrica de los datos: } \\{1,16,81,256\\}",
-    opciones: { a: "7", b: "9", c: "24", d: "30" },
+    opciones: { a: "7", 
+      b: "9", 
+      c: "24", 
+      d: "30" 
+    },
     id: "2024Estadistica38",
     resuesta: "c",
     explicacion: "void",
@@ -683,7 +712,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Dadas las siguientes muestras de datos, determinar cuáles tienen la misma varianza.}",
-    opciones: { a: "1 y 2", b: "1 y 3", c: "2 y 3", d: "2 y 4" },
+    opciones: { 
+      a: "1 y 2", 
+      b: "1 y 3", 
+      c: "2 y 3", 
+      d: "2 y 4" 
+    },
     id: "2024Estadistica40",
     resuesta: "c",
     explicacion: "void",
@@ -691,23 +725,38 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
-    opciones: { a: "Mediana", b: "Armónica", c: "Aritmética", d: "Geométrica" },
+    opciones: { 
+      a: "Mediana", 
+      b: "Armónica", 
+      c: "Aritmética", 
+      d: "Geométrica" 
+    },
     id: "2024Estadistica37",
     resuesta: "b",
     explicacion: "void",
   },
   {
     pregunta:
-      "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana: } \\begin{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
-    opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
+      "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana: } \\{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
+    opciones: { 
+      a: "2,1,3,4", 
+      b: "2,3,1,4", 
+      c: "1,4,2,3", 
+      d: "1,2,4,3" 
+    },
     id: "2024Estadistica39",
     resuesta: "a",
     explicacion: "void",
   },
   {
     pregunta:
-      "\\text{Se lanzan simultáneamente una moneda y un dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
-    opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
+      "\\text{Se lanzan simultáneamente una moneda y una dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
+    opciones: { 
+      a: "12^n", 
+      b: "8^n", 
+      c: "8n", 
+      d: "12n" 
+    },
     id: "2024Estadistica12",
     resuesta: "a",
     explicacion: "void",
@@ -715,7 +764,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Sean A y B dos eventos tales que } P(A)=0.4 \\text{ y } P(A\\cup B)=0.7, \\text{ ¿cuál es el valor de } P(B) \\text{ para que A y B sean independientes?}",
-    opciones: { a: "0.012", b: "0.12", c: "0.5", d: "0.4" },
+    opciones: { 
+      a: "0.012", 
+      b: "0.12", 
+      c: "0.5", 
+      d: "0.4" 
+    },
     id: "2024Estadistica14",
     resuesta: "c",
     explicacion: "void",
@@ -726,7 +780,7 @@ export const reactivos = [
     opciones: {
       a: "P(A)\\cdot P(B)\\cdot P(C)",
       b: "P(A)\\cdot P(B|A)\\cdot P(C|A)",
-      c: "P(A)\\cdot P(B|A)\\cdot P(C|A\\cap B)",
+      c: "P(A)\\cdot P(B|A)\\cdot P(B|A\\cap C)",
       d: "P(A)\\cdot P(B|A)\\cdot P(C|A\\cap B)",
     },
     id: "2024Estadistica21",
@@ -742,7 +796,7 @@ export const reactivos = [
       c: "\\frac{3}{100}",
       d: "\\frac{9}{100}",
     },
-    id: "2024Estadistica16",
+    id: "2024Estadistica16", // Hay dos preguntas en un mismo inciso se tiene que partir en dos la pregunta 
     resuesta: "c",
     explicacion: "void",
   },
@@ -877,7 +931,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\begin{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
+      "\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",
@@ -941,8 +995,8 @@ export const reactivos = [
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
     opciones: {
-      a: "P(A)-P(A\\cap B)",
-      b: "P(A)+P(A\\cup B)",
+      a: "P(A)+P(A\\cup B)",
+      b: "P(A)-P(A\\cap B)",
       c: "P(B)-P(A\\cup B)",
       d: "P(B)+P(A\\cap B)",
     },
@@ -979,10 +1033,10 @@ export const reactivos = [
     pregunta:
       "\\text{Identificar la probabilidad del evento } A\\cap B^c \\text{ (otra versión).}",
     opciones: {
-      a: "P(B)-P(A\\cup B)",
+      a: "P(A)+P(A\\cup B)",
       b: "P(A)-P(A\\cap B)",
-      c: "P(A)\\cdot P(B)",
-      d: "P(A)\\cdot P(B)+P(A)",
+      c: "P(B)-P(A\\cup B)",
+      d: "P(B)+P(A\\cap B)",
     },
     id: "2024Estadistica18",
     resuesta: "b",
