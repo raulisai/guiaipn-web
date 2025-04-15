@@ -59,4 +59,7 @@ html {
     border-color: #22d3ee;
 }
 
-
+div.question {
+    overflow-x: scroll;
+    max-width: 100%;
+    }

@@ -30,51 +30,53 @@
 	});
 </script>
 
-<div class="min-h-screen flex flex-col items-center justify-center py-4">
-
 	<!-- Menú flotante -->
-	<div class="flex flex-col fixed top-4 left-4 z-50">
+	<nav class="flex flex-col fixed top-4 left-4 z-50">
 		<a href="/" class="flex items-center justify-center">
-			<img src="logoipnburrito.png" alt="Logo de la guia del IPN" class="w-[150px]" />
+			<img src="logoipnburrito.png" alt="Logo de la guia del IPN" class="w-[150px]" loading="lazy" width="150" height="40" />
 		</a>
-	</div>
-	<div class="fixed top-4 right-4 z-50">
-		<div class="relative">
-			<button
-				id="menuBtn"
-				bind:this={menuBtn}
-				onclick={toogleMenu}
-				aria-labelledby="menuBtn"
-				aria-haspopup="true"
-				class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md
-					   transition-all duration-300 text-white border border-white/10 
-					   shadow-lg hover:shadow-white/20 flex items-center justify-center
-					   w-12 h-12 group relative overflow-hidden"
-			>
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-					 class="transform transition-transform duration-300 group-hover:scale-110">
-					<line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round" />
-					<line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round" />
-					<line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round" />
-				</svg>
-				<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10 
-							opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-			</button>
-
-			<div
-				class={`menu-hidden absolute right-0 mt-2 w-48 bg-white/20 backdrop-blur-sm
-                            rounded-lg shadow-lg py-2 transition-all duration-200 ${activo ? 'menu-visible' : 'menu-hidden'}`}
-			>
-				<a href="/" class="block px-4 py-2 text-white hover:bg-white/10">Inicio</a>
-				<a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10">Materias</a>
-				<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10">Exámenes</a>
-				<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10">Configuración</a>
+		<div class="fixed top-4 right-4 z-50">
+			<div class="relative">
+				<button
+					id="menuBtn"
+					bind:this={menuBtn}
+					onclick={toogleMenu}
+					aria-labelledby="menuBtn"
+					aria-haspopup="true"
+					class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md
+						   transition-all duration-300 text-white border border-white/10 
+						   shadow-lg hover:shadow-white/20 flex items-center justify-center
+						   w-12 h-12 group relative overflow-hidden"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+						 class="transform transition-transform duration-300 group-hover:scale-110">
+						<line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round" />
+						<line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round" />
+						<line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round" />
+					</svg>
+					<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10 
+								opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				</button>
+	
+				<div
+					class={`menu-hidden absolute right-0 mt-2 w-48 bg-white/20 backdrop-blur-sm
+								rounded-lg shadow-lg py-2 transition-all duration-200 ${activo ? 'menu-visible' : 'menu-hidden'}`}
+				>
+					<a href="/" class="block px-4 py-2 text-white hover:bg-white/10">Inicio</a>
+					<a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10">Materias</a>
+					<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10">Exámenes</a>
+					<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10">Configuración</a>
+				</div>
 			</div>
 		</div>
-	</div>
+	</nav>
 
+
+<!-- Mejorar legibilidad en móviles -->
+<main class="prose prose-invert max-w-none md:prose-lg">
 	{@render children()}
-
+  </main>
+  
 	<!-- Footer -->
 	<footer class="text-white py-12">
 		<div class="container mx-auto px-4">
@@ -82,7 +84,7 @@
 				<!-- Logo y descripción -->
 				<div class="md:col-span-1">
 					<img src="logoipnburrito.png" alt="Logo de la guía del IPN" class="w-32 mb-4" />
-					<p class="text-sm text-white/70">
+					<p class="text-sm text-white/80 ">
 						Preparación exclusiva para el examen de admisión al Instituto Politécnico Nacional.
 					</p>
 				</div>
@@ -92,18 +94,18 @@
 					<h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Enlaces rápidos</h3>
 					<ul>
 						<li class="mb-2">
-							<a href="/" class="text-white/70 hover:text-white transition-colors">Inicio</a>
+							<a href="/" class="text-white/80  hover:text-white transition-colors">Inicio</a>
 						</li>
 						<li class="mb-2">
-							<a href="/materias" class="text-white/70 hover:text-white transition-colors">Materias</a>
+							<a href="/materias" class="text-white/80  hover:text-white transition-colors">Materias</a>
 						</li>
 						<li class="mb-2">
-							<a href="/examen" class="text-white/70 hover:text-white transition-colors"
+							<a href="/examen" class="text-white/80  hover:text-white transition-colors"
 								>Exámenes de práctica</a
 							>
 						</li>
 						<li class="mb-2">
-							<a href="/" class="text-white/70 hover:text-white transition-colors"
+							<a href="/" class="text-white/80  hover:text-white transition-colors"
 								>Recursos gratuitos</a
 							>
 						</li>
@@ -155,7 +157,7 @@
 				<div>
 					<h3 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">Síguenos</h3>
 					<div class="flex gap-4">
-						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visit our Facebook page">
+						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visita nuestro Facebook">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6"
@@ -167,7 +169,7 @@
 								/>
 							</svg>
 						</a>
-						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visit our Facebook page">
+						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visita nuestro Twitter">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6"
@@ -180,7 +182,7 @@
 							</svg>
 						</a>
 						
-						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visit our Facebook page">
+						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visita nuestro Instagram">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6"
@@ -193,7 +195,7 @@
 							</svg>
 						</a>
 						
-						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Visit our Facebook page">
+						<a href="/" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"  aria-label="Visita nuestro canal de YouTube">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="h-6 w-6"
@@ -217,7 +219,6 @@
 			</div>
 		</div>
 	</footer>
-</div>
 
 <style>
 
@@ -231,4 +232,17 @@
 		opacity: 1;
 		transform: translateY(0);
 	}
+	@media (max-width: 768px) {
+		.menu-hidden {
+			display: none;
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		.menu-visible {
+			display: block;
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
 </style>
