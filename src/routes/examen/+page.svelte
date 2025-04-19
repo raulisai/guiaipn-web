@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { reactivos } from '$lib/reactivos';
-	import ExamProgress from './Examprogres.svelte';
-	import Estadisticas from './Estadisticas.svelte';
-	import ModalResponse from './ModalResponse.svelte';
-	import ModalFinish from './ModalFinish.svelte';
-	import MathForm from './Math.svelte';
+	import ExamProgress from './componentes/Examprogres.svelte';
+	import Estadisticas from './componentes/Estadisticas.svelte';
+	import ModalResponse from './componentes/ModalResponse.svelte';
+	import ModalFinish from './componentes/ModalFinish.svelte';
+	import MathForm from './componentes/Math.svelte';
 	import { onMount } from 'svelte';
 
 	const totalQuestions = 4;

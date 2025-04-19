@@ -152,11 +152,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Realizar la operación: } \\ f(x)-alpha g(x)+h(x)\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
-    opciones: { 
-      a: "5x^2-4xy", 
-      b: "-5x^2-8xy", 
-      c: "x^2+y^2-4x", 
-      d: "x^2-2x-4" 
+    opciones: {
+      a: "5x^2-4xy",
+      b: "-5x^2-8xy",
+      c: "x^2+y^2-4x",
+      d: "x^2-2x-4"
     },
     id: "2024Algebra26",
     resuesta: "b",
@@ -648,11 +648,11 @@ export const reactivos = [
   },
   {
     pregunta: "\\text{¿Cuál es el valor de la mediana?}",
-    opciones: { 
-      a: "61", 
-      b: "62", 
-      c: "63", 
-      d: "64" 
+    opciones: {
+      a: "61",
+      b: "62",
+      c: "63",
+      d: "64"
     },
     id: "2024Estadistica29",
     resuesta: "c",
@@ -661,11 +661,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{En una fábrica, si el 30\\% de la producción se concentra en la máquina M1 (con 2\\% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?}",
-    opciones: { 
-      a: "0.3", 
-      b: "0.4", 
-      c: "0.6", 
-      d: "0.7" 
+    opciones: {
+      a: "0.3",
+      b: "0.4",
+      c: "0.6",
+      d: "0.7"
     },
     id: "2024Estadistica26",
     resuesta: "a",
@@ -674,11 +674,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 \\text{ kg}?}",
-    opciones: { 
-      a: "5 \\%", 
-      b: "10 \\%", 
-      c: "15 \\%", 
-      d: "20 \\%" 
+    opciones: {
+      a: "5 \\%",
+      b: "10 \\%",
+      c: "15 \\%",
+      d: "20 \\%"
     },
     id: "2024Estadistica30",
     resuesta: "c",
@@ -687,11 +687,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.}",
-    opciones: { 
-      a: "1, 3, 2", 
-      b: "1, 2, 3", 
-      c: "3, 1, 2", 
-      d: "3, 2, 1" 
+    opciones: {
+      a: "1, 3, 2",
+      b: "1, 2, 3",
+      c: "3, 1, 2",
+      d: "3, 2, 1"
     },
     id: "2024Estadistica36",
     resuesta: "b",
@@ -700,10 +700,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Determinar la media geométrica de los datos: } \\{1,16,81,256\\}",
-    opciones: { a: "7", 
-      b: "9", 
-      c: "24", 
-      d: "30" 
+    opciones: {
+      a: "7",
+      b: "9",
+      c: "24",
+      d: "30"
     },
     id: "2024Estadistica38",
     resuesta: "c",
@@ -712,11 +713,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Dadas las siguientes muestras de datos, determinar cuáles tienen la misma varianza.}",
-    opciones: { 
-      a: "1 y 2", 
-      b: "1 y 3", 
-      c: "2 y 3", 
-      d: "2 y 4" 
+    opciones: {
+      a: "1 y 2",
+      b: "1 y 3",
+      c: "2 y 3",
+      d: "2 y 4"
     },
     id: "2024Estadistica40",
     resuesta: "c",
@@ -725,11 +726,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
-    opciones: { 
-      a: "Mediana", 
-      b: "Armónica", 
-      c: "Aritmética", 
-      d: "Geométrica" 
+    opciones: {
+      a: "Mediana",
+      b: "Armónica",
+      c: "Aritmética",
+      d: "Geométrica"
     },
     id: "2024Estadistica37",
     resuesta: "b",
@@ -738,11 +739,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana: } \\{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
-    opciones: { 
-      a: "2,1,3,4", 
-      b: "2,3,1,4", 
-      c: "1,4,2,3", 
-      d: "1,2,4,3" 
+    opciones: {
+      a: "2,1,3,4",
+      b: "2,3,1,4",
+      c: "1,4,2,3",
+      d: "1,2,4,3"
     },
     id: "2024Estadistica39",
     resuesta: "a",
@@ -751,11 +752,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Se lanzan simultáneamente una moneda y una dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
-    opciones: { 
-      a: "12^n", 
-      b: "8^n", 
-      c: "8n", 
-      d: "12n" 
+    opciones: {
+      a: "12^n",
+      b: "8^n",
+      c: "8n",
+      d: "12n"
     },
     id: "2024Estadistica12",
     resuesta: "a",
@@ -764,11 +765,11 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Sean A y B dos eventos tales que } P(A)=0.4 \\text{ y } P(A\\cup B)=0.7, \\text{ ¿cuál es el valor de } P(B) \\text{ para que A y B sean independientes?}",
-    opciones: { 
-      a: "0.012", 
-      b: "0.12", 
-      c: "0.5", 
-      d: "0.4" 
+    opciones: {
+      a: "0.012",
+      b: "0.12",
+      c: "0.5",
+      d: "0.4"
     },
     id: "2024Estadistica14",
     resuesta: "c",
@@ -1053,6 +1054,460 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
+    explicacion: "void",
+  },
+
+  {
+    pregunta:
+      "Determinar el dominio de la función: \\( f(x) = \\sqrt{5-x} + \\sqrt{3+x} \\)",
+    opciones: {
+      a: "[-5,-3]",
+      b: "[3,5]",
+      c: "[-5,3]",
+      d: "[-3,5]",
+    },
+
+    id: "2024calculoDiferencial01",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función \\( f(x) = \\frac{\\sin x}{x} + \\cos x \\) es continua para toda \\( x \\neq 0 \\). ¿Cuál debe ser el valor que debe darse a \\( f(0) \\) para que la función sea continua en todo \\( \\mathbb{R} \\)?",
+    opciones: {
+      a: "-1",
+      b: "0",
+      c: "1",
+      d: "2",
+    },
+    id: "2024calculoDiferencial17",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Ordenar los pasos para obtener la derivada de una función \\( f(x) \\) en \\( x = c \\)",
+    opciones: {
+      a: "2, 1, 4, 3",
+      b: "2, 3, 1, 4",
+      c: "3, 1, 4, 2",
+      d: "3, 2, 1, 4",
+    },
+    id: "2024calculoDiferencial21",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Relacionar las formas de las gráficas de la función \\( f(x) \\) con los signos de la primera y segunda derivada que les corresponden.",
+    opciones: {
+      a: "1B, 2C, 3D, 4A",
+      b: "1B, 2A, 3C, 4D",
+      c: "1D, 2B, 3A, 4C",
+      d: "1D, 2C, 3A, 4B",
+    },
+    id: "2024calculoDiferencial24",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular la derivada de la función: \\[ f(x) = e^{x \\ln 2} + e^{2 \\ln x} \\]",
+    opciones: {
+      a: "2^x \\cdot \\ln 2 + 2x",
+      b: "2^x + 2x^2",
+      c: "2^x \\cdot \\ln 2 - 2x",
+      d: "2^x \\cdot \\ln 2 + 2x^2",
+    },
+    id: "2024calculoDiferencial27",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La figura muestra la gráfica de una función \\( f(x) \\) derivable que pasa por los puntos \\( A(0,4) \\), \\( B(1,2) \\) y \\( C(2,4) \\). Ordenarlos comenzando por el punto donde el valor de la derivada es menor y hasta el punto donde el valor de la derivada es mayor.",
+    opciones: {
+      a: "A, C, B",
+      b: "B, A, C",
+      c: "B, C, A",
+      d: "C, A, B",
+    },
+    id: "2024calculoDiferencial25",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función \\( f(x) = \\frac{\\ln x}{x} \\) es creciente en el intervalo:",
+    opciones: {
+      a: "(1, 2e)",
+      b: "(0, e)",
+      c: "(2, 2e)",
+      d: "(e, 2e)",
+    },
+    id: "2024calculoDiferencial23",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta: "Calcular la derivada de la función \\( f(x) = \\ln(\\sec(ax+b)) \\)",
+    opciones: {
+      a: "a \\tan(ax+b)",
+      b: "a \\tan^2(ax+b)",
+      c: "a \\sec(ax+b)",
+      d: "a \\sec^2(ax+b)",
+    },
+    id: "2024calculoDiferencial30",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular la segunda derivada de la función \\( f(x) = x \\ln x - x + 10 \\)",
+    opciones: {
+      a: "\\ln x",
+      b: "x + \\ln x",
+      c: "\\frac{1}{x}",
+      d: "\\frac{1}{x} + \\ln x",
+    },
+    id: "2024calculoDiferencial29",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Determinar el valor de \\( x \\) donde la función \\( f(x) = x^5(1-x)^5 \\) tiene un máximo relativo, si se sabe que este valor se encuentra en el intervalo (0,1).",
+    opciones: {
+      a: "x = \\frac{1}{4}",
+      b: "x = \\frac{1}{2}",
+      c: "x = \\frac{3}{8}",
+      d: "x = \\frac{3}{4}",
+    },
+    id: "2024calculoDiferencial39",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función \\( f(x) = \\frac{\\ln x}{x} \\) tiene un valor máximo. Este es _______ y se obtiene cuando \\( x = \\):",
+    opciones: {
+      a: "e, e",
+      b: "\\frac{1}{e}, e",
+      c: "e, \\frac{1}{e}",
+      d: "\\frac{1}{e}, \\frac{1}{e}",
+    },
+    id: "2024calculoDiferencial38",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La gráfica del polinomio \\( P(x) = (x+1)(x-2)^2 \\) tiene un máximo relativo en ______ y un mínimo relativo en:",
+    opciones: {
+      a: "x = 0, x = 2",
+      b: "x = 2, x = 0",
+      c: "x = -1, x = 2",
+      d: "x = 2, x = -1",
+    },
+    id: "2024calculoDiferencial36",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta: "¿Cuál es el rango de la función? \\( f(x) = x^2 + 4x + 12 \\)",
+    opciones: {
+      a: "[4, \\infty)",
+      b: "[8, \\infty)",
+      c: "[12, \\infty)",
+      d: "[16, \\infty)",
+    },
+    id: "2024calculoDiferencial02",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "¿Cuántas soluciones enteras tiene la desigualdad? \\[ \\sqrt[3]{x^3 - 7} < x - 1 \\]",
+    opciones: { a: "0", b: "1", c: "2", d: "3" },
+    id: "2024calculoDiferencial05",
+    resuesta: "b",
+    explicacion: "void",
+  },
+
+  {
+    pregunta:
+      "Es el dominio de la función: \\( f(x) = \\log \\left( \\frac{1+x}{1-x} \\right) \\)",
+    opciones: { a: "(-1, 1)", b: "[-1, 1)", c: "(0, 1)", d: "[-1, 0)" },
+    id: "2024calculoDiferencial03",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Si \\( f(x) = x^2 - 2x + 1 \\), determinar el dominio de la función: \\n\\[ g(x) = \\frac{f(x)}{f(x) - 16} \\]",
+    opciones: {
+      a: "\\( \\mathbb{R} - \\{3, 5\\} \\)",
+      b: "\\( \\mathbb{R} - \\{-3, 5\\} \\)",
+      c: "\\( \\mathbb{R} - \\{3, -5\\} \\)",
+      d: "\\( \\mathbb{R} - \\{-3, -5\\} \\)",
+    },
+    id: "2024calculoDiferencial04",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Si el conjunto solución de la desigualdad \\((x+1)(x-5) \\geq k\\) es el conjunto \\(\\mathbb{R}\\), determinar el mayor valor posible de \\(k\\)",
+    opciones: { a: "-9", b: "-4", c: "4", d: "9" },
+    id: "2024calculoDiferencial08",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "\\lim_{{x \\to 1}} \\left( \\frac{1}{1-x} - \\frac{3}{1-x^3} \\right)",
+    opciones: { a: "-3", b: "-1", c: "1", d: "3" },
+    id: "2024calculoDiferencial09",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta: "Determinar el valor del límite: \\( \\lim_{{x \\to 1}} f(x) \\)",
+    opciones: { a: "1", b: "2", c: "\\frac{3}{2}", d: "\\text{No existe}" },
+    id: "2024calculoDiferencial10",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Determinar el conjunto solución de la desigualdad: \\( x^3 + x^2 \\leq x + 1 \\)",
+    opciones: {
+      a: "(-\\infty, 1]",
+      b: "(-\\infty, -1]",
+      c: "[1, \\infty)",
+      d: "[-1, \\infty)",
+    },
+    id: "2024calculoDiferencial06",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Determinar el conjunto solución de la desigualdad: \\( x^2 + \\frac{2}{x} < 3 \\)",
+    opciones: { a: "(0,2)", b: "(0,-2)", c: "(2,0)", d: "(-2,0)" },
+    id: "2024calculoDiferencial07",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "¿Cuál es el valor del límite? \\[ \\lim_{{x \\to 0}} \\frac{{1 - \\cos ax}}{{1 - \\cos bx}} \\]",
+    opciones: {
+      a: "\\frac{a}{b}",
+      b: "\\frac{b}{a}",
+      c: "\\frac{a^2}{b^2}",
+      d: "\\frac{b^2}{a^2}",
+    },
+    id: "2024calculoDiferencial12",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular el valor del límite: \\( \\lim_{{x \\to \\infty}} \\left( \\frac{x^3}{x^2 + 1} - x \\right) \\)",
+    opciones: { a: "-1", b: "0", c: "1", d: "3" },
+    id: "2024calculoDiferencial14",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "\\[ \\lim_{{x \\to \\infty}} \\left( \\frac{x}{1+x} \\right)^x \\]",
+    opciones: { a: "e", b: "1", c: "\\frac{1}{e}", d: "0" },
+    id: "2024calculoDiferencial16",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Determinar el valor del límite: \\( \\lim_{{x \\to \\infty}} \\frac{{\\sin^3 x}}{{x^2}} \\)",
+    opciones: { a: "0", b: "1", c: "2", d: "3" },
+    id: "2024calculoDiferencial13",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular el valor del límite: \\( \\lim_{{x \\to \\infty}} \\left(3^x + 5^x\\right)^{1/x} \\)",
+    opciones: { a: "3", b: "5", c: "8", d: "15" },
+    id: "2024calculoDiferencial15",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular el valor del límite: \\( \\lim_{{x \\to 0}} \\frac{{\\sin 7x}}{{\\sin 5x}} \\)",
+    opciones: {
+      a: "\\( \\frac{7}{5} \\)",
+      b: "\\( \\frac{5}{7} \\)",
+      c: "\\( \\frac{5}{12} \\)",
+      d: "\\( \\frac{7}{12} \\)",
+    },
+    id: "2024calculoDiferencial11",
+    resuesta: "b",
+    explicacion: "void",
+  },
+
+
+  {
+    pregunta:
+      "Si \\text{ la función definida por intervalos } f(x) = \\begin{cases} 3x + 4 & x \\leq 3 \\\\ 2x + k & x < 3 \\end{cases} \\text{ es continua en } x = 3, \\text{ entonces el valor de } k \\text{ es:}",
+    opciones: { a: "-2", b: "0", c: "5", d: "7" },
+    id: "2024calculoDiferencial20",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función definida en intervalos: \\n\\[f(x) = \\begin{cases} \\n|x - 3| & x \\geq 1 \\\\\\nx^2/4 - 3x/2 + 13/4 & x < 1 \\n\\end{cases}\\]",
+    opciones: {
+      a: "es continua en \\(x = 1\\), pero no en \\(x = 3\\)",
+      b: "es continua en \\(x = 3\\), pero no en \\(x = 1\\)",
+      c: "es continua en \\(x = 1\\) y en \\(x = 3\\)",
+      d: "no es continua en \\(x = 1\\) ni en \\(x = 3\\)",
+    },
+    id: "2024calculoDiferencial18",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función \\( f : \\mathbb{R} \\to \\mathbb{R} \\) está definida por \\( f(x) = \\frac{1}{\\ln |x-3|} \\). Determinar la cantidad de puntos en los que la función es discontinua.",
+    opciones: { a: "1", b: "2", c: "3", d: "4" },
+    id: "2024calculoDiferencial19",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Si \\( f(x) \\) es una función derivable en el intervalo \\((a,b)\\), entonces \\( f(x) \\) es \\underline{\\quad} en los subintervalos donde \\( f'(x)<0 \\) y \\underline{\\quad} en los subintervalos donde \\( f'(x)>0 \\).",
+    opciones: {
+      a: "creciente - decreciente",
+      b: "decreciente - creciente",
+      c: "cóncava - convexa",
+      d: "convexa - cóncava",
+    },
+    id: "2024calculoDiferencial22",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular el valor de la derivada de la función \\( f(x) = \\left( \\sin\\frac{x}{2} + \\cos\\frac{x}{2} \\right)^2 \\) en el punto \\( x = \\frac{\\pi}{6} \\).",
+    opciones: {
+      a: "\\sqrt{3}",
+      b: "\\frac{\\sqrt{3}}{2}",
+      c: "\\frac{1}{2}",
+      d: "\\frac{\\sqrt{2}}{2}",
+    },
+    id: "2024calculoDiferencial26",
+    resuesta: "b",
+    explicacion: "void",
+  },
+
+
+
+
+
+  {
+    pregunta:
+      "Sabiendo que y = \\sqrt{x^2 + a^2}, simplificar la expresión y \\cdot y'",
+    opciones: { a: "x^2 + a^2", b: "x^2 - a^2", c: "x^2", d: "x" },
+    id: "2024calculoDiferencial31",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular el valor de la suma \\( a + b \\), si se sabe que \\( \\frac{d}{dx} \\left( \\frac{x^4 + x^2 + 1}{x^2 - x + 1} \\right) = ax + b \\)",
+    opciones: { a: "0", b: "2", c: "3", d: "4" },
+    id: "2024calculoDiferencial28",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Si \\( x > 0 \\) calcular la derivada de la función: \\( f(x) = \\arccos \\frac{1}{\\sqrt{x^2+1}} \\)",
+    opciones: {
+      a: "\\frac{2x}{x^2+1}",
+      b: "\\frac{1}{x^2+1}",
+      c: "\\frac{-2x}{x^2+1}",
+      d: "\\frac{1}{x^2+1}",
+    },
+    id: "2024calculoDiferencial35",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Si \\( f(x) \\) es una función derivable con \\( f'(x) = x^2 + 5 \\), calcular la derivada de la función \\( f(\\cos x^3) \\)",
+    opciones: {
+      a: "3x^2 \\sen x^3 (\\cos x^3 + 5)",
+      b: "3x^2 \\sen x^3 (\\cos^2 x^3 + 5)",
+      c: "-3x^2 \\sen x^3 (\\cos x^3 + 5)",
+      d: "-3x^2 \\sen x^3 (\\cos^2 x^3 + 5)",
+    },
+    id: "2024calculoDiferencial33",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular la derivada \\( \\frac{dy}{dx} \\) en la expresión \\( e^x + e^y = e^{x+y} \\)",
+    opciones: { a: "e^{x-y}", b: "e^{y-x}", c: "-e^{y-x}", d: "-e^{x-y}" },
+    id: "2024calculoDiferencial34",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "Calcular y simplificar la derivada de la función \\( f(x) = \\ln(x + \\sqrt{x^2 + 9}) \\)",
+    opciones: {
+      a: "\\frac{2x}{\\sqrt{x^2 + 9}}",
+      b: "x\\sqrt{x^2 + 9}",
+      c: "\\frac{1}{\\sqrt{x^2 + 9}}",
+      d: "\\sqrt{x^2 + 9}",
+    },
+    id: "2024calculoDiferencial32",
+    resuesta: "b",
+    explicacion: "void",
+  },
+
+
+  {
+    pregunta:
+      "Calcular el valor máximo de la función: \\( f(x) = \\frac{x}{4x^2 + 9} \\)",
+    opciones: {
+      a: "\\frac{1}{6}",
+      b: "\\frac{1}{9}",
+      c: "\\frac{1}{12}",
+      d: "\\frac{1}{18}",
+    },
+    id: "2024calculoDiferencial40",
+    resuesta: "b",
+    explicacion: "void",
+  },
+  {
+    pregunta:
+      "La función \\( f(x) = \\frac{3}{x} + \\frac{x}{3} \\) tiene un mínimo relativo en:",
+    opciones: {
+      a: "x = \\frac{3}{2}",
+      b: "x = 2",
+      c: "x = \\frac{5}{2}",
+      d: "x = 3",
+    },
+    id: "2024calculoDiferencial37",
+    resuesta: "b",
     explicacion: "void",
   },
 ];
