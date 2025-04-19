@@ -104,7 +104,7 @@
             
             <!-- Question and answers container -->
             <div class="bg-gradient-to-b from-[#04153a] via-[#030e28]/70 to-sky/60 rounded-lg p-3 md:p-4 border border-white/20 mb-4">
-                <div class="mb-3">
+                <div class="question mb-3 break-words md:whitespace-normal">
                     <p class="text-white/80 text-sm md:text-md uppercase mb-1">Pregunta</p>
                     <p class="text-white text-secondary"> <MathForm isBlock={false} content={preguntaAct}  /></p>
                 </div>
@@ -129,9 +129,9 @@
 						<div class="cyberpulse-loader relative w-80 h-40">
 							<!-- Holographic rings -->
 							<div class="absolute inset-0 flex items-center justify-center">
-								<span class="ring ring-1"></span>
-								<span class="ring ring-2"></span>
-								<span class="ring ring-3"></span>
+								<span class="custom-ring  ring-1"></span>
+								<span class="custom-ring  ring-2"></span>
+								<span class="custom-ring  ring-3"></span>
 							</div>
 							<!-- Central core -->
 							<div class="core absolute inset-0 flex items-center justify-center">
@@ -204,7 +204,7 @@
 		perspective: 80rem;
 	}
 
-	.ring {
+	.custom-ring  {
 		position: absolute;
 		border-radius: 50%;
 		border: 2px solid rgba(32, 216, 255, 0.3);

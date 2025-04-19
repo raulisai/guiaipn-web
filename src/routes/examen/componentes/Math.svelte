@@ -29,11 +29,15 @@
     renderMath();
   }
 </script>
-
+  
 <svelte:element 
-  this={isBlock ? "div" : "span"} 
-  class="text-center text-sm "
-  bind:this={container} 
-  class:math-block={isBlock} 
-  class:math-inline={!isBlock}
+  this={isBlock ? "div" : "span"}
+  class="text-center text-sm break-words md:whitespace-normal max-w-full 
+  {isBlock ? 'math-block' : 'math-inline'}"
+  bind:this={container}
 />
+
+<style>
+
+  
+</style>
