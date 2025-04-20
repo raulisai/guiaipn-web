@@ -40,7 +40,7 @@ html {
     background-image: linear-gradient(
       to bottom,         
       #04153a,           
-      rgba(3, 14, 40, 0.7) 70%  
+      rgba(3, 14, 40, 0.7) 90%  
     );
   }
 .card:hover, .card.selected {

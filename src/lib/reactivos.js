@@ -6,6 +6,7 @@ export const reactivos = [
     id: "2024Algebra11",
     resuesta: "b",
     explicacion: "void",
+    imgActive: false
   },
   {
     pregunta:
@@ -19,6 +20,7 @@ export const reactivos = [
     id: "2024Algebra14",
     resuesta: "c",
     explicacion: "void",
+    imgActive: false
   },
   {
     pregunta:
@@ -31,7 +33,7 @@ export const reactivos = [
     },
     id: "2024Algebra12",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -44,7 +46,7 @@ export const reactivos = [
     },
     id: "2024Algebra17",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "(3n-2s)^3 = 27n^3 + (\\_\\_) + 36ns^2 + (\\_\\_)",
@@ -56,7 +58,7 @@ export const reactivos = [
     },
     id: "2024Algebra15",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -69,7 +71,7 @@ export const reactivos = [
     },
     id: "2024Algebra20",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -82,7 +84,7 @@ export const reactivos = [
     },
     id: "2024Algebra18",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -95,7 +97,7 @@ export const reactivos = [
     },
     id: "2024Algebra16",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Simplificar la expresión: } \\frac{x-5+\\frac{24}{x+5}}{x+1}",
@@ -107,15 +109,15 @@ export const reactivos = [
     },
     id: "2024Algebra19",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "\\text{Completar la factorización: } \\9x^4-3x^3z+x^2z^2-9x^2z^2+3xz^3-z^4=(9x^2+(\\_\\_\\_)+z^2)(\\_\\_\\_) -z^2)",
+      "\\text{Completar la factorización: } \\ 9x^4-3x^3z+x^2z^2-9x^2z^2+3xz^3-z^4=(9x^2+(\\_\\_\\_)+z^2)(\\_\\_\\_) -z^2)",
     opciones: { a: "-3xz, 2x^2", b: "-3xz, x^2", c: "3xz, 2x", d: "3x^2z, x" },
     id: "2024Algebra23",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -123,7 +125,7 @@ export const reactivos = [
     opciones: { a: "x^2-3", b: "x^2+9", c: "x^2+3", d: "x^2-9" },
     id: "2024Algebra21",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Factoriza la expresión: } \\ x^3z-x^2y^2-2x^2yz+2xy^3",
@@ -135,7 +137,7 @@ export const reactivos = [
     },
     id: "2024Algebra22",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Factorizar el polinomio: } y^3-27",
@@ -147,7 +149,7 @@ export const reactivos = [
     },
     id: "2024Algebra24",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -160,7 +162,7 @@ export const reactivos = [
     },
     id: "2024Algebra26",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -173,7 +175,7 @@ export const reactivos = [
     },
     id: "2024Algebra27",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -181,7 +183,7 @@ export const reactivos = [
     opciones: { a: "15", b: "30", c: "-15", d: "-30" },
     id: "2024Algebra29",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -189,7 +191,7 @@ export const reactivos = [
     opciones: { a: "32", b: "25", c: "17", d: "9" },
     id: "2024Algebra32",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -202,7 +204,7 @@ export const reactivos = [
     },
     id: "2024Algebra34",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -210,7 +212,7 @@ export const reactivos = [
     opciones: { a: "-\\frac{1}{2}", b: "1/2", c: "-1", d: "1" },
     id: "2024Algebra30",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -223,7 +225,7 @@ export const reactivos = [
     },
     id: "2024Algebra33",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -236,7 +238,7 @@ export const reactivos = [
     },
     id: "2024Algebra37",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -249,7 +251,7 @@ export const reactivos = [
     },
     id: "2024Algebra36",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Indicar las soluciones de la ecuación: } \\frac{x}{x-4}=6-\\frac{x}{x+4}",
@@ -261,7 +263,7 @@ export const reactivos = [
     },
     id: "2024Algebra38",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -274,7 +276,7 @@ export const reactivos = [
     },
     id: "2024Algebra40",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -287,7 +289,7 @@ export const reactivos = [
     },
     id: "2024Algebra02",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -300,11 +302,11 @@ export const reactivos = [
     },
     id: "2024Algebra03",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "\\text{Elegir la opción que presenta el orden de los números reales de menor a mayor: } 3\\sqrt{2},\\;\\frac{1}{\\sqrt{2}},\\;\\sqrt{frac{2}{3}},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt{2}",
+      "\\text{Elegir la opción que presenta el orden de los números reales de menor a mayor: } 3\\sqrt{2},\\;\\frac{1}{\\sqrt{2}},\\;\\sqrt{\\frac{2}{3}},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt{2}",
     opciones: {
       a: "\\frac{1}{\\sqrt{2}},\\;\\frac{2}{3}\\sqrt[3]{2},\\;\\frac{2}{3}\\sqrt{3},\\;3\\sqrt{2}",
       b: "\\frac{1}{\\sqrt{2}},\\;\\sqrt{2},\\;3\\sqrt{2},\\;\\frac{2}{3}\\sqrt{3},\\;\\sqrt[3]{2}",
@@ -313,7 +315,7 @@ export const reactivos = [
     },
     id: "2024Algebra04",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Realizar la siguiente operación con números decimales:} \\s=\\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
@@ -325,7 +327,7 @@ export const reactivos = [
     },
     id: "2024Algebra05",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -333,7 +335,7 @@ export const reactivos = [
     opciones: { a: "45\\,km", b: "32\\,km", c: "27\\,km", d: "19\\,km" },
     id: "2024Algebra06",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -346,7 +348,7 @@ export const reactivos = [
     },
     id: "2024Algebra07",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -354,7 +356,7 @@ export const reactivos = [
     opciones: { a: "12", b: "15", c: "20", d: "25" },
     id: "2024Algebra08",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -367,7 +369,7 @@ export const reactivos = [
     },
     id: "2024Algebra09",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -375,7 +377,7 @@ export const reactivos = [
     opciones: { a: "10 y 12", b: "12 y 18", c: "18 y 22", d: "22 y 30" },
     id: "2024Algebra10",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -388,7 +390,7 @@ export const reactivos = [
     },
     id: "2024Algebra13",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -396,7 +398,7 @@ export const reactivos = [
     opciones: { a: "-4", b: "-3", c: "-2", d: "-1" },
     id: "2024Algebra25",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -404,7 +406,7 @@ export const reactivos = [
     opciones: { a: "x=2", b: "x=4", c: "x=1/4", d: "x=1/2" },
     id: "2024Algebra28",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -417,7 +419,7 @@ export const reactivos = [
     },
     id: "2024Algebra01",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -430,7 +432,7 @@ export const reactivos = [
     },
     id: "2024Algebra31",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -438,7 +440,7 @@ export const reactivos = [
     opciones: { a: "2", b: "5", c: "10", d: "25" },
     id: "2024Algebra35",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -446,7 +448,7 @@ export const reactivos = [
     opciones: { a: "10", b: "32", c: "128", d: "256" },
     id: "2024Estadistica04",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -459,7 +461,7 @@ export const reactivos = [
     },
     id: "2024Estadistica01",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -472,7 +474,7 @@ export const reactivos = [
     },
     id: "2024Estadistica02",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -480,7 +482,7 @@ export const reactivos = [
     opciones: { a: "40", b: "46", c: "50", d: "56" },
     id: "2024Estadistica03",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -488,7 +490,7 @@ export const reactivos = [
     opciones: { a: "2084", b: "2048", c: "512", d: "256" },
     id: "2024Estadistica06",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Asociar la fórmula con el concepto correspondiente.}",
@@ -500,7 +502,7 @@ export const reactivos = [
     },
     id: "2024Estadistica09",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -508,7 +510,7 @@ export const reactivos = [
     opciones: { a: "660", b: "560", c: "280", d: "180" },
     id: "2024Estadistica10",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -516,7 +518,7 @@ export const reactivos = [
     opciones: { a: "10", b: "20", c: "200", d: "400" },
     id: "2024Estadistica08",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -524,7 +526,7 @@ export const reactivos = [
     opciones: { a: "24", b: "16", c: "9", d: "8" },
     id: "2024Estadistica07",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -537,7 +539,7 @@ export const reactivos = [
     },
     id: "2024Estadistica11",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -545,7 +547,7 @@ export const reactivos = [
     opciones: { a: "1", b: "\\frac{3}{4}", c: "\\frac{1}{2}", d: "\\frac{1}{4}" },
     id: "2024Estadistica15",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -553,7 +555,7 @@ export const reactivos = [
     opciones: { a: "6", b: "8", c: "12", d: "14" },
     id: "2024Estadistica13",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -566,7 +568,7 @@ export const reactivos = [
     },
     id: "2024Estadistica20",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -579,7 +581,7 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -592,7 +594,7 @@ export const reactivos = [
     },
     id: "2024Estadistica25",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -605,7 +607,7 @@ export const reactivos = [
     },
     id: "2024Estadistica22",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -618,7 +620,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -631,7 +633,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -644,7 +646,7 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{¿Cuál es el valor de la mediana?}",
@@ -656,7 +658,7 @@ export const reactivos = [
     },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -669,7 +671,7 @@ export const reactivos = [
     },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -682,7 +684,7 @@ export const reactivos = [
     },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -695,7 +697,7 @@ export const reactivos = [
     },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -708,7 +710,7 @@ export const reactivos = [
     },
     id: "2024Estadistica38",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -721,7 +723,7 @@ export const reactivos = [
     },
     id: "2024Estadistica40",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -734,7 +736,7 @@ export const reactivos = [
     },
     id: "2024Estadistica37",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -747,7 +749,7 @@ export const reactivos = [
     },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -760,7 +762,7 @@ export const reactivos = [
     },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -773,7 +775,7 @@ export const reactivos = [
     },
     id: "2024Estadistica14",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -786,7 +788,7 @@ export const reactivos = [
     },
     id: "2024Estadistica21",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -799,7 +801,7 @@ export const reactivos = [
     },
     id: "2024Estadistica16", // Hay dos preguntas en un mismo inciso se tiene que partir en dos la pregunta 
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -812,7 +814,7 @@ export const reactivos = [
     },
     id: "2024Estadistica17",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -824,7 +826,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -837,7 +839,7 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -849,7 +851,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -862,7 +864,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -875,14 +877,14 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{¿Cuál es el valor de la mediana?}",
     opciones: { a: "61", b: "62", c: "63", d: "64" },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -890,14 +892,14 @@ export const reactivos = [
     opciones: { a: "0.3", b: "0.4", c: "0.6", d: "0.7" },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 kg?}",
     opciones: { a: "5 \\%", b: "10 \\%", c: "15 \\%", d: "20 \\%" },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -905,14 +907,14 @@ export const reactivos = [
     opciones: { a: "1, 3, 2", b: "1, 2, 3", c: "3, 1, 2", d: "3, 2, 1" },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Determinar la media geométrica de } \\{1,16,81,256\\}",
     opciones: { a: "7", b: "9", c: "24", d: "30" },
     id: "2024Estadistica38",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -920,7 +922,7 @@ export const reactivos = [
     opciones: { a: "1 y 2", b: "1 y 3", c: "2 y 3", d: "2 y 4" },
     id: "2024Estadistica40",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -928,7 +930,7 @@ export const reactivos = [
     opciones: { a: "Mediana", b: "Armónica", c: "Aritmética", d: "Geométrica" },
     id: "2024Estadistica37",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -936,7 +938,7 @@ export const reactivos = [
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -944,7 +946,7 @@ export const reactivos = [
     opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -952,7 +954,7 @@ export const reactivos = [
     opciones: { a: "0.012", b: "0.12", c: "0.5", d: "0.4" },
     id: "2024Estadistica14",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -965,7 +967,7 @@ export const reactivos = [
     },
     id: "2024Estadistica21",
     resuesta: "d",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -978,7 +980,7 @@ export const reactivos = [
     },
     id: "2024Estadistica16",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -991,7 +993,7 @@ export const reactivos = [
     },
     id: "2024Estadistica17",
     resuesta: "c",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -1003,7 +1005,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -1016,7 +1018,7 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -1028,7 +1030,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -1041,7 +1043,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
@@ -1054,26 +1056,25 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
 
   {
     pregunta:
-      "Determinar el dominio de la función: \\( f(x) = \\sqrt{5-x} + \\sqrt{3+x} \\)",
+      "\\text{Determinar el dominio de la función } f(x)=\\sqrt{5-x}+\\sqrt{3+x}",
     opciones: {
       a: "[-5,-3]",
       b: "[3,5]",
       c: "[-5,3]",
       d: "[-3,5]",
     },
-
     id: "2024calculoDiferencial01",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La función \\( f(x) = \\frac{\\sin x}{x} + \\cos x \\) es continua para toda \\( x \\neq 0 \\). ¿Cuál debe ser el valor que debe darse a \\( f(0) \\) para que la función sea continua en todo \\( \\mathbb{R} \\)?",
+      "\\text{La función } f(x)=\\frac{\\sin x}{x}+\\cos x \\text{ es continua para } x\\neq0.\\;\\text{¿Qué valor debe tomar } f(0) \\text{ para que sea continua en todo } \\mathbb{R}\\text{?}",
     opciones: {
       a: "-1",
       b: "0",
@@ -1082,11 +1083,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial17",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Ordenar los pasos para obtener la derivada de una función \\( f(x) \\) en \\( x = c \\)",
+      "\\text{Ordena los pasos para obtener la derivada de } f(x) \\text{ en } x=c",
     opciones: {
       a: "2, 1, 4, 3",
       b: "2, 3, 1, 4",
@@ -1095,11 +1096,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial21",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Relacionar las formas de las gráficas de la función \\( f(x) \\) con los signos de la primera y segunda derivada que les corresponden.",
+      "\\text{Relaciona las formas de la gráfica de } f(x) \\text{ con los signos de } f'(x) \\text{ y } f''(x)",
     opciones: {
       a: "1B, 2C, 3D, 4A",
       b: "1B, 2A, 3C, 4D",
@@ -1108,24 +1109,24 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial24",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular la derivada de la función: \\[ f(x) = e^{x \\ln 2} + e^{2 \\ln x} \\]",
+      "\\text{Calcular la derivada de } f(x)=e^{x\\ln2}+e^{2\\ln x}",
     opciones: {
-      a: "2^x \\cdot \\ln 2 + 2x",
-      b: "2^x + 2x^2",
-      c: "2^x \\cdot \\ln 2 - 2x",
-      d: "2^x \\cdot \\ln 2 + 2x^2",
+      a: "2^{x}\\,\\ln2+2x",
+      b: "2^{x}+2x^{2}",
+      c: "2^{x}\\,\\ln2-2x",
+      d: "2^{x}\\,\\ln2+2x^{2}",
     },
     id: "2024calculoDiferencial27",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La figura muestra la gráfica de una función \\( f(x) \\) derivable que pasa por los puntos \\( A(0,4) \\), \\( B(1,2) \\) y \\( C(2,4) \\). Ordenarlos comenzando por el punto donde el valor de la derivada es menor y hasta el punto donde el valor de la derivada es mayor.",
+      "\\text{Ordena los puntos } A(0,4), B(1,2), C(2,4) \\text{ del menor al mayor valor de } f'(x)",
     opciones: {
       a: "A, C, B",
       b: "B, A, C",
@@ -1134,11 +1135,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial25",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La función \\( f(x) = \\frac{\\ln x}{x} \\) es creciente en el intervalo:",
+      "\\text{La función } f(x)=\\frac{\\ln x}{x} \\text{ es creciente en:}",
     opciones: {
       a: "(1, 2e)",
       b: "(0, e)",
@@ -1147,49 +1148,50 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial23",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
-    pregunta: "Calcular la derivada de la función \\( f(x) = \\ln(\\sec(ax+b)) \\)",
+    pregunta:
+      "\\text{Calcular la derivada de } f(x)=\\ln(\\sec(ax+b))",
     opciones: {
-      a: "a \\tan(ax+b)",
-      b: "a \\tan^2(ax+b)",
-      c: "a \\sec(ax+b)",
-      d: "a \\sec^2(ax+b)",
+      a: "a\\tan(ax+b)",
+      b: "a\\tan^{2}(ax+b)",
+      c: "a\\sec(ax+b)",
+      d: "a\\sec^{2}(ax+b)",
     },
     id: "2024calculoDiferencial30",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular la segunda derivada de la función \\( f(x) = x \\ln x - x + 10 \\)",
+      "\\text{Calcular la segunda derivada de } f(x)=x\\ln x-x+10",
     opciones: {
       a: "\\ln x",
-      b: "x + \\ln x",
+      b: "x+\\ln x",
       c: "\\frac{1}{x}",
-      d: "\\frac{1}{x} + \\ln x",
+      d: "\\frac{1}{x}+\\ln x",
     },
     id: "2024calculoDiferencial29",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Determinar el valor de \\( x \\) donde la función \\( f(x) = x^5(1-x)^5 \\) tiene un máximo relativo, si se sabe que este valor se encuentra en el intervalo (0,1).",
+      "\\text{Para } f(x)=x^{5}(1-x)^{5} \\text{ con } x\\in(0,1)\\text{, el máximo relativo ocurre en:}",
     opciones: {
-      a: "x = \\frac{1}{4}",
-      b: "x = \\frac{1}{2}",
-      c: "x = \\frac{3}{8}",
-      d: "x = \\frac{3}{4}",
+      a: "x=\\frac{1}{4}",
+      b: "x=\\frac{1}{2}",
+      c: "x=\\frac{3}{8}",
+      d: "x=\\frac{3}{4}",
     },
     id: "2024calculoDiferencial39",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La función \\( f(x) = \\frac{\\ln x}{x} \\) tiene un valor máximo. Este es _______ y se obtiene cuando \\( x = \\):",
+      "\\text{La función } f(x)=\\frac{\\ln x}{x} \\text{ tiene un valor máximo. Este es }\\underline{\\quad}\\text{ y se obtiene cuando } x=\\text{:}",
     opciones: {
       a: "e, e",
       b: "\\frac{1}{e}, e",
@@ -1198,11 +1200,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial38",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La gráfica del polinomio \\( P(x) = (x+1)(x-2)^2 \\) tiene un máximo relativo en ______ y un mínimo relativo en:",
+      "\\text{La gráfica de } P(x)=(x+1)(x-2)^{2} \\text{ presenta un máximo relativo en }\\underline{\\quad}\\text{ y un mínimo relativo en }\\underline{\\quad}",
     opciones: {
       a: "x = 0, x = 2",
       b: "x = 2, x = 0",
@@ -1211,10 +1213,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial36",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
-    pregunta: "¿Cuál es el rango de la función? \\( f(x) = x^2 + 4x + 12 \\)",
+    pregunta:
+      "\\text{¿Cuál es el rango de } f(x)=x^{2}+4x+12\\,?",
     opciones: {
       a: "[4, \\infty)",
       b: "[8, \\infty)",
@@ -1223,64 +1226,89 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial02",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "¿Cuántas soluciones enteras tiene la desigualdad? \\[ \\sqrt[3]{x^3 - 7} < x - 1 \\]",
-    opciones: { a: "0", b: "1", c: "2", d: "3" },
+      "\\text{¿Cuántas soluciones enteras tiene } \\sqrt[3]{x^{3}-7}<x-1\\,?",
+    opciones: {
+      a: "0",
+      b: "1",
+      c: "2",
+      d: "3",
+    },
     id: "2024calculoDiferencial05",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
-
   {
     pregunta:
-      "Es el dominio de la función: \\( f(x) = \\log \\left( \\frac{1+x}{1-x} \\right) \\)",
-    opciones: { a: "(-1, 1)", b: "[-1, 1)", c: "(0, 1)", d: "[-1, 0)" },
+      "\\text{Es el dominio de } f(x)=\\log\\bigl(\\tfrac{1+x}{1-x}\\bigr)",
+    opciones: {
+      a: "(-1, 1)",
+      b: "[-1, 1)",
+      c: "(0, 1)",
+      d: "[-1, 0)",
+    },
     id: "2024calculoDiferencial03",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Si \\( f(x) = x^2 - 2x + 1 \\), determinar el dominio de la función: \\n\\[ g(x) = \\frac{f(x)}{f(x) - 16} \\]",
+      "\\text{Dado } f(x)=x^{2}-2x+1,\\; \\text{determinar el dominio de } g(x)=\\tfrac{f(x)}{f(x)-16}",
     opciones: {
-      a: "\\( \\mathbb{R} - \\{3, 5\\} \\)",
-      b: "\\( \\mathbb{R} - \\{-3, 5\\} \\)",
-      c: "\\( \\mathbb{R} - \\{3, -5\\} \\)",
-      d: "\\( \\mathbb{R} - \\{-3, -5\\} \\)",
+      a: "\\mathbb{R}-\\{3,5\\}",
+      b: "\\mathbb{R}-\\{-3,5\\}",
+      c: "\\mathbb{R}-\\{3,-5\\}",
+      d: "\\mathbb{R}-\\{-3,-5\\}",
     },
     id: "2024calculoDiferencial04",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Si el conjunto solución de la desigualdad \\((x+1)(x-5) \\geq k\\) es el conjunto \\(\\mathbb{R}\\), determinar el mayor valor posible de \\(k\\)",
-    opciones: { a: "-9", b: "-4", c: "4", d: "9" },
+      "\\text{Si } (x+1)(x-5)\\ge k \\text{ se cumple en todo } \\mathbb{R},\\; \\text{el mayor } k \\text{ posible es}",
+    opciones: {
+      a: "-9",
+      b: "-4",
+      c: "4",
+      d: "9",
+    },
     id: "2024calculoDiferencial08",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "\\lim_{{x \\to 1}} \\left( \\frac{1}{1-x} - \\frac{3}{1-x^3} \\right)",
-    opciones: { a: "-3", b: "-1", c: "1", d: "3" },
+      "\\displaystyle \\lim_{x\\to1}\\left(\\frac{1}{1-x}-\\frac{3}{1-x^{3}}\\right)",
+    opciones: {
+      a: "-3",
+      b: "-1",
+      c: "1",
+      d: "3",
+    },
     id: "2024calculoDiferencial09",
     resuesta: "b",
-    explicacion: "void",
-  },
-  {
-    pregunta: "Determinar el valor del límite: \\( \\lim_{{x \\to 1}} f(x) \\)",
-    opciones: { a: "1", b: "2", c: "\\frac{3}{2}", d: "\\text{No existe}" },
-    id: "2024calculoDiferencial10",
-    resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Determinar el conjunto solución de la desigualdad: \\( x^3 + x^2 \\leq x + 1 \\)",
+      "\\text{Determinar } \\displaystyle \\lim_{x\\to1} f(x)",
+    opciones: {
+      a: "1",
+      b: "2",
+      c: "\\frac{3}{2}",
+      d: "No existe",
+    },
+    id: "2024calculoDiferencial10",
+    resuesta: "b",
+    explicacion: "void", imgActive: false
+  },
+  {
+    pregunta:
+      "\\text{Conjunto solución de } x^{3}+x^{2}\\le x+1",
     opciones: {
       a: "(-\\infty, 1]",
       b: "(-\\infty, -1]",
@@ -1289,108 +1317,141 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial06",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Determinar el conjunto solución de la desigualdad: \\( x^2 + \\frac{2}{x} < 3 \\)",
-    opciones: { a: "(0,2)", b: "(0,-2)", c: "(2,0)", d: "(-2,0)" },
+      "\\text{Conjunto solución de } x^{2}+\\tfrac{2}{x}<3",
+    opciones: {
+      a: "(0,2)",
+      b: "(0,-2)",
+      c: "(2,0)",
+      d: "(-2,0)",
+    },
     id: "2024calculoDiferencial07",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "¿Cuál es el valor del límite? \\[ \\lim_{{x \\to 0}} \\frac{{1 - \\cos ax}}{{1 - \\cos bx}} \\]",
+      "\\displaystyle \\lim_{x\\to0}\\frac{1-\\cos ax}{1-\\cos bx}",
     opciones: {
       a: "\\frac{a}{b}",
       b: "\\frac{b}{a}",
-      c: "\\frac{a^2}{b^2}",
-      d: "\\frac{b^2}{a^2}",
+      c: "\\frac{a^{2}}{b^{2}}",
+      d: "\\frac{b^{2}}{a^{2}}",
     },
     id: "2024calculoDiferencial12",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular el valor del límite: \\( \\lim_{{x \\to \\infty}} \\left( \\frac{x^3}{x^2 + 1} - x \\right) \\)",
-    opciones: { a: "-1", b: "0", c: "1", d: "3" },
+      "\\displaystyle \\lim_{x\\to\\infty}\\left(\\frac{x^{3}}{x^{2}+1}-x\\right)",
+    opciones: {
+      a: "-1",
+      b: "0",
+      c: "1",
+      d: "3",
+    },
     id: "2024calculoDiferencial14",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "\\[ \\lim_{{x \\to \\infty}} \\left( \\frac{x}{1+x} \\right)^x \\]",
-    opciones: { a: "e", b: "1", c: "\\frac{1}{e}", d: "0" },
+      "\\displaystyle \\lim_{x\\to\\infty}\\left(\\frac{x}{1+x}\\right)^{x}",
+    opciones: {
+      a: "e",
+      b: "1",
+      c: "\\frac{1}{e}",
+      d: "0",
+    },
     id: "2024calculoDiferencial16",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Determinar el valor del límite: \\( \\lim_{{x \\to \\infty}} \\frac{{\\sin^3 x}}{{x^2}} \\)",
-    opciones: { a: "0", b: "1", c: "2", d: "3" },
+      "\\displaystyle \\lim_{x\\to\\infty}\\frac{\\sin^{3}x}{x^{2}}",
+    opciones: {
+      a: "0",
+      b: "1",
+      c: "2",
+      d: "3",
+    },
     id: "2024calculoDiferencial13",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular el valor del límite: \\( \\lim_{{x \\to \\infty}} \\left(3^x + 5^x\\right)^{1/x} \\)",
-    opciones: { a: "3", b: "5", c: "8", d: "15" },
+      "\\displaystyle \\lim_{x\\to\\infty}\\bigl(3^{x}+5^{x}\\bigr)^{1/x}",
+    opciones: {
+      a: "3",
+      b: "5",
+      c: "8",
+      d: "15",
+    },
     id: "2024calculoDiferencial15",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular el valor del límite: \\( \\lim_{{x \\to 0}} \\frac{{\\sin 7x}}{{\\sin 5x}} \\)",
+      "\\displaystyle \\lim_{x\\to0}\\frac{\\sin7x}{\\sin5x}",
     opciones: {
-      a: "\\( \\frac{7}{5} \\)",
-      b: "\\( \\frac{5}{7} \\)",
-      c: "\\( \\frac{5}{12} \\)",
-      d: "\\( \\frac{7}{12} \\)",
+      a: "\\frac{7}{5}",
+      b: "\\frac{5}{7}",
+      c: "\\frac{5}{12}",
+      d: "\\frac{7}{12}",
     },
     id: "2024calculoDiferencial11",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
-
-
   {
     pregunta:
-      "Si \\text{ la función definida por intervalos } f(x) = \\begin{cases} 3x + 4 & x \\leq 3 \\\\ 2x + k & x < 3 \\end{cases} \\text{ es continua en } x = 3, \\text{ entonces el valor de } k \\text{ es:}",
-    opciones: { a: "-2", b: "0", c: "5", d: "7" },
+      "\\text{Sea } f(x)=\\begin{cases}3x+4,&x\\le3\\\\2x+k,&x<3\\end{cases}\\;.\\,\\text{Si es continua en } x=3\\text{, entonces } k=\\underline{\\quad}",
+    opciones: {
+      a: "-2",
+      b: "0",
+      c: "5",
+      d: "7",
+    },
     id: "2024calculoDiferencial20",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La función definida en intervalos: \\n\\[f(x) = \\begin{cases} \\n|x - 3| & x \\geq 1 \\\\\\nx^2/4 - 3x/2 + 13/4 & x < 1 \\n\\end{cases}\\]",
+      "\\text{La función por intervalos }\\begin{cases}|x-3|,&x\\ge1\\\\ \\tfrac{x^{2}}{4}-\\tfrac{3x}{2}+\\tfrac{13}{4},&x<1\\end{cases}\\text{ es:}",
     opciones: {
-      a: "es continua en \\(x = 1\\), pero no en \\(x = 3\\)",
-      b: "es continua en \\(x = 3\\), pero no en \\(x = 1\\)",
-      c: "es continua en \\(x = 1\\) y en \\(x = 3\\)",
-      d: "no es continua en \\(x = 1\\) ni en \\(x = 3\\)",
+      a: "continua en \\(x=1\\) pero no en \\(x=3\\)",
+      b: "continua en \\(x=3\\) pero no en \\(x=1\\)",
+      c: "continua en \\(x=1\\) y en \\(x=3\\)",
+      d: "no es continua en \\(x=1\\) ni en \\(x=3\\)",
     },
     id: "2024calculoDiferencial18",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "La función \\( f : \\mathbb{R} \\to \\mathbb{R} \\) está definida por \\( f(x) = \\frac{1}{\\ln |x-3|} \\). Determinar la cantidad de puntos en los que la función es discontinua.",
-    opciones: { a: "1", b: "2", c: "3", d: "4" },
+      "\\text{Si } f(x)=\\tfrac{1}{\\ln|x-3|},\\;\\text{¿en cuántos puntos es discontinua?}",
+    opciones: {
+      a: "1",
+      b: "2",
+      c: "3",
+      d: "4",
+    },
     id: "2024calculoDiferencial19",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Si \\( f(x) \\) es una función derivable en el intervalo \\((a,b)\\), entonces \\( f(x) \\) es \\underline{\\quad} en los subintervalos donde \\( f'(x)<0 \\) y \\underline{\\quad} en los subintervalos donde \\( f'(x)>0 \\).",
+      "\\text{Si } f(x) \\text{ es derivable en } (a,b),\\; f(x) \\text{ es }\\underline{\\quad}\\text{ donde } f'(x)<0 \\text{ y }\\underline{\\quad}\\text{ donde } f'(x)>0",
     opciones: {
       a: "creciente - decreciente",
       b: "decreciente - creciente",
@@ -1399,11 +1460,11 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial22",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular el valor de la derivada de la función \\( f(x) = \\left( \\sin\\frac{x}{2} + \\cos\\frac{x}{2} \\right)^2 \\) en el punto \\( x = \\frac{\\pi}{6} \\).",
+      "\\text{Derivar } f(x)=\\left(\\sin\\tfrac{x}{2}+\\cos\\tfrac{x}{2}\\right)^{2}\\;\\text{en } x=\\tfrac{\\pi}{6}",
     opciones: {
       a: "\\sqrt{3}",
       b: "\\frac{\\sqrt{3}}{2}",
@@ -1412,81 +1473,90 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial26",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
-
-
-
-
-
   {
     pregunta:
-      "Sabiendo que y = \\sqrt{x^2 + a^2}, simplificar la expresión y \\cdot y'",
-    opciones: { a: "x^2 + a^2", b: "x^2 - a^2", c: "x^2", d: "x" },
+      "\\text{Si } y=\\sqrt{x^{2}+a^{2}},\\;\\text{simplificar } y\\,y'",
+    opciones: {
+      a: "x^{2}+a^{2}",
+      b: "x^{2}-a^{2}",
+      c: "x^{2}",
+      d: "x",
+    },
     id: "2024calculoDiferencial31",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular el valor de la suma \\( a + b \\), si se sabe que \\( \\frac{d}{dx} \\left( \\frac{x^4 + x^2 + 1}{x^2 - x + 1} \\right) = ax + b \\)",
-    opciones: { a: "0", b: "2", c: "3", d: "4" },
+      "\\text{Sea } \\tfrac{d}{dx}\\Bigl(\\tfrac{x^{4}+x^{2}+1}{x^{2}-x+1}\\Bigr)=ax+b.\\;\\text{Calcular } a+b",
+    opciones: {
+      a: "0",
+      b: "2",
+      c: "3",
+      d: "4",
+    },
     id: "2024calculoDiferencial28",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Si \\( x > 0 \\) calcular la derivada de la función: \\( f(x) = \\arccos \\frac{1}{\\sqrt{x^2+1}} \\)",
+      "\\text{Para } x>0,\\;\\text{derivar } f(x)=\\arccos\\tfrac{1}{\\sqrt{x^{2}+1}}",
     opciones: {
-      a: "\\frac{2x}{x^2+1}",
-      b: "\\frac{1}{x^2+1}",
-      c: "\\frac{-2x}{x^2+1}",
-      d: "\\frac{1}{x^2+1}",
+      a: "\\frac{2x}{x^{2}+1}",
+      b: "\\frac{1}{x^{2}+1}",
+      c: "\\frac{-2x}{x^{2}+1}",
+      d: "\\frac{1}{x^{2}+1}",
     },
     id: "2024calculoDiferencial35",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Si \\( f(x) \\) es una función derivable con \\( f'(x) = x^2 + 5 \\), calcular la derivada de la función \\( f(\\cos x^3) \\)",
+      "\\text{Si } f'(x)=x^{2}+5,\\;\\text{derivar } f(\\cos x^{3})",
     opciones: {
-      a: "3x^2 \\sen x^3 (\\cos x^3 + 5)",
-      b: "3x^2 \\sen x^3 (\\cos^2 x^3 + 5)",
-      c: "-3x^2 \\sen x^3 (\\cos x^3 + 5)",
-      d: "-3x^2 \\sen x^3 (\\cos^2 x^3 + 5)",
+      a: "3x^{2}\\sin x^{3}(\\cos x^{3}+5)",
+      b: "3x^{2}\\sin x^{3}(\\cos^{2}x^{3}+5)",
+      c: "-3x^{2}\\sin x^{3}(\\cos x^{3}+5)",
+      d: "-3x^{2}\\sin x^{3}(\\cos^{2}x^{3}+5)",
     },
     id: "2024calculoDiferencial33",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular la derivada \\( \\frac{dy}{dx} \\) en la expresión \\( e^x + e^y = e^{x+y} \\)",
-    opciones: { a: "e^{x-y}", b: "e^{y-x}", c: "-e^{y-x}", d: "-e^{x-y}" },
+      "\\text{En } e^{x}+e^{y}=e^{x+y},\\;\\text{calcular } \\tfrac{dy}{dx}",
+    opciones: {
+      a: "e^{x-y}",
+      b: "e^{y-x}",
+      c: "-e^{y-x}",
+      d: "-e^{x-y}",
+    },
     id: "2024calculoDiferencial34",
     resuesta: "b",
-    explicacion: "void",
+    explicacion: "void", imgActive: false
   },
   {
     pregunta:
-      "Calcular y simplificar la derivada de la función \\( f(x) = \\ln(x + \\sqrt{x^2 + 9}) \\)",
+      "\\text{Derivar y simplificar } f(x)=\\ln\\bigl(x+\\sqrt{x^{2}+9}\\bigr)",
     opciones: {
-      a: "\\frac{2x}{\\sqrt{x^2 + 9}}",
-      b: "x\\sqrt{x^2 + 9}",
-      c: "\\frac{1}{\\sqrt{x^2 + 9}}",
-      d: "\\sqrt{x^2 + 9}",
+      a: "\\frac{2x}{\\sqrt{x^{2}+9}}",
+      b: "x\\sqrt{x^{2}+9}",
+      c: "\\frac{1}{\\sqrt{x^{2}+9}}",
+      d: "\\sqrt{x^{2}+9}",
     },
     id: "2024calculoDiferencial32",
     resuesta: "b",
     explicacion: "void",
+    imgActive: false
   },
-
-
   {
     pregunta:
-      "Calcular el valor máximo de la función: \\( f(x) = \\frac{x}{4x^2 + 9} \\)",
+      "\\text{Calcular el valor máximo de } f(x)=\\tfrac{x}{4x^{2}+9}",
     opciones: {
       a: "\\frac{1}{6}",
       b: "\\frac{1}{9}",
@@ -1496,19 +1566,21 @@ export const reactivos = [
     id: "2024calculoDiferencial40",
     resuesta: "b",
     explicacion: "void",
+    imgActive: false
   },
   {
     pregunta:
-      "La función \\( f(x) = \\frac{3}{x} + \\frac{x}{3} \\) tiene un mínimo relativo en:",
+      "\\text{La función } f(x)=\\tfrac{3}{x}+\\tfrac{x}{3} \\text{ tiene un mínimo relativo en:}",
     opciones: {
-      a: "x = \\frac{3}{2}",
+      a: "x = \\tfrac{3}{2}",
       b: "x = 2",
-      c: "x = \\frac{5}{2}",
+      c: "x = \\tfrac{5}{2}",
       d: "x = 3",
     },
     id: "2024calculoDiferencial37",
     resuesta: "b",
     explicacion: "void",
-  },
+    imgActive: false
+  }
 ];
 export default reactivos;
