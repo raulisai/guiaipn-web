@@ -8,7 +8,7 @@
 	import { onMount } from 'svelte';
 	import { Eye, EyeOff } from 'lucide-svelte'; // Example using lucide icons
 
-	const totalQuestions = 4;
+	const totalQuestions = 20;
 	let answers = $state<{ [key: number]: string }>({});
 	let respuesta;
 	let currentQuestion = $state(0);
@@ -23,7 +23,7 @@
 	let reactivo = $state({
 		id: 'exm2024V1Math04',
 		currentQuestion: '0',
-		pregunta: 'cuanto es 2+2',
+		pregunta: 'cagando pregunta...si continua asi recarga la pagina',
 		iscorrectQuestion: false,
 		opciones: [],
 		respuestaCorrecta: 'A',
@@ -32,14 +32,11 @@
 		imgAct: false // Initialize imgAct
 	});
 
-	onMount(() => {
-		// Inicializar el temporizador
-		getQuestionRandom();
-	});
+	onMount(() => { getQuestionRandom();});
 
-	function finishExam() {
-		finish = true; // Cambia el estado para mostrar el modal de finalización
-	}
+	function finishExam() { finish = true; }	
+
+
 
 	function UpdateResponseOfModal(resp, resCorrect) {
 		let opcionSeleccionada = reactivo.opciones.find((opcion) => opcion.key === resp);
@@ -50,47 +47,54 @@
 	}
 
 	function getQuestionRandom() {
-		showOptionalImage = false; // Reset image visibility state for new question
-		let idRandom = Math.floor(Math.random() * reactivos.length); // Use full length
-		currentQuestion = currentQuestion + 1;
-
+		// Reset UI state
+		showOptionalImage = false;
+		
+		// Increment question counter and check if exam is complete
+		currentQuestion += 1;
 		if (currentQuestion > totalQuestions) {
-			finishExam(); // Llama a la función para finalizar el examen
+			finishExam();
 			return;
 		}
-
-		// Ensure reactivos array is not empty and idRandom is valid
-		if (reactivos.length === 0) {
+		
+		// Validate reactivos data
+		if (!reactivos.length) {
 			console.error('Reactivos data is empty.');
 			reactivo.pregunta = 'Error al cargar la pregunta.';
 			return;
 		}
+		
+		// Select random question
+		const idRandom = Math.floor(Math.random() * reactivos.length);
 		const selectedReactivo = reactivos[idRandom];
+		
 		if (!selectedReactivo) {
 			console.error(`Reactivo with index ${idRandom} not found.`);
 			reactivo.pregunta = 'Error al cargar la pregunta.';
 			return;
 		}
-
-		let id = selectedReactivo.id;
+		
+		// Update reactivo state with selected question data
+		const { id, resuesta, pregunta, opciones, imgActive } = selectedReactivo;
+		
 		reactivo.id = id;
-		reactivo.respuestaCorrecta = selectedReactivo.resuesta;
-		reactivo.pregunta = selectedReactivo.pregunta;
+		reactivo.respuestaCorrecta = resuesta;
+		reactivo.pregunta = pregunta;
+		reactivo.imgAct = imgActive === true;
+		reactivo.pathImg = apiImg + id + '.png';
+		reactivo.currentQuestion = currentQuestion.toString();
+		
+		// Extract materia from id
 		materiaQuestion = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
-		// Ensure imgActive exists and assign it, default to false if undefined
-		reactivo.imgAct = selectedReactivo.imgActive === true; // Explicit boolean check
-
-		reactivo.pathImg = apiImg + id + '.png'; // Actualiza la ruta de la imagen
-		reactivo.opciones = Object.entries(selectedReactivo.opciones).map(([key, value]) => ({
+		
+		// Format options
+		reactivo.opciones = Object.entries(opciones).map(([key, value]) => ({
 			key,
 			value: String(value)
 		}));
-		reactivo.currentQuestion = currentQuestion.toString();
 	}
 
-	function toggleOptionalImage() {
-		showOptionalImage = !showOptionalImage;
-	}
+	const toggleOptionalImage = () => showOptionalImage = !showOptionalImage;
 
 	function selectOption(resp) {
 		respuesta = resp;
