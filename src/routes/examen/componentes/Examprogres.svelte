@@ -7,7 +7,7 @@
 	$: answeredQuestions = Object.keys(answers).length;
 </script>
   
-<div class="progress-container glow-effect card_color">
+<div class="progress-container bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg shadow-lg card_color">
     <div class="progress-header">
       <span>Pregunta {currentQuestion} de {totalQuestions}</span>
       <span>{answeredQuestions} respondidas</span>
@@ -28,7 +28,6 @@
           class:answeredCorrect={answers[i + 1] === 'true'}
           class:answeredIncorrect={answers[i + 1] === 'false'}
           class:unanswered={!answers[i + 1] && i + 1 !== currentQuestion}
-         
         ></div>
       {/each}
     </div>
@@ -38,12 +37,15 @@
   .progress-container {
     margin-bottom: 1.5rem;
     padding: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    border: 1px solid rgba(55, 65, 81, 0.5); /* gris-700/50 */
+    background: rgba(31, 41, 55, 0.3); /* bg-gray-800/30 */
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(59,130,246,0.05);
+    color: #e5e7eb;
     width: 100%;
     max-width: 100%;
+    transition: background 0.3s;
   }
 
 	.progress-header {
@@ -66,7 +68,7 @@
 		height: 100%;
 		background: linear-gradient(to right, #3b82f6, #fbbf24);
 		border-radius: 999px;
-		transition: width 0.4s ease;
+		transition: width 0.4s cubic-bezier(.4,0,.2,1);
 		box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 	}
 
@@ -76,7 +78,7 @@
 		margin-top: 1rem;
 		overflow-x: auto;
 		padding-bottom: 0.5rem;
-		-ms-overflow-style: none; /* for Internet Explorer, Edge */
+		-ms-overflow-style: none;
 		scrollbar-width: thin;
 		flex-wrap: wrap;
 	}

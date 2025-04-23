@@ -195,7 +195,8 @@
 					</button>
 				{/each}
 			</div>
-			<Estadisticas />
+			<!-- <Estadisticas /> -->
+			
 			<ModalResponse
 				bind:this={modalRef}
 				pregunta={reactivo.pregunta}
@@ -210,49 +211,7 @@
 </div>
 
 <style>
-	.texto-rojo {
-		text-shadow:
-			0 0 10px #512a2aaa,
-			0 0 20px #82585855,
-			0 0 2px #ddc8c8;
-		color: #e30000;
-	}
 
-	.main_container {
-		width: 95vw;
-	}
-
-	.question-container {
-		border-radius: 0.5rem;
-		animation: fadeIn 0.5s ease-out;
-	}
-	.question-header {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 1rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.308);
-		padding-bottom: 0.5rem;
-	}
-
-	.question-number {
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.9);
-	}
-
-	.question-badge {
-		transition: all 0.3s ease;
-	}
-
-	.question-content {
-		/* display: flex; */ /* Already handled by Tailwind */
-		/* justify-content: center; */ /* Already handled by Tailwind */
-		/* gap: 1rem; */ /* Already handled by Tailwind */
-	}
-
-	/* Default styles for question text (larger screens) */
-	.question-text-container {
-		/* Defaults allow wrapping */
-	}
 	.question-text-content {
 		text-align: center; /* Center text on larger screens */
 		word-wrap: break-word; /* Ensure long words wrap */
