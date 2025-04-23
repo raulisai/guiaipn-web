@@ -20,6 +20,9 @@
 	let modalRef; // Referencia al componente hijo
 	let showOptionalImage = $state(false); // State to control visibility of optional image
 
+	// Estado del switch para mostrar la resolución
+	let showSolution = false;
+
 	let reactivo = $state({
 		id: 'exm2024V1Math04',
 		currentQuestion: '0',
@@ -129,6 +132,46 @@
 			<section class="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4">
 				<div class="flex justify-between items-center pb-2 border-b border-gray-700/50">
 					<span class="font-semibold text-gray-200">Pregunta {reactivo.currentQuestion}</span>
+					<!-- Botón switch minimalista para ver cómo resolverlo -->
+	<div class="flex justify-end mb-6 ">
+		<div class="relative group">
+			<button
+				class="w-10 h-6 rounded-full flex items-center transition-colors duration-300 focus:outline-none shadow-md border-2 border-gray-600 hover:border-yellow-400"
+				style="background-color: {showSolution ? '#fbbf24' : '#374151'};"
+				aria-label="Ver cómo resolverlo"
+				onclick={() => (showSolution = !showSolution)}
+			>
+				<span
+					class="absolute left-1 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-yellow-400 flex items-center justify-center text-gray-900 text-xs transition-transform duration-300"
+					style="transform: translateY(-50%) translateX({showSolution
+						? '1.25rem'
+						: '0'}) scale({showSolution ? 1.1 : 1}); box-shadow: 0 0 8px rgba(251,191,36,0.5);"
+				>
+					<!-- Bombillo minimalista SVG -->
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 20 20"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-3 h-3"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M10 3a5 5 0 00-2 9.584V15a2 2 0 104 0v-2.416A5 5 0 0010 3z"
+						/>
+					</svg>
+				</span>
+			</button>
+			<!-- Tooltip creativo -->
+			<div
+				class="absolute right-0 top-0 mt-8 w-44 p-2 bg-gray-900 text-yellow-300 text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 -translate-y-2 pointer-events-none transition-all duration-300 z-10 select-none"
+			>
+				¿ayuda? ¡Haz clic para ver la respuesta al final explicado por IA! 💡
+			</div>
+		</div>
+	</div>
 					<!-- Updated badge style: transparent background, light border, adjusted text color -->
 					<span class="question-badge text-xs font-medium border border-blue-400/30 text-blue-300 px-3 py-1 rounded-full bg-transparent shadow-sm">
 						{materiaQuestion}
@@ -178,19 +221,25 @@
 				</div>
 			</section>
 
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
-				{#each reactivo.opciones as respuesta, index}
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8 w-full">
+				{#each reactivo.opciones as respuesta}
 					<button
-						class="block w-full px-4 py-2 mt-2 text-left text-gray-700 rounded card bg-gray-800/10 glow-effect backdrop-blur-sm border border-white/20"
+						class="group w-full p-3 sm:p-4 text-left rounded-md transition-all duration-200 
+							   bg-gray-800/20 hover:bg-gray-700/30 focus:outline-none focus:ring-2 
+							   focus:ring-blue-500/40 border border-gray-700/50 hover:border-gray-600/70"
 						onclick={() => selectOption(respuesta.key)}
 						id="btn-{respuesta.key}"
 						aria-label="Respuesta {respuesta.key}"
 					>
-						<div class="w-full h-full flex flex-col justify-center">
-							<span class="text-white font-bold text-lg mb-1">{respuesta.key}</span>
-							<p class="text-white/90 text-sm sm:text-base line-clamp-3 overflow-hidden">
+						<div class="flex items-start gap-3">
+							<span class="flex-shrink-0 w-6 h-6 flex items-center justify-center 
+									 bg-gray-700/50 group-hover:bg-blue-600/30 rounded-full text-sm font-medium 
+									 text-gray-200 transition-colors">
+								{respuesta.key}
+							</span>
+							<div class="text-gray-200 text-sm sm:text-base">
 								<MathForm isBlock={false} content={respuesta.value} />
-							</p>
+							</div>
 						</div>
 					</button>
 				{/each}
