@@ -3,7 +3,7 @@
 	import { reactivos } from '$lib/reactivos';
 	import { examStore } from '$lib/stores/examStore';
 	import ExamProgress from './componentes/Examprogres.svelte';
-	import ModalResponse from './componentes/ModalResponse.svelte';
+	import IAResponse from './componentes/GenerationIAResponse.svelte';
 	import ModalFinish from './componentes/ModalFinish.svelte';
 	import QuestionDisplay from './componentes/QuestionDisplay.svelte';
 	import QuestionHeader from './componentes/QuestionHeader.svelte';
@@ -163,7 +163,7 @@
 			<AnswerOptions selectOption={selectOption} />
 
 			<!-- Modal components -->
-			<ModalResponse
+			<IAResponse
 				bind:this={modalRef}
 				pregunta={$examStore.reactivo.pregunta}
 				id={$examStore.reactivo.id}
