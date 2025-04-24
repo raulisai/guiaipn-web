@@ -137,7 +137,7 @@
 </script>
 
 <!-- Add a wrapper for positioning bubbles -->
-<div class="text-gray-100 overflow-hidden">
+<div class="text-gray-100 overflow-hidden mt-20">
 	<!-- Main content container -->
 	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
 		<div class="w-full max-w-4xl space-y-6">
