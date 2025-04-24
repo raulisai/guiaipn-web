@@ -45,7 +45,7 @@ const initialState: ExamState = {
   },
   finish: false,
   showOptionalImage: false,
-  showSolution: false,
+  showSolution: true,
   apiImg: 'https://img-reactivos.s3.us-east-2.amazonaws.com/'
 };
 

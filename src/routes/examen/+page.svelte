@@ -123,9 +123,12 @@
 			// Guardar respuesta incorrecta
 			examStore.saveAnswer($examStore.currentQuestion, false);
 			
-			// Abrir modal con la respuesta correcta
+			if($examStore.showSolution){
+            // Abrir modal con la respuesta correcta
 			modalRef.toogleModal();
-			UpdateResponseOfModal(resp, $examStore.reactivo.respuestaCorrecta);
+			UpdateResponseOfModal(resp, $examStore.reactivo.respuestaCorrecta)
+			}
+			
 		}
 
 		// Pasar a la siguiente pregunta

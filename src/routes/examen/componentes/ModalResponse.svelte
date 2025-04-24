@@ -1,5 +1,4 @@
 <script>
-	import Math from './Math.svelte';
 	let { pregunta, id, iscorrect } = $props();
 	import MathForm from './Math.svelte';
 
