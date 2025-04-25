@@ -114,7 +114,6 @@
 			
 			// Guardar respuesta correcta
 			examStore.saveAnswer($examStore.currentQuestion, true);
-			alert('Correcto!');
 		} else {
 			// Actualizar estado para marcar como incorrecta
 			const updatedReactivo = {...$examStore.reactivo, iscorrectQuestion: false};
