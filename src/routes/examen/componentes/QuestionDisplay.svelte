@@ -2,6 +2,7 @@
     import { examStore } from "$lib/stores/examStore";
     import CharacterIa from "./CharacterIA.svelte";
     import MathForm from "./Math.svelte";
+    import RadarChart from "./RadarChart.svelte";
     import { Eye } from 'lucide-svelte';
     
     export let toggleOptionalImage: () => void;
@@ -16,42 +17,45 @@
         <!-- Inner div to handle nowrap -->
         <div class="question-text-content" class:long-question-content={isLongQuestion}>
             <MathForm isBlock={false} content={$examStore.reactivo.pregunta} />
-        </div>
-    </div>
-
-    <!-- Image Container - Conditional Display -->
-    <div class="flex question-imgreference w-full justify-center items-center min-h-[50px]">
+        </div>     <!-- Image Container - Conditional Display -->
+    <div class="flex flex-wrap question-imgreference w-full justify-center items-center gap-4 min-h-[50px]">
         {#if $examStore.reactivo.imgAct}
             <!-- Image shown by default if imgAct is true -->
             <img
                 src={$examStore.reactivo.pathImg}
                 alt={$examStore.reactivo.altIMg}
                 class="w-auto h-auto max-w-full max-h-[60vh] object-contain rounded border border-gray-700/30"
-            />
-        {:else if $examStore.reactivo.pathImg}
-            <!-- Image is optional (imgAct is false but path exists) -->
-            {#if $examStore.showOptionalImage}
-                <!-- Show image if button was clicked -->
-                <img
-                    src={$examStore.reactivo.pathImg}
-                    alt={$examStore.reactivo.altIMg}
-                    class="w-auto h-auto max-w-full max-h-[60vh] object-contain rounded border border-gray-700/30"
-                />
-            {:else}
-                <!-- Show button to reveal image -->
-                <button
-                    on:click={toggleOptionalImage}
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/50 rounded-md text-blue-200 transition text-sm"
-                    aria-label="Mostrar imagen de referencia"
-                >
-                    <Eye size={16} />
-                    Mostrar Imagen reactivo
-                </button>
+            />        {:else if $examStore.reactivo.pathImg}
+                <!-- Image is optional (imgAct is false but path exists) -->
+                {#if $examStore.showOptionalImage}
+                    <!-- Show image if button was clicked -->
+                    <img
+                        src={$examStore.reactivo.pathImg}
+                        alt={$examStore.reactivo.altIMg}
+                        class="w-auto h-auto max-w-full max-h-[60vh] object-contain rounded border border-gray-700/30"
+                    />
+                {:else}
+                    <!-- Show button to reveal image -->
+                    <button
+                        on:click={toggleOptionalImage}
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/50 rounded-md text-blue-200 transition text-sm"
+                        aria-label="Mostrar imagen de referencia"
+                    >
+                        <Eye size={16} />
+                        Mostrar Imagen reactivo
+                    </button>
+                {/if}
             {/if}
-        {/if}
-       <CharacterIa />
+        </div>
+        
+        <!-- Character and Stats Container -->
+        <div class="character-stats-container">
+            <!-- Character Mascot -->
+            <CharacterIa />
+        </div>
     </div>
 </div>
+
 
 <style>
     .question-text-content {
@@ -127,12 +131,34 @@
             min-width: 100%; /* Ensure it takes at least the container width */
             text-align: left; /* Align text left when scrolling */
         }
+        
+        /* Mobile responsive for stats container */
+        .character-stats-container {
+            margin-left: 0;
+            margin-top: 1rem;
+        }
     }
-
+    
     @media (min-width: 1920px) {
         .question-imgreference {
             max-width: 80%;
             margin: 2rem auto;
         }
     }
+    
+    /* Animation for stats chart */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    
+    .character-stats-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 1rem;
+    }
+
 </style>

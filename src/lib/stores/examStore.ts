@@ -81,8 +81,7 @@ const createExamStore = () => {
       ...state,
       finish: true
     })),
-    
-    // Guardar respuesta
+      // Guardar respuesta
     saveAnswer: (questionNumber: number, isCorrect: boolean) => update(state => {
       const newAnswers = { ...state.answers };
       const newAnswersDetailed = { ...state.answersDetailed };
@@ -98,7 +97,11 @@ const createExamStore = () => {
       
       // Guardar el ID del reactivo en localStorage para poder acceder desde el modal
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(`q${questionNumber}_id`, state.reactivo.id);
+        try {
+          localStorage.setItem(`q${questionNumber}_id`, state.reactivo.id);
+        } catch (e) {
+          console.warn('Unable to access localStorage:', e);
+        }
       }
       
       return {
