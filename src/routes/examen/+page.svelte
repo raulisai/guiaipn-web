@@ -204,7 +204,6 @@
     
     .stat-chart-container {
         position: relative;
-        z-index: 5;
         margin-top: 0.5rem;
         border-radius: 0.5rem;
         overflow: hidden;

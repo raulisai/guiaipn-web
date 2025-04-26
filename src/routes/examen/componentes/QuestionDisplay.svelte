@@ -13,9 +13,9 @@
 
 <div class="question-content flex flex-col items-center gap-4 rounded-md">
     <!-- Container for question text - enables horizontal scroll on mobile -->
-    <div id="question" class="question-text-container relative w-full p-4" class:long-question={isLongQuestion}>
+    <div id="question" class="question-text-container relative w-full p-4" >
         <!-- Inner div to handle nowrap -->
-        <div class="question-text-content" class:long-question-content={isLongQuestion}>
+        <div class="question-text-content"   class:long-question={isLongQuestion}>
             <MathForm isBlock={false} content={$examStore.reactivo.pregunta} />
         </div>     <!-- Image Container - Conditional Display -->
     <div class="flex flex-wrap question-imgreference w-full justify-center items-center gap-4 min-h-[50px]">
@@ -46,13 +46,14 @@
                     </button>
                 {/if}
             {/if}
-        </div>
-        
-        <!-- Character and Stats Container -->
+              <!-- Character and Stats Container -->
         <div class="character-stats-container">
             <!-- Character Mascot -->
             <CharacterIa />
         </div>
+        </div>
+        
+      
     </div>
 </div>
 
@@ -84,13 +85,6 @@
         border-radius: 20px;
         border: 3px solid transparent;
     }
-    
-    .long-question-content {
-        white-space: nowrap;
-        display: inline-block;
-        min-width: 100%;
-        text-align: left;
-    }
 
     .question-imgreference {
         position: relative;
@@ -105,7 +99,7 @@
 
     /* Apply horizontal scroll only on small screens for regular-length questions */
     @media (max-width: 640px) {
-        .question-text-container:not(.long-question) {
+        .long-question {
             overflow-x: auto; /* Enable horizontal scroll */
             /* Add some padding for scrollbar visibility if needed */
             padding-bottom: 12px;
@@ -113,23 +107,8 @@
             scrollbar-width: thin; /* Firefox */
             scrollbar-color: rgba(107, 114, 128, 0.5) transparent; /* Firefox */
         }
-        .question-text-container:not(.long-question)::-webkit-scrollbar {
+        .long-question::-webkit-scrollbar {
             height: 4px; /* Height of horizontal scrollbar */
-        }
-        .question-text-container:not(.long-question)::-webkit-scrollbar-track {
-            background: transparent; /* Track background */
-        }
-        .question-text-container:not(.long-question)::-webkit-scrollbar-thumb {
-            background-color: rgba(107, 114, 128, 0.5); /* Scrollbar color */
-            border-radius: 20px; /* Roundness of the scrollbar */
-            border: 3px solid transparent; /* Creates padding around scroll thumb */
-        }
-
-        .question-text-content:not(.long-question-content) {
-            white-space: nowrap; /* Prevent text wrapping */
-            display: inline-block; /* Necessary for nowrap */
-            min-width: 100%; /* Ensure it takes at least the container width */
-            text-align: left; /* Align text left when scrolling */
         }
         
         /* Mobile responsive for stats container */
