@@ -83,7 +83,7 @@
 <!-- Modal -->
 <div
     id="modal"
-    class="fixed inset-0 bg-black/60 w-full backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn"
+    class="fixed inset-0 bg-black/60 w-full backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
 >
     <div
         class="basemodal bg-gray-900/90 rounded-2xl max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl mt-32 shadow-cyan-500/20 border border-cyan-500/30 transition-all duration-300 ease-in-out"

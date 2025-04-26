@@ -13,12 +13,19 @@ type Reactivo = {
   imgAct: boolean;
 };
 
+// Definición del tipo para respuestas
+type AnswerData = {
+  isCorrect: boolean;
+  reactivoId: string;
+};
+
 // Definición del tipo para el estado del examen
 type ExamState = {
   totalQuestions: number;
   currentQuestion: number;
   materiaQuestion: string;
-  answers: { [key: number]: string };
+  answers: { [key: number]: string }; // mantener compatibilidad hacia atrás
+  answersDetailed: { [key: number]: AnswerData }; // nueva estructura con más datos
   reactivo: Reactivo;
   finish: boolean;
   showOptionalImage: boolean;
@@ -32,6 +39,7 @@ const initialState: ExamState = {
   currentQuestion: 0,
   materiaQuestion: 'Matematicas',
   answers: {},
+  answersDetailed: {},
   reactivo: {
     id: 'exm2024V1Math04',
     currentQuestion: '0',
@@ -77,10 +85,26 @@ const createExamStore = () => {
     // Guardar respuesta
     saveAnswer: (questionNumber: number, isCorrect: boolean) => update(state => {
       const newAnswers = { ...state.answers };
+      const newAnswersDetailed = { ...state.answersDetailed };
+      
+      // Mantener compatibilidad con el formato anterior
       newAnswers[questionNumber] = isCorrect ? 'true' : 'false';
+      
+      // Nuevo formato con datos detallados
+      newAnswersDetailed[questionNumber] = {
+        isCorrect: isCorrect,
+        reactivoId: state.reactivo.id
+      };
+      
+      // Guardar el ID del reactivo en localStorage para poder acceder desde el modal
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(`q${questionNumber}_id`, state.reactivo.id);
+      }
+      
       return {
         ...state,
-        answers: newAnswers
+        answers: newAnswers,
+        answersDetailed: newAnswersDetailed
       };
     }),
     
