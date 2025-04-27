@@ -1,11 +1,19 @@
 <script lang="ts">
     import { examStore } from "$lib/stores/examStore";
+    import { user } from "$lib/stores/authStore";
     
     export let toggleSolution: () => void;
 </script>
 
 <div class="flex justify-between items-center pb-2 border-b border-gray-700/50">
-    <span class="font-semibold text-gray-200">Pregunta {$examStore.reactivo.currentQuestion}</span>
+    <div class="flex flex-col">
+        <span class="font-semibold text-gray-200">Pregunta {$examStore.reactivo.currentQuestion}</span>
+        {#if $user}
+            <span class="text-sm text-yellow-400/80">Examen de {$user.name}</span>
+        {:else}
+            <span class="text-sm text-gray-400/80">Examen de práctica</span>
+        {/if}
+    </div>
     <!-- Botón switch minimalista para ver cómo resolverlo -->
     <div class="flex justify-end mb-6">
         <div class="relative group">

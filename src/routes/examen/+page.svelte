@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { reactivos } from '$lib/reactivos';
 	import { examStore } from '$lib/stores/examStore';
+	import { user } from '$lib/stores/authStore';
 	import ExamProgress from './componentes/Examprogres.svelte';
 	import IAResponse from './componentes/GenerationIAResponse.svelte';
 	import ModalFinish from './componentes/ModalFinish.svelte';

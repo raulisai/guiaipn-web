@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import { elasticOut, backOut } from 'svelte/easing';
+	import { user } from '$lib/stores/authStore';
 	
 	// Variables para la primera sección
 	let visible = false;

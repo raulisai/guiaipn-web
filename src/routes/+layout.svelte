@@ -1,11 +1,27 @@
 <script>
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { user, logout } from '$lib/stores/authStore';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	let menuBtn;
 	let activo = $state(false);
 	let scrolled = $state(false);
 	let isHovered = $state(false);
+	
+	// Rutas protegidas que requieren autenticación
+	const protectedRoutes = ['/progreso', '/materias'];
+	
+	// Verificar si la ruta actual requiere autenticación
+	let isProtectedRoute = $derived(protectedRoutes.some(route => $page.url.pathname.startsWith(route)));
+	
+	$effect(() => {
+		if (isProtectedRoute && !$user) {
+			// Redirigir al login si intenta acceder a una ruta protegida sin estar autenticado
+			goto('/cuenta/login');
+		}
+	});
 
 	let { children } = $props();
 
@@ -19,6 +35,12 @@
 
 	function handleMouseLeave() {
 		isHovered = false;
+	}
+	
+	function handleLogout() {
+		logout();
+		goto('/');
+		activo = false;
 	}
 
 	onMount(() => {
@@ -91,31 +113,62 @@
 					<line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round" />
 					<line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round" />
 					<line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round" />
-				</svg>
-				<div
+				</svg>				<div
 					class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10
 								opacity-0 group-hover:opacity-100 transition-opacity duration-300"
 				></div>
-			</button>			<div
-				class={`absolute right-0 mt-2 w-48 backdrop-blur-md border border-white/10
+			</button>			
+			<div
+				class={`absolute right-0 mt-2 w-64 backdrop-blur-md border border-white/10
 							rounded-lg shadow-lg py-2 transition-all duration-300
 							${scrolled ? 'bg-black/50' : 'bg-white/20'}
 							${activo ? 'menu-visible' : 'menu-hidden'}`}
 			>
-				<a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">Inicio</a
-				>
-				<a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
-					>Materias</a
-				>
-				<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
-					>Exámenes</a
-				>
-				<a href="/progreso" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
-					>Mi Progreso</a
-				>
-				<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
-					>Configuración</a
-				>
+				{#if $user}
+					<div class="px-4 py-3 border-b border-white/10">
+						<div class="flex items-center gap-3">
+							<div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-800 to-red-950 flex items-center justify-center text-white font-bold">
+								{$user.name.charAt(0).toUpperCase()}
+							</div>
+							<div>
+								<p class="text-white font-medium">{$user.name}</p>
+								<p class="text-white/60 text-sm">{$user.email}</p>
+							</div>
+						</div>
+					</div>
+				{/if}
+				
+				<a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">Inicio</a>
+				
+				<!-- Mostrar enlaces protegidos solo si está autenticado -->
+				{#if $user}
+					<a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Materias
+					</a>
+					<a href="/progreso" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Mi Progreso
+					</a>
+				{/if}
+				
+				<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+					Exámenes
+				</a>
+				
+				{#if $user}
+					<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Configuración
+					</a>
+					<button 
+						onclick={handleLogout}
+						class="w-full text-left px-4 py-2 text-red-400 hover:bg-white/10 transition-colors"
+					>
+						Cerrar Sesión
+					</button>
+				{:else}
+					<a href="/cuenta/login" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Iniciar Sesión
+					</a>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -287,8 +340,7 @@
 	</div>
 </footer>
 
-<style>
-	.menu-hidden {
+<style>	.menu-hidden {
 		display: none;
 		opacity: 0;
 		transform: translateY(-10px);
@@ -309,5 +361,16 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+	
+	/* Estilos para contenido de usuario en nav */
+	.user-avatar {
+		background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+		transition: all 0.3s ease;
+	}
+	
+	.user-avatar:hover {
+		transform: scale(1.05);
+		box-shadow: 0 0 15px rgba(255, 100, 100, 0.2);
 	}
 </style>
