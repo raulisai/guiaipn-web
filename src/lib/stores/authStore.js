@@ -1,30 +1,77 @@
 import { writable } from 'svelte/store';
+import { supabase } from '$lib/supabase';
+import { browser } from '$app/environment';
 
-// Verificar si estamos en el navegador antes de acceder a localStorage
-const isBrowser = typeof window !== 'undefined';
+// Crear la store con el valor inicial null (se actualizará después con el estado de la sesión)
+export const user = writable(null);
 
-// Intentar obtener el usuario del localStorage al iniciar la aplicación
-const storedUser = isBrowser ? localStorage.getItem('user') : null;
-const initialUser = storedUser ? JSON.parse(storedUser) : null;
+// Inicializa la sesión al cargar el archivo
+if (browser) {
+    // Obtener la sesión actual al iniciar
+    supabase.auth.getSession().then(({ data }) => {
+        if (data && data.session) {
+            user.set(data.session.user);
+        }
+    });
 
-// Crear la store con el valor inicial
-export const user = writable(initialUser);
+    // Configurar el listener de cambios en la autenticación
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (session) {
+            user.set(session.user);
+        } else {
+            user.set(null);
+        }
+    });
+}
 
-// Funciones auxiliares para login, logout, etc.
-export const login = (userData) => {
-    user.set(userData);
-    if (isBrowser) {
-        localStorage.setItem('user', JSON.stringify(userData));
-    }
+// Función para iniciar sesión con email/password
+export const signInWithEmail = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+    
+    if (error) throw error;
+    return data;
 };
 
-export const logout = () => {
-    user.set(null);
-    if (isBrowser) {
-        localStorage.removeItem('user');
-    }
+// Función para registrarse con email/password
+export const signUpWithEmail = async (email, password, name) => {
+    // Primero creamos el usuario
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: {
+                full_name: name
+            }
+        }
+    });
+    
+    if (error) throw error;
+    return data;
 };
 
+// Función para iniciar sesión con Google
+export const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: `${window.location.origin}/auth/callback`
+        }
+    });
+    
+    if (error) throw error;
+    return data;
+};
+
+// Función para cerrar sesión
+export const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+};
+
+// Función para verificar si el usuario está autenticado
 export const isAuthenticated = () => {
     let currentUser;
     const unsubscribe = user.subscribe(value => {

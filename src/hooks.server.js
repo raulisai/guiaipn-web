@@ -1,8 +1,46 @@
+import { createClient } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-    // Verify if path is protected (materias or progreso)
+    // Crear un cliente Supabase para cada solicitud
+    event.locals.supabase = createClient(
+        PUBLIC_SUPABASE_URL,
+        PUBLIC_SUPABASE_ANON_KEY,
+        {
+            auth: {
+                autoRefreshToken: false, // SvelteKit maneja el ciclo de vida de la request
+                persistSession: false    // Evitamos que Supabase use localStorage
+            }
+        }
+    );
+
+    // Crear un cliente de Supabase que use cookies para autenticación
+    event.locals.supabaseServerClient = createClient(
+        PUBLIC_SUPABASE_URL,
+        PUBLIC_SUPABASE_ANON_KEY,
+        {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: true,
+                detectSessionInUrl: false // No detectar la sesión en la URL, lo manejamos manualmente
+            },
+            global: {
+                headers: {
+                    cookie: event.request.headers.get('cookie') || ''
+                }
+            }
+        }
+    );
+
+    // Obtener la sesión del usuario actual
+    const {
+        data: { session }
+    } = await event.locals.supabaseServerClient.auth.getSession();
+    event.locals.session = session;
+
+    // Verificar rutas protegidas
     const protectedPaths = ['/materias', '/progreso', '/cuenta'];
     const isProtectedPath = protectedPaths.some(path => 
         event.url.pathname === path || event.url.pathname.startsWith(`${path}/`)
@@ -12,29 +50,32 @@ export async function handle({ event, resolve }) {
     const isLoginPath = event.url.pathname === '/cuenta/login';
     
     if (isProtectedPath && !isLoginPath) {
-        // Check if user is authenticated by looking at session cookie or localStorage
-        // For simplicity, we're checking for any user data in localStorage
-        // In a real app, you would check a session cookie or JWT token
-        const user = event.cookies.get('user');
-        
-        if (!user) {
-            // Redirect to login if not authenticated
+        // Verificar si el usuario está autenticado
+        if (!session) {
+            // Redireccionar al login si no está autenticado
             throw redirect(303, '/cuenta/login');
         }
     }
     
-    return await resolve(event);
+    // Resolver la request
+    const response = await resolve(event, {
+        transformPageChunk: ({ html }) => html
+    });
+
+    // Enviar las cookies de la sesión al cliente
+    return response;
 }
 
-// This is optional but can be used to handle errors
+// Manejo de errores
 /** @type {import('@sveltejs/kit').HandleServerError} */
 export function handleError({ error, event }) {
-    const errorCode = error && typeof error === 'object' && 'code' in error 
-        ? error.code 
-        : 'UNKNOWN';
-        
-    return {
-        message: 'Ocurrió un error inesperado. Por favor intenta nuevamente.',
-        code: errorCode
-    };
+    const errorId = crypto.randomUUID();
+    console.error(`Error ID ${errorId}:`, error);
+    
+    // Create a standard Error object that matches the expected return type
+    const customError = new Error('Ocurrió un error inesperado. Por favor intenta nuevamente.');
+    // Add the ID as a property to the error object
+    /** @type {any} */ (customError).id = errorId;
+    
+    return customError;
 }

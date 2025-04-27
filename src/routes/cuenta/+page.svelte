@@ -7,8 +7,13 @@
 
     let visible = false;
     let contentVisible = false;
+    let debugInfo = { hasUser: false, userData: null };
 
     onMount(() => {
+        //console.log("Estado inicial del usuario:", $user);
+        debugInfo.hasUser = !!$user;
+        debugInfo.userData = $user;
+        
         // Si no hay usuario, redirigir al login
         if (!$user) {
             goto('/cuenta/login');
@@ -17,7 +22,9 @@
 
         setTimeout(() => {
             visible = true;
-            setTimeout(() => contentVisible = true, 300);
+            contentVisible = true;
+
+           
         }, 100);
     });
 
@@ -49,12 +56,17 @@
                         border border-cyan hover:border-red-300/50 transition-all mb-8"
                     >
                         <div class="flex items-center gap-6 mb-6 pb-6 border-b border-white/10">
-                            <div class="w-20 h-20 rounded-full bg-gradient-to-r from-red-800 to-red-950 flex items-center justify-center text-white text-3xl font-bold">
-                                {$user.name.charAt(0).toUpperCase()}
+                            <div class="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-r from-red-800 to-red-950 flex items-center justify-center text-white text-3xl font-bold">
+                                {#if $user.user_metadata?.avatar_url}
+                                    <img src={$user.user_metadata.avatar_url} alt={$user.name} class="w-full h-full object-cover" />
+                                {:else}
+                                    {$user.name?.charAt(0).toUpperCase() || 'U'}
+                                {/if}
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-white">{$user.name}</h2>
+                                <h2 class="text-2xl font-bold text-white">{$user.user_metadata?.full_name || $user.name}</h2>
                                 <p class="text-white/70">{$user.email}</p>
+                                <p class="text-white/50 text-sm mt-1">Miembro desde: {new Date($user.created_at).toLocaleDateString()}</p>
                                 {#if $user.isAdmin}
                                     <span class="inline-block mt-2 px-3 py-1 text-xs font-medium bg-red-900/50 text-red-200 rounded-full">
                                         Administrador
@@ -152,6 +164,121 @@
                         </div>
                     </div>
                     
+                    <!-- Nueva sección de planes de pago -->
+                    <div 
+                        in:fade={{ duration: 500, delay: 150 }}
+                        class="bg-blue-card backdrop-blur-sm rounded-xl p-8 shadow-lg shadow-blue-900/20 
+                        border border-cyan hover:border-red-300/50 transition-all mb-8"
+                    >
+                        <h3 class="text-xl font-semibold text-white mb-6">Planes de Suscripción</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Plan Gratuito -->
+                            <div class="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-red-500/30 transition-all relative overflow-hidden">
+                                <div class="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-br from-blue-900 to-blue-700 rotate-12"></div>
+                                <h4 class="text-lg font-bold text-white mb-2">Gratuito</h4>
+                                <p class="text-3xl font-bold text-white mb-4">$0 <span class="text-sm font-normal text-white/70">/mes</span></p>
+                                
+                                <ul class="space-y-2 mb-6">
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>5 exámenes mensuales</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Estadísticas básicas</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/40 text-sm line-through">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-700 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Acceso a material premium</span>
+                                    </li>
+                                </ul>
+                                
+                                <button class="w-full py-2 bg-white/10 text-white border border-white/20 rounded-lg hover:bg-white/20 transition-colors">
+                                    Plan actual
+                                </button>
+                            </div>
+                            
+                            <!-- Plan Estándar -->
+                            <div class="bg-white/5 rounded-lg p-6 border border-red-500/30 hover:border-red-500/70 transition-all relative overflow-hidden transform hover:scale-105 duration-300">
+                                <div class="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-red-900 to-red-700 rotate-12"></div>
+                                <div class="absolute top-0 right-0 bg-red-600 text-white text-xs px-3 py-1 font-bold">POPULAR</div>
+                                <h4 class="text-lg font-bold text-white mb-2">Estándar</h4>
+                                <p class="text-3xl font-bold text-white mb-4">$99 <span class="text-sm font-normal text-white/70">/mes</span></p>
+                                
+                                <ul class="space-y-2 mb-6">
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Exámenes ilimitados</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Estadísticas avanzadas</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Acceso a material premium</span>
+                                    </li>
+                                </ul>
+                                
+                                <button class="w-full py-2 bg-gradient-to-r from-red-950 to-red-800 text-white rounded-lg hover:from-red-800 hover:to-red-700 transition-colors">
+                                    Actualizar Plan
+                                </button>
+                            </div>
+                            
+                            <!-- Plan Premium -->
+                            <div class="bg-white/5 rounded-lg p-6 border border-white/10 hover:border-red-500/30 transition-all relative overflow-hidden">
+                                <div class="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-br from-purple-900 to-purple-700 rotate-12"></div>
+                                <h4 class="text-lg font-bold text-white mb-2">Premium</h4>
+                                <p class="text-3xl font-bold text-white mb-4">$199 <span class="text-sm font-normal text-white/70">/mes</span></p>
+                                
+                                <ul class="space-y-2 mb-6">
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Todo lo del plan Estándar</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Asesorías personalizadas</span>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-white/80 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                        <span>Contenido exclusivo</span>
+                                    </li>
+                                </ul>
+                                
+                                <button class="w-full py-2 bg-white/10 text-white border border-white/20 rounded-lg hover:bg-white/20 transition-colors">
+                                    Actualizar Plan
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <p class="text-white/70 text-sm">
+                                Los cambios en los planes de suscripción se aplicarán inmediatamente.
+                                <a href="/cuenta/facturacion" class="text-red-400 hover:text-red-300">Ver historial de facturación</a>
+                            </p>
+                        </div>
+                    </div>
+                    
                     <!-- Sección de seguridad -->
                     <div 
                         in:fade={{ duration: 500, delay: 200 }}
@@ -195,7 +322,7 @@
                     <!-- Botones de acción -->
                     <div class="flex justify-between">
                         <button 
-                            on:click={handleLogout}
+                            onclick={handleLogout}
                             in:scale={{ duration: 500, delay: 300 }}
                             class="px-6 py-2 bg-red-900/50 border border-red-800/50 rounded-lg text-white 
                             hover:bg-red-900/70 transition-all duration-300"
@@ -266,5 +393,10 @@
     
     input:checked + label + span {
         transform: translate(1.35rem, 0);
+    }
+    
+    /* New styles for the button hover effect */
+    button:hover {
+        background-color: #ff4757; /* Change to a brighter red on hover */
     }
 </style>

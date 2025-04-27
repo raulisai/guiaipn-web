@@ -3,12 +3,14 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import { elasticOut, backOut } from 'svelte/easing';
 	import { user } from '$lib/stores/authStore';
+	import { goto } from '$app/navigation';
 	
 	// Variables para la primera sección
 	let visible = false;
 	let heroVisible = false;
 	let buttonVisible = false;
 	let imageVisible = false;
+	let currentUser = null;
 	
 	// Variables para la sección "Cómo funciona"
 	let titleVisible = false;
@@ -62,7 +64,22 @@
 			setTimeout(() => buttonVisible = true, 800);
 			setTimeout(() => imageVisible = true, 400);
 		}, 300);
+
+		// Obtener el usuario actual
+		const unsubscribe = user.subscribe((value) => {
+			currentUser = value;
+		});
+
+		return () => unsubscribe();
 	});
+
+	function handleCTAClick() {
+		if (currentUser) {
+			goto('/materias');
+		} else {
+			goto('/cuenta/login');
+		}
+	}
 </script>
 
 <section
@@ -76,6 +93,18 @@
 		class="md:w-1/2 flex flex-col items-center justify-center text-center px-6 md:text-left mb-8 md:mb-0 z-10"
 	>
 		{#if visible}
+			{#if currentUser}
+				<div 
+					in:fade={{ duration: 500 }}
+					class="mb-4 p-4 bg-blue-950/30 backdrop-blur-sm rounded-lg border border-blue-800/50"
+				>
+					<h2 class="text-xl text-white font-medium">¡Bienvenido de nuevo!</h2>
+					<p class="text-cyan-400">
+						{currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]}
+					</p>
+				</div>
+			{/if}
+
 			<h1 
 				in:fly={{ y: -50, duration: 1000, easing: elasticOut }}
 				class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg"
