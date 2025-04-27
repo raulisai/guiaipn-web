@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import { elasticOut } from 'svelte/easing';
+	import { user } from '$lib/stores/authStore';
+	import { goto } from '$app/navigation';
 	
 	// Variables para animaciones
 	let titleVisible = false;
@@ -39,6 +41,12 @@
 	}
 	
 	onMount(() => {
+		// Verificar si el usuario está logueado
+		if (!$user) {
+			goto('/cuenta/login');
+			return;
+		}
+		
 		// Iniciar la primera animación inmediatamente
 		setTimeout(() => {
 			titleVisible = true;
