@@ -49,7 +49,7 @@
 <header
 	role="banner"
 	class={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out
-				${scrolled ? 'py-2 bg-black/50 backdrop-blur-md shadow-lg' : 'py-4'}`}
+				${scrolled ? 'py-2 bg-black/80 shadow-lg' : 'py-4 bg-transparent'}`}
 	onmouseenter={handleMouseEnter}
 	onmouseleave={handleMouseLeave}
 >
@@ -120,16 +120,14 @@
 	</div>
 </header>
 
-<!-- Spacer to prevent content from being hidden under the fixed header -->
-<div class={`${scrolled ? 'h-16' : 'h-24'} transition-all duration-300`}></div>
 
 <!-- Mejorar legibilidad en móviles -->
-<main class="prose prose-invert max-w-none md:prose-lg">
+<main class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#030e27]/90 to-black/90">
 	{@render children()}
 </main>
 
 <!-- Footer -->
-<footer class="text-white py-12">
+<footer class="text-white py-12 bg-[#030a1d]">
 	<div class="container mx-auto px-4">
 		<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 			<!-- Logo y descripción -->
