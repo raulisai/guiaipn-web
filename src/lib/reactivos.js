@@ -11,7 +11,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\sqrt{\\frac{z}{12r^3}(2r-2rs)^2}\\times\\sqrt[3]{\\frac{27r^9s^{12}}{z^{-15}}}",
+      "\\text{Simplificar la expresión algebraica: }\\sqrt{\\frac{z}{12r^3}(2r-2rs)^2}\\times\\sqrt[3]{\\frac{27r^9s^{12}}{z^{-15}}}",
     opciones: {
       a: "\\frac{s}{r}(1-s)z^2",
       b: "rs^2(1-s)^2z^3",
@@ -52,7 +52,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
-    pregunta: "(3n-2s)^3 = 27n^3 + (\\_\\_) + 36ns^2 + (\\_\\_)",
+    pregunta: "\\text{Completar el binomio: } (3n-2s)^3 = 27n^3 + (\\_\\_) + 36ns^2 + (\\_\\_)",
     opciones: {
       a: "-27n^2s, -4s^2",
       b: "-54n^2s, -8s^3",
@@ -123,7 +123,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\frac{\\left(\\frac{3}{x-3}+\\frac{x}{x+3}\\right)}{\\frac{1}{x^2-9}}",
+      "\\text{Simplificar la expresion : } \\frac{\\left(\\frac{3}{x-3}+\\frac{x}{x+3}\\right)}{\\frac{1}{x^2-9}}",
     opciones: { a: "x^2-3", b: "x^2+9", c: "x^2+3", d: "x^2-9" },
     id: "2024Algebra21",
     resuesta: "b",
@@ -154,7 +154,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: true
   },  {
     pregunta:
-      "\\text{Realizar la operación: } f(x)-\\alpha g(x)+h(x)\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
+      "\\text{Realizar la operación: } \\text {f(x)-alpha g(x)+h(x)}\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
     opciones: {
       a: "5x^2-4xy",
       b: "-5x^2-8xy",
@@ -167,7 +167,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{H}_n(x)=\\frac{(-1)^{n+2}}{\\sqrt{(x-1)^{2n+5}+1}}\\cos((2n+1)\\pi x)\\quad\\text{Calcular los valores } H_0(0) \\text{ y } H_2(1)",
+      "\\text{Una señal es descrita por la funcion: } \\text{H}_n(x)=\\frac{(-1)^{n+2}}{\\sqrt{(x-1)^{2n+5}+1}}\\cos((2n+1)\\pi x)\\quad\\text{Calcular los valores } H_0(0) \\text{ y } H_2(1)",
     opciones: {
       a: "H_0(0)=0,\\; H_2(1)=1",
       b: "H_0(0)=0,\\; H_2(1)=-1",
@@ -216,7 +216,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: true
   },  {
     pregunta:
-      "\\text{Resolver el sistema de ecuaciones lineales si se sabe que } z=2: \\begin{align} -x+y+z=2 \\\\ x-3y-4z=5 \\end{align}",
+      "\\text{Resolver el sistema de ecuaciones lineales si se sabe que } \\text {z=2: } \\begin{align} -x+y+z=2 \\\\ x-3y-4z=5 \\end{align}",
     opciones: {
       a: "x=\\frac{11}{2}, y=\\frac{11}{2}",
       b: "x=\\frac{13}{2}, y=\\frac{13}{2}",
@@ -289,7 +289,8 @@ export const reactivos = [
     resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },  {
-    pregunta: "Relacionar cada conjunto con los números que le corresponden:",
+    pregunta: 
+    "\\text{Relacionar cada conjunto con los números que le corresponden: }",
     opciones: {
       a: "1B, 2D, 3A, 4C",
       b: "1C, 2D, 3A, 4B",
@@ -314,7 +315,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: true
   },  {
     pregunta:
-      "\\text{Realizar la siguiente operación con números decimales: } s=\\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
+      "\\text{Realizar la siguiente operación con números decimales: } \\text{s= } \\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
     opciones: {
       a: "\\frac{9}{2}",
       b: "\\frac{7}{2}",
@@ -488,7 +489,8 @@ export const reactivos = [
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMath: true
   },  {
-    pregunta: "Asociar la fórmula con el concepto correspondiente.",
+    pregunta: 
+    "\\text{Asociar la fórmula con el concepto correspondiente. }",
     opciones: {
       a: "1C, 2B, 3D, 4A",
       b: "1C, 2A, 3D, 4B",
@@ -565,7 +567,8 @@ export const reactivos = [
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },  {
-    pregunta: "Identificar cuál de los siguientes eventos no es aleatorio.",
+    pregunta: 
+    "\\text{Identificar cuál de los siguientes eventos no es aleatorio.}",
     opciones: {
       a: "Lanzar una moneda al aire",
       b: "Ir a la escuela todos los días",
@@ -647,7 +650,7 @@ export const reactivos = [
       a: "61",
       b: "62",
       c: "63",
-      d: "64"
+      d: "64",
     },
     id: "2024Estadistica29",
     resuesta: "c",
@@ -660,7 +663,7 @@ export const reactivos = [
       a: "0.3",
       b: "0.4",
       c: "0.6",
-      d: "0.7"
+      d: "0.7",
     },
     id: "2024Estadistica26",
     resuesta: "a",
@@ -673,7 +676,7 @@ export const reactivos = [
       a: "5 \\%",
       b: "10 \\%",
       c: "15 \\%",
-      d: "20 \\%"
+      d: "20 \\%",
     },
     id: "2024Estadistica30",
     resuesta: "c",
@@ -686,7 +689,7 @@ export const reactivos = [
       a: "1, 3, 2",
       b: "1, 2, 3",
       c: "3, 1, 2",
-      d: "3, 2, 1"
+      d: "3, 2, 1",
     },
     id: "2024Estadistica36",
     resuesta: "b",
@@ -699,7 +702,7 @@ export const reactivos = [
       a: "7",
       b: "9",
       c: "24",
-      d: "30"
+      d: "30",
     },
     id: "2024Estadistica38",
     resuesta: "c",
@@ -712,30 +715,31 @@ export const reactivos = [
       a: "1 y 2",
       b: "1 y 3",
       c: "2 y 3",
-      d: "2 y 4"
+      d: "2 y 4",
     },
     id: "2024Estadistica40",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },  {
-    pregunta: "Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.",
+    pregunta: 
+    "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
     opciones: {
       a: "Mediana",
       b: "Armónica",
       c: "Aritmética",
-      d: "Geométrica"
+      d: "Geométrica",
     },
     id: "2024Estadistica37",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMath: false
   },{
     pregunta:
-      "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana:} \\begin{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
+      "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana: } \\{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
     opciones: {
       a: "2,1,3,4",
       b: "2,3,1,4",
       c: "1,4,2,3",
-      d: "1,2,4,3"
+      d: "1,2,4,3",
     },
     id: "2024Estadistica39",
     resuesta: "a",
@@ -748,7 +752,7 @@ export const reactivos = [
       a: "12^n",
       b: "8^n",
       c: "8n",
-      d: "12n"
+      d: "12n",
     },
     id: "2024Estadistica12",
     resuesta: "a",
@@ -761,7 +765,7 @@ export const reactivos = [
       a: "0.012",
       b: "0.12",
       c: "0.5",
-      d: "0.4"
+      d: "0.4",
     },
     id: "2024Estadistica14",
     resuesta: "c",
@@ -790,19 +794,6 @@ export const reactivos = [
       d: "\\frac{9}{100}",
     },
     id: "2024Estadistica16", // Hay dos preguntas en un mismo inciso se tiene que partir en dos la pregunta 
-    resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
-  },
-  {
-    pregunta:
-      "\\text{Calcular la probabilidad de seleccionar una pieza no defectuosa.}",
-    opciones: {
-      a: "\\frac{59}{60}",
-      b: "\\frac{73}{75}",
-      c: "\\frac{97}{100}",
-      d: "\\frac{297}{300}",
-    },
-    id: "2024Estadistica17",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
@@ -863,15 +854,21 @@ export const reactivos = [
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
       c: "\\frac{20}{81}",
-      d: "\\frac{10}{81}",
+      d: "\\frac{10}{81}"
     },
     id: "2024Estadistica28",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
-    pregunta: "\\text{¿Cuál es el valor de la mediana?}",
-    opciones: { a: "61", b: "62", c: "63", d: "64" },
+    pregunta: 
+    "\\text{¿Cuál es el valor de la mediana?}",
+    opciones: { 
+      a: "61", 
+      b: "62", 
+      c: "63", 
+      d: "64" 
+    },
     id: "2024Estadistica29",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
@@ -923,7 +920,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: true
   },  {
     pregunta:
-      "\\text{Ordenar ascendentemente los conjuntos de números según su mediana:} \\\\ \\begin{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
+      "\\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",
@@ -1057,7 +1054,7 @@ export const reactivos = [
       d: "[-3,5]",
     },
     id: "2024calculoDiferencial01",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1070,7 +1067,7 @@ export const reactivos = [
       d: "2",
     },
     id: "2024calculoDiferencial17",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1083,7 +1080,7 @@ export const reactivos = [
       d: "3, 2, 1, 4",
     },
     id: "2024calculoDiferencial21",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1096,7 +1093,7 @@ export const reactivos = [
       d: "1D, 2C, 3A, 4B",
     },
     id: "2024calculoDiferencial24",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1109,7 +1106,7 @@ export const reactivos = [
       d: "2^{x}\\,\\ln2+2x^{2}",
     },
     id: "2024calculoDiferencial27",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1148,7 +1145,7 @@ export const reactivos = [
       d: "a\\sec^{2}(ax+b)",
     },
     id: "2024calculoDiferencial30",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1161,7 +1158,7 @@ export const reactivos = [
       d: "\\frac{1}{x}+\\ln x",
     },
     id: "2024calculoDiferencial29",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1200,7 +1197,7 @@ export const reactivos = [
       d: "x = 2, x = -1",
     },
     id: "2024calculoDiferencial36",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1226,7 +1223,7 @@ export const reactivos = [
       d: "3",
     },
     id: "2024calculoDiferencial05",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1239,7 +1236,7 @@ export const reactivos = [
       d: "[-1, 0)",
     },
     id: "2024calculoDiferencial03",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1265,12 +1262,12 @@ export const reactivos = [
       d: "9",
     },
     id: "2024calculoDiferencial08",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to1}\\left(\\frac{1}{1-x}-\\frac{3}{1-x^{3}}\\right)",
+      "\\text{Calcular el valor del límite: } \\lim_{x\\to1}\\left(\\frac{1}{1-x}-\\frac{3}{1-x^{3}}\\right)",
     opciones: {
       a: "-3",
       b: "-1",
@@ -1291,7 +1288,7 @@ export const reactivos = [
       d: "No existe",
     },
     id: "2024calculoDiferencial10",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1304,7 +1301,7 @@ export const reactivos = [
       d: "[-1, \\infty)",
     },
     id: "2024calculoDiferencial06",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1317,12 +1314,12 @@ export const reactivos = [
       d: "(-2,0)",
     },
     id: "2024calculoDiferencial07",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to0}\\frac{1-\\cos ax}{1-\\cos bx}",
+      "\\text{Cuál es el valor del límite } \\lim_{x\\to0}\\frac{1-\\cos ax}{1-\\cos bx}",
     opciones: {
       a: "\\frac{a}{b}",
       b: "\\frac{b}{a}",
@@ -1330,12 +1327,12 @@ export const reactivos = [
       d: "\\frac{b^{2}}{a^{2}}",
     },
     id: "2024calculoDiferencial12",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to\\infty}\\left(\\frac{x^{3}}{x^{2}+1}-x\\right)",
+      "\\text{Calcular el valor del límite: } \\lim_{x\\to\\infty}\\left(\\frac{x^{3}}{x^{2}+1}-x\\right)",
     opciones: {
       a: "-1",
       b: "0",
@@ -1348,7 +1345,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to\\infty}\\left(\\frac{x}{1+x}\\right)^{x}",
+      "\\text{Calcular el valor del límite: } \\lim_{x\\to\\infty}\\left(\\frac{x}{1+x}\\right)^{x}",
     opciones: {
       a: "e",
       b: "1",
@@ -1356,12 +1353,12 @@ export const reactivos = [
       d: "0",
     },
     id: "2024calculoDiferencial16",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to\\infty}\\frac{\\sin^{3}x}{x^{2}}",
+      "\\text{Determinarl el valor del límite: } \\lim_{x\\to\\infty}\\frac{\\sin^{3}x}{x^{2}}",
     opciones: {
       a: "0",
       b: "1",
@@ -1369,12 +1366,12 @@ export const reactivos = [
       d: "3",
     },
     id: "2024calculoDiferencial13",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to\\infty}\\bigl(3^{x}+5^{x}\\bigr)^{1/x}",
+      "\\text{Calcular el valor del límite: } \\lim_{x\\to\\infty}\\bigl(3^{x}+5^{x}\\bigr)^{1/x}",
     opciones: {
       a: "3",
       b: "5",
@@ -1387,7 +1384,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\displaystyle \\lim_{x\\to0}\\frac{\\sin7x}{\\sin5x}",
+      "\\text{Calcular el valor del límite: } \\lim_{x\\to0}\\frac{\\sin7x}{\\sin5x}",
     opciones: {
       a: "\\frac{7}{5}",
       b: "\\frac{5}{7}",
@@ -1395,9 +1392,10 @@ export const reactivos = [
       d: "\\frac{7}{12}",
     },
     id: "2024calculoDiferencial11",
-    resuesta: "b",
+    resuesta: "a",
     explicacion: "void", imgActive: false, lengMath: true
-  },  {
+  }, 
+   {
     pregunta:
       "\\text{Sea } f(x)=\\begin{cases}3x+4, & x\\leq 3 \\\\ 2x+k, & x > 3\\end{cases}\\; \\text{Si es continua en } x=3\\text{, entonces } k=\\underline{\\quad}",
     opciones: {
@@ -1407,20 +1405,20 @@ export const reactivos = [
       d: "7",
     },
     id: "2024calculoDiferencial20",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
       "\\text{La función por intervalos }\\begin{cases}|x-3|,&x\\ge1\\\\ \\tfrac{x^{2}}{4}-\\tfrac{3x}{2}+\\tfrac{13}{4},&x<1\\end{cases}\\text{ es:}",
     opciones: {
-      a: "continua en \\(x=1\\) pero no en \\(x=3\\)",
-      b: "continua en \\(x=3\\) pero no en \\(x=1\\)",
-      c: "continua en \\(x=1\\) y en \\(x=3\\)",
-      d: "no es continua en \\(x=1\\) ni en \\(x=3\\)",
+      a: "\\text{continua en } \\(x=1\\) \\text{pero no en } \\(x=3\\)",
+      b: "\\text{continua en } \\(x=3\\) \\text{pero no en } \\(x=1\\)",
+      c: "\\text{continua en } \\(x=1\\) \\text{y en } \\(x=3\\)",
+      d: "\\text{no es continua en } \\(x=1\\) \\text{ni en } \\(x=3\\)",
     },
     id: "2024calculoDiferencial18",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1433,7 +1431,7 @@ export const reactivos = [
       d: "4",
     },
     id: "2024calculoDiferencial19",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1472,7 +1470,7 @@ export const reactivos = [
       d: "x",
     },
     id: "2024calculoDiferencial31",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1485,7 +1483,7 @@ export const reactivos = [
       d: "4",
     },
     id: "2024calculoDiferencial28",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1511,7 +1509,7 @@ export const reactivos = [
       d: "-3x^{2}\\sin x^{3}(\\cos^{2}x^{3}+5)",
     },
     id: "2024calculoDiferencial33",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1524,7 +1522,7 @@ export const reactivos = [
       d: "-e^{x-y}",
     },
     id: "2024calculoDiferencial34",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMath: true
   },
   {
@@ -1537,7 +1535,7 @@ export const reactivos = [
       d: "\\sqrt{x^{2}+9}",
     },
     id: "2024calculoDiferencial32",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void",
     imgActive: false, lengMath: true
   },
@@ -1551,7 +1549,7 @@ export const reactivos = [
       d: "\\frac{1}{18}",
     },
     id: "2024calculoDiferencial40",
-    resuesta: "b",
+    resuesta: "c",
     explicacion: "void",
     imgActive: false, lengMath: true
   },
@@ -1565,7 +1563,7 @@ export const reactivos = [
       d: "x = 3",
     },
     id: "2024calculoDiferencial37",
-    resuesta: "b",
+    resuesta: "d",
     explicacion: "void",
     imgActive: false,
     lengMath: true
