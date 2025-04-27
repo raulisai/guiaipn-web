@@ -16,6 +16,11 @@
 	let step3Visible = false;
 	let ctaVisible = false;
 	
+	// Variables para la sección "Mi Progreso"
+	let progressTitleVisible = false;
+	let progressDashboardVisible = false;
+	let progressCtaVisible = false;
+	
 	// Función de utilidad para detectar cuando un elemento es visible en el viewport
 	function inView(node, options = {}) {
 		const { rootMargin = '0px', threshold = 0 } = options;
@@ -30,6 +35,9 @@
 					if (sectionId === 'step2') step2Visible = true;
 					if (sectionId === 'step3') step3Visible = true;
 					if (sectionId === 'cta') ctaVisible = true;
+					if (sectionId === 'progress-title') progressTitleVisible = true;
+					if (sectionId === 'progress-dashboard') progressDashboardVisible = true;
+					if (sectionId === 'progress-cta') progressCtaVisible = true;
 				}
 			});
 		};
@@ -287,6 +295,8 @@
 	</div>
 </section>
 
+
+
 <style>
 	/* Estilos básicos */
 	.border-cyan {
@@ -414,6 +424,22 @@
 		animation: floating 10s ease-in-out 2s infinite, glow 5s infinite 2s alternate;
 	}
 	
+	.floating-4 {
+		width: 250px;
+		height: 250px;
+		top: 60%;
+		left: 3%;
+		animation: floating 14s ease-in-out 1.5s infinite, glow 7s infinite 1.5s alternate;
+	}
+	
+	.floating-5 {
+		width: 180px;
+		height: 180px;
+		top: 20%;
+		right: 5%;
+		animation: floating 11s ease-in-out 2.5s infinite, glow 7s infinite 1s alternate;
+	}
+	
 	/* Partículas de fondo */
 	.particles-container {
 		background-image: 
@@ -449,6 +475,30 @@
 	.section-how {
 		position: relative;
 		overflow: hidden;
+	}
+	
+	/* Estilos para la sección de Mi Progreso */
+	.section-progress {
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.progress-card {
+		background: #0b1a32a3;
+		transition: all 0.3s ease;
+	}
+	
+	.progress-card:hover {
+		box-shadow: 0 5px 30px rgba(153, 27, 27, 0.2);
+	}
+	
+	.progress-circle-fill {
+		animation: progressFill 2s ease-out forwards;
+	}
+	
+	@keyframes progressFill {
+		0% { stroke-dashoffset: 377; }
+		100% { stroke-dashoffset: 94; }
 	}
 	
 	/* Definiciones de animaciones */
@@ -495,8 +545,7 @@
 		100% { background-position: 1000px 1000px, 500px 500px; }
 	}
 	
-	/* Media queries */
-	@media (max-width: 430px) {
+	/* Media queries */	@media (max-width: 430px) {
 		section {
 			margin-top: 100px;
 			gap: 1px;
@@ -511,5 +560,45 @@
 	.content_guiaIPN {
 		margin-top: -100;
 		margin-bottom: 50px;
+	}
+	
+	/* Estilos para la sección de Mi Progreso */
+	.section-progress {
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.progress-card {
+		background: #0b1a32a3;
+		transition: all 0.3s ease;
+	}
+	
+	.progress-card:hover {
+		box-shadow: 0 5px 30px rgba(153, 27, 27, 0.2);
+	}
+	
+	.floating-4 {
+		width: 250px;
+		height: 250px;
+		top: 60%;
+		left: 3%;
+		animation: floating 14s ease-in-out 1.5s infinite, glow 7s infinite 1.5s alternate;
+	}
+	
+	.floating-5 {
+		width: 180px;
+		height: 180px;
+		top: 20%;
+		right: 5%;
+		animation: floating 11s ease-in-out 2.5s infinite, glow 7s infinite 1s alternate;
+	}
+	
+	.progress-circle-fill {
+		animation: progressFill 2s ease-out forwards;
+	}
+	
+	@keyframes progressFill {
+		0% { stroke-dashoffset: 377; }
+		100% { stroke-dashoffset: 94; }
 	}
 </style>

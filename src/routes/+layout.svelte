@@ -96,9 +96,7 @@
 					class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10
 								opacity-0 group-hover:opacity-100 transition-opacity duration-300"
 				></div>
-			</button>
-
-			<div
+			</button>			<div
 				class={`absolute right-0 mt-2 w-48 backdrop-blur-md border border-white/10
 							rounded-lg shadow-lg py-2 transition-all duration-300
 							${scrolled ? 'bg-black/50' : 'bg-white/20'}
@@ -111,6 +109,9 @@
 				>
 				<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
 					>Exámenes</a
+				>
+				<a href="/progreso" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
+					>Mi Progreso</a
 				>
 				<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
 					>Configuración</a
