@@ -188,6 +188,7 @@
 				pregunta={$examStore.reactivo.pregunta}
 				id={$examStore.reactivo.id}
 				iscorrect={$examStore.reactivo.iscorrectQuestion}
+				lengMath={$examStore.reactivo.lengMath}
 			/>
 
 			{#if $examStore.finish}

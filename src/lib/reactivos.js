@@ -441,11 +441,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Si el conjunto A tiene 1024 subconjuntos, indicar su cardinalidad.}",
+      "Si el conjunto A tiene 1024 subconjuntos, indicar su cardinalidad.",
     opciones: { a: "10", b: "32", c: "128", d: "256" },
     id: "2024Estadistica04",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -1111,7 +1111,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Ordena los puntos } A(0,4), B(1,2), C(2,4) \\text{ del menor al mayor valor de } f'(x)",
+      "Ordena los puntos  A(0,4), B(1,2), C(2,4) del menor al mayor valor de f'(x)",
     opciones: {
       a: "A, C, B",
       b: "B, A, C",
@@ -1120,7 +1120,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial25",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:

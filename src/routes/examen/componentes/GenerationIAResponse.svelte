@@ -1,5 +1,5 @@
 <script>
-	let { pregunta, id, iscorrect } = $props();
+	let { pregunta, id, iscorrect, lengMath } = $props();
 	import MathForm from './Math.svelte';
 
 	let respuesta = $state({
@@ -11,7 +11,10 @@
 	let isLoading = $state(false); // Nueva variable para controlar el estado de carga
 	// svelte-ignore non_reactive_update
 	let preguntaAct = pregunta; // Inicializar preguntaAct como un estado
-    let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
+	let lengMat = lengMath; // Nueva variable para controlar el estado de la pregunta
+	let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
+
+
 
 	export function toogleModal() {
 		showModal = !showModal;
@@ -24,11 +27,10 @@
 
 	export async function updateData(respUser, resCorrect) {
 		preguntaAct = pregunta;
+		lengMat = lengMath; // Actualizar el estado de la pregunta
 		respuesta.usuario = respUser;
 		respuesta.correcta = resCorrect;
 		isLoading = true; // Activar el estado de carga
-
-	
 
 		try {
 			explication = await enviarRespuesta(pregunta, respuesta.correcta);
@@ -37,7 +39,7 @@
 			console.error('Error al obtener la explicación:', error);
 		} finally {
 			isLoading = false; // Desactivar el estado de carga
-			classTopic ='margin-modal';
+			classTopic = 'margin-modal';
 		}
 	}
 
@@ -80,168 +82,229 @@
 </script>
 
 {#if showModal}
-<!-- Modal -->
-<div
-    id="modal"
-    class="fixed inset-0 bg-black/60 w-full backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
->
-    <div
-        class="basemodal bg-gray-900/90 rounded-2xl max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl mt-32 shadow-cyan-500/20 border border-cyan-500/30 transition-all duration-300 ease-in-out"
-        style={classTopic}
-    >
-        <!-- Decorative elements -->
-        <div class="absolute -top-3 left-10 w-40 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse"></div>
-        <div class="absolute -bottom-3 right-10 w-40 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse"></div>
-        
-        <div class="p-4 md:p-6 lg:p-8 relative">
-            <div class="mb-6 relative">
-                <!-- Header with speech bubble -->
-                <div class="flex justify-between items-center mb-6">
-                    <button
-                        onclick={closeModal}
-                        class="text-cyan-300 hover:text-white transition-all duration-300 text-xl h-10 w-10 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-cyan-900/50 hover:scale-110 border border-cyan-500/30"
-                    >
-                        ✕
-                    </button>
-                </div>
-                
-                <!-- Question and answers container -->
-                <div class="bg-gray-800/60 rounded-xl p-4 md:p-5 border border-cyan-500/20 mb-6 transform hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-cyan-500/10">
-                    <div class="question mb-4 break-words md:whitespace-normal relative group">
-                        <p class="text-cyan-300/90 text-sm font-semibold mb-2 uppercase flex items-center">
-                            <span class="inline-block w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-ping"></span>
-                            Pregunta
-                        </p>
-                        <div class="text-white text-secondary bg-gray-900/40 p-3 rounded-lg border-l-2 border-cyan-400/70 group-hover:border-cyan-400 transition-all duration-300">
-                            <MathForm isBlock={false} content={preguntaAct} />
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="transform hover:translate-y-[-2px] transition-all duration-300 group">
-                            <div class="bg-gray-800/80 py-3 px-4 rounded-lg border-l-2 border-blue-400/50 group-hover:border-blue-400 transition-all">
-                                <p class="text-blue-300 text-sm font-semibold mb-2 uppercase flex items-center">
-                                    <span class="inline-block w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                                    Tu respuesta
-                                </p>
-                                <div class="text-gray-100 text-secondary"><MathForm isBlock={false} content={respuesta.usuario} /></div>
-                            </div>
-                        </div>
-                        
-                        <div class="transform hover:translate-y-[-2px] transition-all duration-300 group">
-                            <div class="bg-gray-800/80 py-3 px-4 rounded-lg border-l-2 border-emerald-400/50 group-hover:border-emerald-400 transition-all">
-                                <p class="text-emerald-300 text-sm font-semibold mb-2 uppercase flex items-center">
-                                    <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
-                                    Respuesta correcta
-                                </p>
-                                <div class="text-gray-100 text-secondary"><MathForm isBlock={false} content={respuesta.correcta} /></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="space-y-6">
-                {#if isLoading}
-                <!-- Futuristic loading indicator with holographic effect -->
-                <div class="flex flex-col justify-center items-center h-80">
-                    <div class="cyberpulse-loader relative w-80 h-40">
-                        <!-- Holographic rings -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="custom-ring ring-1"></span>
-                            <span class="custom-ring ring-2"></span>
-                            <span class="custom-ring ring-3"></span>
-                        </div>
-                        <!-- Central core -->
-                        <div class="core absolute inset-0 flex items-center justify-center">
-                            <div class="pulse-core"></div>
-                            <div class="scan-line"></div>
-                        </div>
-                        <!-- Orbiting particles -->
-                        <div class="orbital-particles">
-                            {#each Array(8) as _, i}
-                                <div class="particle" style="--particle-index: {i}"></div>
-                            {/each}
-                        </div>
-                    </div>
-                    <p class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mt-8 text-lg font-medium tracking-wider glow-text">
-                        <span class="typing-text">Analizando respuesta...</span>
-                    </p>
-                </div>
-                {:else}
-                <!-- Contenido responsivo con animaciones -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Explicación Problema -->
-                    <div class="bg-gray-800/50 rounded-xl p-5 border border-cyan-500/20 shadow-lg shadow-cyan-900/10 hover:shadow-cyan-500/30 transition-all duration-500 group">
-                        <p class="text-cyan-300 text-sm font-semibold uppercase mb-3 flex items-center">
-                            <span class="inline-block w-1.5 h-1.5 bg-cyan-400 rounded-full mr-2 group-hover:animate-ping"></span>
-                            Explicación Problema
-                        </p>
-                        <div class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-cyan-400/30 group-hover:border-cyan-400 transition-all duration-300">
-                            {explication.explicacionRespuesta}
-                        </div>
-                    </div>
+	<!-- Modal -->
+	<div
+		id="modal"
+		class="fixed inset-0 bg-black/60 w-full backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn"
+	>
+		<div
+			class="basemodal bg-gray-900/90 rounded-2xl max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl mt-32 shadow-cyan-500/20 border border-cyan-500/30 transition-all duration-300 ease-in-out"
+			style={classTopic}
+		>
+			<!-- Decorative elements -->
+			<div
+				class="absolute -top-3 left-10 w-40 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse"
+			></div>
+			<div
+				class="absolute -bottom-3 right-10 w-40 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse"
+			></div>
 
-                    <!-- Tips -->
-                    <div class="bg-gray-800/50 rounded-xl p-5 border border-blue-500/20 shadow-lg shadow-blue-900/10 hover:shadow-blue-500/30 transition-all duration-500 group">
-                        <p class="text-blue-300 text-sm font-semibold uppercase mb-3 flex items-center">
-                            <span class="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full mr-2 group-hover:animate-ping"></span>
-                            Tips
-                        </p>
-                        <div class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-blue-400/30 group-hover:border-blue-400 transition-all duration-300">
-                            {explication.Tip}
-                        </div>
-                    </div>
-                </div>
+			<div class="p-4 md:p-6 lg:p-8 relative">
+				<div class="mb-6 relative">
+					<!-- Header with speech bubble -->
+					<div class="flex justify-between items-center mb-6">
+						<button
+							onclick={closeModal}
+							class="text-cyan-300 hover:text-white transition-all duration-300 text-xl h-10 w-10 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-cyan-900/50 hover:scale-110 border border-cyan-500/30"
+						>
+							✕
+						</button>
+					</div>
 
-                <!-- Pasos para resolver -->
-                <div class="bg-gray-800/50 rounded-xl p-5 border border-purple-500/20 shadow-lg shadow-purple-900/10 hover:shadow-purple-500/30 transition-all duration-500 group animate-fadeIn animation-delay-200">
-                    <p class="text-purple-300 text-sm font-semibold uppercase mb-3 flex items-center">
-                        <span class="inline-block w-1.5 h-1.5 bg-purple-400 rounded-full mr-2 group-hover:animate-ping"></span>
-                        Pasos para resolver
-                    </p>
-                    <div class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-purple-400/30 group-hover:border-purple-400 transition-all duration-300">
-                        <ol class="list-none pl-0 space-y-3">
-                            {#each explication.pasosParaResolverElProblema as paso, i}
-                                <li class="flex items-start group/item hover:translate-x-1 transition-all duration-300">
-                                    <span class="flex-shrink-0 inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-900/50 text-purple-300 mr-3 border border-purple-500/30 group-hover/item:bg-purple-800/80 transition-all duration-300">
-                                        {i + 1}
-                                    </span>
-                                    <span class="leading-relaxed">{paso}</span>
-                                </li>
-                            {/each}
-                        </ol>
-                    </div>
-                </div>
+					<!-- Question and answers container -->
+					<div
+						class="bg-gray-800/60 rounded-xl p-4 md:p-5 border border-cyan-500/20 mb-6 transform hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-cyan-500/10"
+					>
+						<div class="question mb-4 break-words md:whitespace-normal relative group">
+							<p class="text-cyan-300/90 text-sm font-semibold mb-2 uppercase flex items-center">
+								<span class="inline-block w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-ping"
+								></span>
+								Pregunta
+							</p>
+							<div
+								class="text-white text-secondary bg-gray-900/40 p-3 rounded-lg border-l-2 border-cyan-400/70 group-hover:border-cyan-400 transition-all duration-300"
+							>
+								{#if lengMat }
+									<div class="question-text-content" class:long-question={lengMat} >
+										<MathForm isBlock={false} content={preguntaAct} />
+									</div>
+								{:else}
+									<p>{preguntaAct}</p>
+								{/if}
+							</div>
+						</div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Formulas -->
-                    <div class="bg-gray-800/50 rounded-xl p-5 border border-emerald-500/20 shadow-lg shadow-emerald-900/10 hover:shadow-emerald-500/30 transition-all duration-500 group animate-fadeIn animation-delay-300">
-                        <p class="text-emerald-300 text-sm font-semibold uppercase mb-3 flex items-center">
-                            <span class="inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full mr-2 group-hover:animate-ping"></span>
-                            Fórmulas
-                        </p>
-                        <div class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-emerald-400/30 group-hover:border-emerald-400 transition-all duration-300">
-                            {explication.conceptosORecordatorios}
-                        </div>
-                    </div>
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="transform hover:translate-y-[-2px] transition-all duration-300 group">
+								<div
+									class="bg-gray-800/80 py-3 px-4 rounded-lg border-l-2 border-blue-400/50 group-hover:border-blue-400 transition-all"
+								>
+									<p class="text-blue-300 text-sm font-semibold mb-2 uppercase flex items-center">
+										<span class="inline-block w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+										Tu respuesta
+									</p>
+									<div class="text-gray-100 text-secondary">
+										<MathForm isBlock={false} content={respuesta.usuario} />
+									</div>
+								</div>
+							</div>
 
-                    <!-- Ejemplo -->
-                    <div class="bg-gray-800/50 rounded-xl p-5 border border-amber-500/20 shadow-lg shadow-amber-900/10 hover:shadow-amber-500/30 transition-all duration-500 group animate-fadeIn animation-delay-400">
-                        <p class="text-amber-300 text-sm font-semibold uppercase mb-3 flex items-center">
-                            <span class="inline-block w-1.5 h-1.5 bg-amber-400 rounded-full mr-2 group-hover:animate-ping"></span>
-                            Ejemplo
-                        </p>
-                        <div class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-amber-400/30 group-hover:border-amber-400 transition-all duration-300">
-                            {explication.ejemploSimilar}
-                        </div>
-                    </div>
-                </div>
-                {/if}
-            </div>
-        </div>
-    </div>
-</div>
+							<div class="transform hover:translate-y-[-2px] transition-all duration-300 group">
+								<div
+									class="bg-gray-800/80 py-3 px-4 rounded-lg border-l-2 border-emerald-400/50 group-hover:border-emerald-400 transition-all"
+								>
+									<p
+										class="text-emerald-300 text-sm font-semibold mb-2 uppercase flex items-center"
+									>
+										<span class="inline-block w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
+										Respuesta correcta
+									</p>
+									<div class="text-gray-100 text-secondary">
+										<MathForm isBlock={false} content={respuesta.correcta} />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="space-y-6">
+					{#if isLoading}
+						<!-- Futuristic loading indicator with holographic effect -->
+						<div class="flex flex-col justify-center items-center h-80">
+							<div class="cyberpulse-loader relative w-80 h-40">
+								<!-- Holographic rings -->
+								<div class="absolute inset-0 flex items-center justify-center">
+									<span class="custom-ring ring-1"></span>
+									<span class="custom-ring ring-2"></span>
+									<span class="custom-ring ring-3"></span>
+								</div>
+								<!-- Central core -->
+								<div class="core absolute inset-0 flex items-center justify-center">
+									<div class="pulse-core"></div>
+									<div class="scan-line"></div>
+								</div>
+								<!-- Orbiting particles -->
+								<div class="orbital-particles">
+									{#each Array(8) as _, i}
+										<div class="particle" style="--particle-index: {i}"></div>
+									{/each}
+								</div>
+							</div>
+							<p
+								class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 mt-8 text-lg font-medium tracking-wider glow-text"
+							>
+								<span class="typing-text">Analizando respuesta...</span>
+							</p>
+						</div>
+					{:else}
+						<!-- Contenido responsivo con animaciones -->
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<!-- Explicación Problema -->
+							<div
+								class="bg-gray-800/50 rounded-xl p-5 border border-cyan-500/20 shadow-lg shadow-cyan-900/10 hover:shadow-cyan-500/30 transition-all duration-500 group"
+							>
+								<p class="text-cyan-300 text-sm font-semibold uppercase mb-3 flex items-center">
+									<span
+										class="inline-block w-1.5 h-1.5 bg-cyan-400 rounded-full mr-2 group-hover:animate-ping"
+									></span>
+									Explicación Problema
+								</p>
+								<div
+									class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-cyan-400/30 group-hover:border-cyan-400 transition-all duration-300"
+								>
+									{explication.explicacionRespuesta}
+								</div>
+							</div>
+
+							<!-- Tips -->
+							<div
+								class="bg-gray-800/50 rounded-xl p-5 border border-blue-500/20 shadow-lg shadow-blue-900/10 hover:shadow-blue-500/30 transition-all duration-500 group"
+							>
+								<p class="text-blue-300 text-sm font-semibold uppercase mb-3 flex items-center">
+									<span
+										class="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full mr-2 group-hover:animate-ping"
+									></span>
+									Tips
+								</p>
+								<div
+									class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-blue-400/30 group-hover:border-blue-400 transition-all duration-300"
+								>
+									{explication.Tip}
+								</div>
+							</div>
+						</div>
+
+						<!-- Pasos para resolver -->
+						<div
+							class="bg-gray-800/50 rounded-xl p-5 border border-purple-500/20 shadow-lg shadow-purple-900/10 hover:shadow-purple-500/30 transition-all duration-500 group animate-fadeIn animation-delay-200"
+						>
+							<p class="text-purple-300 text-sm font-semibold uppercase mb-3 flex items-center">
+								<span
+									class="inline-block w-1.5 h-1.5 bg-purple-400 rounded-full mr-2 group-hover:animate-ping"
+								></span>
+								Pasos para resolver
+							</p>
+							<div
+								class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-purple-400/30 group-hover:border-purple-400 transition-all duration-300"
+							>
+								<ol class="list-none pl-0 space-y-3">
+									{#each explication.pasosParaResolverElProblema as paso, i}
+										<li
+											class="flex items-start group/item hover:translate-x-1 transition-all duration-300"
+										>
+											<span
+												class="flex-shrink-0 inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-900/50 text-purple-300 mr-3 border border-purple-500/30 group-hover/item:bg-purple-800/80 transition-all duration-300"
+											>
+												{i + 1}
+											</span>
+											<span class="leading-relaxed">{paso}</span>
+										</li>
+									{/each}
+								</ol>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<!-- Formulas -->
+							<div
+								class="bg-gray-800/50 rounded-xl p-5 border border-emerald-500/20 shadow-lg shadow-emerald-900/10 hover:shadow-emerald-500/30 transition-all duration-500 group animate-fadeIn animation-delay-300"
+							>
+								<p class="text-emerald-300 text-sm font-semibold uppercase mb-3 flex items-center">
+									<span
+										class="inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full mr-2 group-hover:animate-ping"
+									></span>
+									Fórmulas
+								</p>
+								<div
+									class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-emerald-400/30 group-hover:border-emerald-400 transition-all duration-300"
+								>
+									{explication.conceptosORecordatorios}
+								</div>
+							</div>
+
+							<!-- Ejemplo -->
+							<div
+								class="bg-gray-800/50 rounded-xl p-5 border border-amber-500/20 shadow-lg shadow-amber-900/10 hover:shadow-amber-500/30 transition-all duration-500 group animate-fadeIn animation-delay-400"
+							>
+								<p class="text-amber-300 text-sm font-semibold uppercase mb-3 flex items-center">
+									<span
+										class="inline-block w-1.5 h-1.5 bg-amber-400 rounded-full mr-2 group-hover:animate-ping"
+									></span>
+									Ejemplo
+								</p>
+								<div
+									class="text-gray-200 text-secondary bg-gray-900/40 p-4 rounded-lg border-l-2 border-amber-400/30 group-hover:border-amber-400 transition-all duration-300"
+								>
+									{explication.ejemploSimilar}
+								</div>
+							</div>
+						</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</div>
 {/if}
 
 <style>
@@ -337,13 +400,52 @@
 			blink 1s step-end infinite;
 	}
 
-	.text-secondary{
-		font-size:16px;
+	.text-secondary {
+		font-size: 16px;
 	}
-	
+
+
+	 /* Apply horizontal scroll for long questions regardless of screen size */
+    .long-question {
+        overflow-x: auto; /* Enable horizontal scroll */
+        padding-bottom: 12px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(107, 114, 128, 0.5) transparent;
+    }
+    
+    .long-question::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    .long-question::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .long-question::-webkit-scrollbar-thumb {
+        background-color: rgba(107, 114, 128, 0.5);
+        border-radius: 20px;
+        border: 3px solid transparent;
+    }
+
+    /* Apply horizontal scroll only on small screens for regular-length questions */
+    @media (max-width: 640px) {
+        .long-question {
+            overflow-x: auto; /* Enable horizontal scroll */
+            /* Add some padding for scrollbar visibility if needed */
+            padding-bottom: 12px;
+            /* Optional: Style the scrollbar for webkit browsers */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: rgba(107, 114, 128, 0.5) transparent; /* Firefox */
+        }
+        .long-question::-webkit-scrollbar {
+            height: 4px; /* Height of horizontal scrollbar */
+        }
+    
+    }
+
 	@media screen and (max-width: 768px) {
-		.text-secondary{
-			font-size:12px;
+		.text-secondary {
+			font-size: 12px;
 		}
 	}
 
