@@ -11,6 +11,7 @@
 	let isLoading = $state(false); // Nueva variable para controlar el estado de carga
 	// svelte-ignore non_reactive_update
 	let preguntaAct = pregunta; // Inicializar preguntaAct como un estado
+	// svelte-ignore non_reactive_update
 	let lengMat = lengMath; // Nueva variable para controlar el estado de la pregunta
 	let classTopic = $state('margin-top: 0px;'); // Nueva variable para controlar la clase del modal
 
@@ -63,7 +64,7 @@
 			}
 
 			const data = await response.json();
-			//console.log('resp:', data);
+			console.log('resp:', data);
 			return data;
 		} catch (error) {
 			console.error('There was a problem with the fetch operation:', error);
