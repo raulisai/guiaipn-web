@@ -357,7 +357,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      '\\text{Identificar la expresión que corresponde al siguiente lenguaje algebraico para un entero positivo: "La razón de la raíz cúbica de un número par disminuido en cinco, entre la quinta parte del cuadrado de la diferencia del siguiente número impar menos su impar consecutivo."}',
+      "Identificar la expresión que corresponde al siguiente lenguaje algebraico para un entero positivo: La razón de la raíz cúbica de un número par disminuido en cinco, entre la quinta parte del cuadrado de la diferencia del siguiente número impar menos su impar consecutivo.",
     opciones: {
       a: "\\frac{\\sqrt[3]{n}-5}{5\\left[(2n+1)-(2n+1)+1\\right]^2}",
       b: "\\frac{\\sqrt[3]{2n}-5}{\\frac{1}{5}\\left[(2n+1)-(2n+3)\\right]^2}",
@@ -366,7 +366,7 @@ export const reactivos = [
     },
     id: "2024Algebra09",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
