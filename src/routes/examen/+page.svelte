@@ -3,16 +3,15 @@
 	import { reactivos } from '$lib/reactivos';
 	import { examStore } from '$lib/stores/examStore';
 	import ExamProgress from './componentes/Examprogres.svelte';
-	import IAResponse from './componentes/GenerationIAResponse.svelte';
 	import ModalFinish from './componentes/ModalFinish.svelte';
 	import QuestionDisplay from './componentes/QuestionDisplay.svelte';
 	import QuestionHeader from './componentes/QuestionHeader.svelte';
 	import AnswerOptions from './componentes/AnswerOptions.svelte';
 	import RadarChart from './componentes/RadarChart.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let respuesta;
-	let modalRef; // Referencia al componente hijo
 
 	onMount(() => {
 		getQuestionRandom();
@@ -22,18 +21,70 @@
 		examStore.finishExam();
 	}
 
-	function UpdateResponseOfModal(resp, resCorrect) {
+	function navigateToExplanation(resp, resCorrect) {
 		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
 		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
-		if (modalRef) {
-			modalRef.updateData(opcionSeleccionada.value, opcionCorrecta.value);
+		
+		// Save current question data to localStorage for possible recovery
+		localStorage.setItem('current_question_id', $examStore.reactivo.id);
+		localStorage.setItem('current_question_text', $examStore.reactivo.pregunta);
+		localStorage.setItem('current_user_answer', opcionSeleccionada.value);
+		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
+		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
+		localStorage.setItem('current_is_math', ($examStore.reactivo.lengMath || false).toString());
+				// Create URL with query parameters
+		const queryParams = new URLSearchParams({
+			id: $examStore.reactivo.id,
+			pregunta: $examStore.reactivo.pregunta,
+			respuestaUsuario: opcionSeleccionada.value,
+			respuestaCorrecta: opcionCorrecta.value,
+			iscorrect: $examStore.reactivo.iscorrectQuestion.toString(),
+			lengMath: ($examStore.reactivo.lengMath || false).toString()
+		});
+		
+		// Add fade-out effect to the current page
+		const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
+		if (mainContent) {
+			mainContent.style.opacity = '0';
+			mainContent.style.transition = 'opacity 0.3s ease-out';
+			
+			setTimeout(() => {
+				// Navigate to explanation page with parameters
+				goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
+			}, 300);
+		} else {
+			// Navigate immediately if we can't find the element
+			goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
 		}
-	}
-
+	}	// When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
 		// Reset UI state
 		if ($examStore.showOptionalImage) {
 			examStore.toggleOptionalImage();
+		}
+
+		// Check if we're returning from explanation page
+		const returnFromExplanation = localStorage.getItem('return_from_explanation');
+		if (returnFromExplanation === 'true') {
+			// Clear the flag
+			localStorage.removeItem('return_from_explanation');
+			// Clear current question data
+			localStorage.removeItem('current_question_id');
+			localStorage.removeItem('current_question_text');
+			localStorage.removeItem('current_user_answer');
+			localStorage.removeItem('current_correct_answer');
+			localStorage.removeItem('current_is_correct');
+			localStorage.removeItem('current_is_math');
+			
+			// Add a subtle entrance animation when returning from explanation
+			const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
+			if (mainContent) {
+				mainContent.style.opacity = '0';
+				mainContent.style.transition = 'opacity 0.3s ease-in';
+				setTimeout(() => {
+					mainContent.style.opacity = '1';
+				}, 50);
+			}
 		}
 
 		// Increment question counter and check if exam is complete
@@ -104,7 +155,6 @@
 	function toggleSolution() {
 		examStore.toggleSolution();
 	}
-
 	function selectOption(resp) {
 		respuesta = resp;
 		// Validar la respuesta
@@ -124,9 +174,9 @@
 			examStore.saveAnswer($examStore.currentQuestion, false);
 
 			if ($examStore.showSolution) {
-				// Abrir modal con la respuesta correcta
-				modalRef.toogleModal();
-				UpdateResponseOfModal(resp, $examStore.reactivo.respuestaCorrecta);
+				// Navigate to explanation page
+				navigateToExplanation(resp, $examStore.reactivo.respuestaCorrecta);
+				return; // Don't proceed to next question yet
 			}
 		}
 
@@ -177,19 +227,8 @@
 
 				<!-- Question content and image -->
 				<QuestionDisplay {toggleOptionalImage} />
-			</section>
-
-			<!-- Answer options component -->
+			</section>			<!-- Answer options component -->
 			<AnswerOptions {selectOption} />
-
-			<!-- Modal components -->
-			<IAResponse
-				bind:this={modalRef}
-				pregunta={$examStore.reactivo.pregunta}
-				id={$examStore.reactivo.id}
-				iscorrect={$examStore.reactivo.iscorrectQuestion}
-				lengMath={$examStore.reactivo.lengMath}
-			/>
 
 			{#if $examStore.finish}
 				<ModalFinish answers={$examStore.answers} />
