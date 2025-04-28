@@ -503,7 +503,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Un profesor tiene 3 ejemplares de un libro de matemáticas, 3 de español y 2 de literatura. ¿De cuántas maneras puede acomodarlos en un estante?}",
+      "Un profesor tiene 3 ejemplares de un libro de matemáticas, 3 de español y 2 de literatura. ¿De cuántas maneras puede acomodarlos en un estante?",
     opciones: { a: "660", b: "560", c: "280", d: "180" },
     id: "2024Estadistica10",
     resuesta: "b",
@@ -511,11 +511,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{En un salón con 6 niños y 5 niñas, formar un equipo de 3 niños y 2 niñas. ¿De cuántas maneras se puede formar el equipo?}",
+      "En un salón con 6 niños y 5 niñas, formar un equipo de 3 niños y 2 niñas. ¿De cuántas maneras se puede formar el equipo?",
     opciones: { a: "10", b: "20", c: "200", d: "400" },
     id: "2024Estadistica08",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -527,7 +527,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Una urna contiene 11 bolas numeradas del 10 al 20, de dos colores: azul y blanco. Identificar el espacio muestral del experimento de extraer una bola.}",
+      "Una urna contiene 11 bolas numeradas del 10 al 20, de dos colores: azul y blanco. Identificar el espacio muestral del experimento de extraer una bola.",
     opciones: {
       a: "\\{1,2,3,4,5,6,7,8,9,10\\}",
       b: "\\{0,1,2,3,4,5,6,7,8,9,10\\}",
@@ -548,11 +548,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Los equipos de fútbol A y B juegan un torneo. El primer que gane 4 juegos en total o 2 seguidos, gana. ¿Cuál es el número de puntos muestrales?}",
+      "Los equipos de fútbol A y B juegan un torneo. El primer que gane 4 juegos en total o 2 seguidos, gana. ¿Cuál es el número de puntos muestrales?",
     opciones: { a: "6", b: "8", c: "12", d: "14" },
     id: "2024Estadistica13",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -620,7 +620,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se realizó una encuesta sobre la preferencia de vivir en la ciudad o en zonas conurbadas. Del total, el 60\\% son mujeres, de las cuales el 70\\% prefiere la ciudad. Si la probabilidad de que cualquier persona prefiera la ciudad es 0.65, ¿cuál es la probabilidad de que un hombre desee vivir en la ciudad?}",
+      "Se realizó una encuesta sobre la preferencia de vivir en la ciudad o en zonas conurbadas. Del total, el 60% son mujeres, de las cuales el 70% prefiere la ciudad. Si la probabilidad de que cualquier persona prefiera la ciudad es 0.65, ¿cuál es la probabilidad de que un hombre desee vivir en la ciudad?",
     opciones: {
       a: "\\frac{3}{10}",
       b: "\\frac{7}{20}",
@@ -658,7 +658,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{En una fábrica, si el 30\\% de la producción se concentra en la máquina M1 (con 2\\% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?}",
+      "En una fábrica, si el 30% de la producción se concentra en la máquina M1 (con 2% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?",
     opciones: {
       a: "0.3",
       b: "0.4",
@@ -667,7 +667,7 @@ export const reactivos = [
     },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -710,7 +710,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Dadas las siguientes muestras de datos, determinar cuáles tienen la misma varianza.}",
+      "Dadas las siguientes muestras de datos, determinar cuáles tienen la misma varianza.",
     opciones: {
       a: "1 y 2",
       b: "1 y 3",
@@ -719,10 +719,10 @@ export const reactivos = [
     },
     id: "2024Estadistica40",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },  {
     pregunta: 
-    "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
+    "Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.",
     opciones: {
       a: "Mediana",
       b: "Armónica",
@@ -734,7 +734,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMath: false
   },{
     pregunta:
-      "\\text{Ordenar de forma ascendente los conjuntos de números según su mediana: } \\{enumerate} \\item \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\item \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\item \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\item \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{enumerate}",
+      "Ordenar de forma ascendente los conjuntos de números según su mediana: {4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9} {3,2,3,4,5,3,3,4,4,5,5,6,6,9,9} {6,6,7,7,3,9,2,3,4,6,6,6,7,9,9} {3,4,7,7,8,8,9,9,7,6,7,9,7,7,9}",
     opciones: {
       a: "2,1,3,4",
       b: "2,3,1,4",
@@ -743,7 +743,7 @@ export const reactivos = [
     },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -875,7 +875,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{En una fábrica, dado que el 30\\% de la producción se concentra en M1 (con 2\\% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?}",
+      "En una fábrica, dado que el 30% de la producción se concentra en M1 (con 2% defectuosos) y el resto en M2, ¿cuál es la probabilidad de que un producto no defectuoso provenga de M1?",
     opciones: { a: "0.3", b: "0.4", c: "0.6", d: "0.7" },
     id: "2024Estadistica26",
     resuesta: "a",
