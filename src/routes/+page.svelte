@@ -454,22 +454,6 @@
 		animation: floating 10s ease-in-out 2s infinite, glow 5s infinite 2s alternate;
 	}
 	
-	.floating-4 {
-		width: 250px;
-		height: 250px;
-		top: 60%;
-		left: 3%;
-		animation: floating 14s ease-in-out 1.5s infinite, glow 7s infinite 1.5s alternate;
-	}
-	
-	.floating-5 {
-		width: 180px;
-		height: 180px;
-		top: 20%;
-		right: 5%;
-		animation: floating 11s ease-in-out 2.5s infinite, glow 7s infinite 1s alternate;
-	}
-	
 	/* Partículas de fondo */
 	.particles-container {
 		background-image: 
@@ -505,25 +489,6 @@
 	.section-how {
 		position: relative;
 		overflow: hidden;
-	}
-	
-	/* Estilos para la sección de Mi Progreso */
-	.section-progress {
-		position: relative;
-		overflow: hidden;
-	}
-	
-	.progress-card {
-		background: #0b1a32a3;
-		transition: all 0.3s ease;
-	}
-	
-	.progress-card:hover {
-		box-shadow: 0 5px 30px rgba(153, 27, 27, 0.2);
-	}
-	
-	.progress-circle-fill {
-		animation: progressFill 2s ease-out forwards;
 	}
 	
 	@keyframes progressFill {
@@ -591,42 +556,6 @@
 		margin-top: -100;
 		margin-bottom: 50px;
 	}
-	
-	/* Estilos para la sección de Mi Progreso */
-	.section-progress {
-		position: relative;
-		overflow: hidden;
-	}
-	
-	.progress-card {
-		background: #0b1a32a3;
-		transition: all 0.3s ease;
-	}
-	
-	.progress-card:hover {
-		box-shadow: 0 5px 30px rgba(153, 27, 27, 0.2);
-	}
-	
-	.floating-4 {
-		width: 250px;
-		height: 250px;
-		top: 60%;
-		left: 3%;
-		animation: floating 14s ease-in-out 1.5s infinite, glow 7s infinite 1.5s alternate;
-	}
-	
-	.floating-5 {
-		width: 180px;
-		height: 180px;
-		top: 20%;
-		right: 5%;
-		animation: floating 11s ease-in-out 2.5s infinite, glow 7s infinite 1s alternate;
-	}
-	
-	.progress-circle-fill {
-		animation: progressFill 2s ease-out forwards;
-	}
-	
 	@keyframes progressFill {
 		0% { stroke-dashoffset: 377; }
 		100% { stroke-dashoffset: 94; }

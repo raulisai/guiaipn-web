@@ -129,10 +129,6 @@
 		animation: fadeIn 0.3s ease-out forwards;
 	}
 	
-	.animate-fadeOut {
-		animation: fadeOut 0.3s ease-out forwards;
-	}
-	
 	/* Hide scrollbar for Chrome, Safari and Opera */
 	.basemodal::-webkit-scrollbar {
 		width: 0.4rem;
@@ -166,9 +162,6 @@
 		animation: fadeIn 0.3s ease-out forwards;
 	}
 	
-	.animate-fadeOut {
-		animation: fadeOut 0.3s ease-out forwards;
-	}
 	
 	/* Hide scrollbar for Chrome, Safari and Opera */
 	.basemodal::-webkit-scrollbar {

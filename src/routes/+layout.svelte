@@ -4,13 +4,16 @@
     import { supabase } from '$lib/supabase';
     import { onMount } from 'svelte';
     import { user, logout } from '$lib/stores/authStore';
-    import { page } from '$app/stores';
+    import { page } from '$app/stores';;
     import { goto, invalidate } from '$app/navigation';
+
+   
 
     let menuBtn;
     let activo = $state(false);
     let scrolled = $state(false);
     let isHovered = $state(false);
+    let { children } = $props();
     
     // Rutas protegidas que requieren autenticación
     const protectedRoutes = ['/progreso', '/materias'];
@@ -187,7 +190,7 @@
 
 <!-- Mejorar legibilidad en móviles -->
 <main class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#030e27]/90 to-black/90">
-    <slot />
+    {@render children()}
 </main>
 
 <!-- Footer -->
