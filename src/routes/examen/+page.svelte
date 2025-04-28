@@ -2,7 +2,6 @@
 <script lang="ts">
 	import { reactivos } from '$lib/reactivos';
 	import { examStore } from '$lib/stores/examStore';
-	import { user } from '$lib/stores/authStore';
 	import ExamProgress from './componentes/Examprogres.svelte';
 	import IAResponse from './componentes/GenerationIAResponse.svelte';
 	import ModalFinish from './componentes/ModalFinish.svelte';
@@ -68,7 +67,7 @@
 		}
 
 		// Update reactivo state with selected question data
-		const { id, resuesta, pregunta, opciones, imgActive } = selectedReactivo;
+		const { id, resuesta, pregunta, opciones, imgActive, lengMath } = selectedReactivo;
 
 		// Extract materia from id
 		const materia = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
@@ -90,7 +89,8 @@
 			currentQuestion: $examStore.currentQuestion.toString(),
 			opciones: formattedOptions,
 			iscorrectQuestion: false,
-			altIMg: 'guia ipn Imagen de reactivo'
+			altIMg: 'guia ipn Imagen de reactivo',
+			lengMath: lengMath
 		};
 
 		examStore.setReactivo(updatedReactivo);

@@ -336,7 +336,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Un pastel se corta quitando dos tercios cada vez que alguien toma una porción. Después de tres cortes, ¿qué fracción queda del pastel?}",
+      "Un pastel se corta quitando dos tercios cada vez que alguien toma una porción. Después de tres cortes, ¿qué fracción queda del pastel?",
     opciones: {
       a: "\\frac{1}{2}",
       b: "\\frac{1}{9}",
@@ -345,7 +345,7 @@ export const reactivos = [
     },
     id: "2024Algebra07",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -507,7 +507,7 @@ export const reactivos = [
     opciones: { a: "660", b: "560", c: "280", d: "180" },
     id: "2024Estadistica10",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -747,7 +747,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan simultáneamente una moneda y una dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?}",
+      "Se lanzan simultáneamente una moneda y una dado de 6 caras } n \\text{ veces. ¿Cuántos distintos resultados se pueden obtener?",
     opciones: {
       a: "12^n",
       b: "8^n",
@@ -756,7 +756,7 @@ export const reactivos = [
     },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:

@@ -2,7 +2,6 @@
     import { examStore } from "$lib/stores/examStore";
     import CharacterIa from "./CharacterIA.svelte";
     import MathForm from "./Math.svelte";
-    import RadarChart from "./RadarChart.svelte";
     import { Eye } from 'lucide-svelte';
     
     export let toggleOptionalImage: () => void;
@@ -15,9 +14,15 @@
     <!-- Container for question text - enables horizontal scroll on mobile -->
     <div id="question" class="question-text-container relative w-full p-4" >
         <!-- Inner div to handle nowrap -->
-        <div class="question-text-content"   class:long-question={isLongQuestion}>
-            <MathForm isBlock={false} content={$examStore.reactivo.pregunta} />
-        </div>     <!-- Image Container - Conditional Display -->
+        
+            {#if $examStore.reactivo.lengMath !== false}
+            <div class="question-text-content" class:long-question={isLongQuestion}>
+                <MathForm isBlock={false} content={$examStore.reactivo.pregunta} />
+            </div>
+            {:else}
+                <p>{$examStore.reactivo.pregunta}</p>
+            {/if}
+             <!-- Image Container - Conditional Display -->
     <div class="flex flex-wrap question-imgreference w-full justify-center items-center gap-4 min-h-[50px]">
         {#if $examStore.reactivo.imgAct}
             <!-- Image shown by default if imgAct is true -->

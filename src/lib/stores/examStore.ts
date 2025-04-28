@@ -11,6 +11,7 @@ type Reactivo = {
   pathImg: string;
   altIMg: string;
   imgAct: boolean;
+  lengMath?: boolean; // opcional, dependiendo de si se usa o no
 };
 
 // Definición del tipo para respuestas
@@ -31,6 +32,7 @@ type ExamState = {
   showOptionalImage: boolean;
   showSolution: boolean;
   apiImg: string;
+  
 };
 
 // Estado inicial
@@ -49,7 +51,8 @@ const initialState: ExamState = {
     respuestaCorrecta: 'A',
     pathImg: 'https://img-reactivos.s3.us-east-2.amazonaws.com/2024Algebra03.png',
     altIMg: 'guia ipn Imagen de reactivo',
-    imgAct: false
+    imgAct: false,
+    lengMath: true
   },
   finish: false,
   showOptionalImage: false,
