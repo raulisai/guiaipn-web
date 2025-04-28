@@ -13,6 +13,14 @@
 
 	let respuesta;
 
+	// Animation state variables
+	let isNavigating = false;
+	let animateQuestionLeft = false;
+	let animateAnswersRight = false;
+	let animateProgressOut = false;
+	let animateChartOut = false;
+	let mainContentFading = false;
+
 	onMount(() => {
 		getQuestionRandom();
 	});
@@ -22,6 +30,10 @@
 	}
 
 	function navigateToExplanation(resp, resCorrect) {
+		// Prevent multiple navigation attempts
+		if (isNavigating) return;
+		isNavigating = true;
+		
 		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
 		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
 		
@@ -32,7 +44,8 @@
 		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
 		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
 		localStorage.setItem('current_is_math', ($examStore.reactivo.lengMath || false).toString());
-				// Create URL with query parameters
+		
+		// Create URL with query parameters
 		const queryParams = new URLSearchParams({
 			id: $examStore.reactivo.id,
 			pregunta: $examStore.reactivo.pregunta,
@@ -42,20 +55,18 @@
 			lengMath: ($examStore.reactivo.lengMath || false).toString()
 		});
 		
-		// Add fade-out effect to the current page
-		const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
-		if (mainContent) {
-			mainContent.style.opacity = '0';
-			mainContent.style.transition = 'opacity 0.3s ease-out';
-			
-			setTimeout(() => {
-				// Navigate to explanation page with parameters
-				goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
-			}, 300);
-		} else {
-			// Navigate immediately if we can't find the element
+		// Trigger animations using Svelte reactivity
+		animateQuestionLeft = true;
+		animateAnswersRight = true;
+		animateProgressOut = true;
+		animateChartOut = true;
+		mainContentFading = true;
+		
+		// Wait for animations to complete before navigation
+		setTimeout(() => {
+			// Navigate to explanation page with parameters
 			goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
-		}
+		}, 600);
 	}	// When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
 		// Reset UI state
@@ -186,13 +197,13 @@
 </script>
 
 <!-- Add a wrapper for positioning bubbles -->
-<div class="text-gray-100 overflow-hidden">
+<div class="text-gray-100 overflow-hidden" class:opacity-30={mainContentFading} class:transition-all={mainContentFading} class:duration-500={mainContentFading}>
 	<!-- Main content container -->
 	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
 		<div class="w-full max-w-4xl space-y-6">
 			<!-- Progress bar component -->
-			<div class="flex flex-wrap items-center justify-between gap-4 ">
-				<div class="flex-1 min-w-[65%] mt-12">
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<div class="flex-1 min-w-[65%] mt-12" class:animate-fade-out={animateProgressOut}>
 					<ExamProgress
 						currentQuestion={$examStore.currentQuestion}
 						totalQuestions={$examStore.totalQuestions}
@@ -200,7 +211,7 @@
 					/>
 				</div>
 				{#if Object.keys($examStore.answers).length > 0}
-					<div class="stat-chart-container animate-fadeIn">
+					<div class="stat-chart-container animate-fadeIn" class:animate-fade-out={animateChartOut}>
 						<div class="stat-title text-xs text-center text-cyan-300 mb-1 font-medium">
 							<span class="flex items-center justify-center">
 								<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-1 animate-pulse"></span>
@@ -221,14 +232,19 @@
 			<!-- Question Card -->
 			<section
 				class="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+				class:animate-slide-left={animateQuestionLeft}
 			>
 				<!-- Question header with solution toggle -->
 				<QuestionHeader {toggleSolution} />
 
 				<!-- Question content and image -->
 				<QuestionDisplay {toggleOptionalImage} />
-			</section>			<!-- Answer options component -->
-			<AnswerOptions {selectOption} />
+			</section>
+			
+			<!-- Answer options component -->
+			<div class:animate-slide-right={animateAnswersRight}>
+				<AnswerOptions {selectOption} />
+			</div>
 
 			{#if $examStore.finish}
 				<ModalFinish answers={$examStore.answers} />
@@ -265,4 +281,42 @@
         box-shadow: 0 0 15px rgba(0, 183, 255, 0.2);
     }
     
+    /* New animations for transitions */
+	@keyframes slideLeft {
+		0% { transform: translateX(0); opacity: 1; }
+		100% { transform: translateX(-100px); opacity: 0; }
+	}
+	
+	@keyframes slideRight {
+		0% { transform: translateX(0); opacity: 1; }
+		100% { transform: translateX(100px); opacity: 0; }
+	}
+	
+	@keyframes fadeOut {
+		0% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+	
+	.animate-slide-left {
+		animation: slideLeft 0.5s ease-out forwards;
+	}
+	
+	.animate-slide-right {
+		animation: slideRight 0.5s ease-out forwards;
+	}
+	
+	.animate-fade-out {
+		animation: fadeOut 0.4s ease-out forwards;
+	}
+	
+	/* Add entrance animations for when returning from explanation */
+	@keyframes slideInLeft {
+		0% { transform: translateX(-100px); opacity: 0; }
+		100% { transform: translateX(0); opacity: 1; }
+	}
+	
+	@keyframes slideInRight {
+		0% { transform: translateX(100px); opacity: 0; }
+		100% { transform: translateX(0); opacity: 1; }
+	}
 </style>
