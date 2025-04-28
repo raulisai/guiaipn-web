@@ -14,7 +14,7 @@
 <!-- Hero Section -->
          
         <section class="hero gradient-bg min-h-[50vh] flex flex-col items-center justify-center p-8">
-            <h1 class="text-6xl font-bold text-white text-center drop-shadow-lg mb-4">
+            <h1 class="hero-text text-6xl font-bold text-white text-center drop-shadow-lg mb-4">
                 Explora tus <span class="text-amber-300">Materias</span>
             </h1>
             <p class="text-xl text-white/80 text-center max-w-3xl mb-8">
@@ -170,7 +170,7 @@
         <style>
 
           @media (max-width: 768px) {
-            .hero {
+            .hero-text {
               margin-top: 60px;
             }
           }
