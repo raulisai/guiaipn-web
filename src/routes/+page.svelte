@@ -542,7 +542,7 @@
 	
 	/* Media queries */	@media (max-width: 430px) {
 		section {
-			margin-top: 100px;
+			
 			gap: 1px;
 		}
 		

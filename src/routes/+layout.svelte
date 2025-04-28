@@ -81,7 +81,7 @@
 
 <!-- Menú flotante mejorado con efecto de scroll y hover -->
 <!-- svelte-ignore a11y_no_redundant_roles -->
-<header
+<nav
     role="banner"
     class={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out
                 ${scrolled ? 'py-2 bg-black/80 shadow-lg' : 'py-4 bg-transparent'}`}
@@ -186,7 +186,7 @@
             </div>
         </div>
     </div>
-</header>
+</nav>
 
 <!-- Mejorar legibilidad en móviles -->
 <main class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#030e27]/90 to-black/90">
