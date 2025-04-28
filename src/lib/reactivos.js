@@ -536,7 +536,7 @@ export const reactivos = [
     },
     id: "2024Estadistica11",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -629,7 +629,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -879,7 +879,7 @@ export const reactivos = [
     opciones: { a: "0.3", b: "0.4", c: "0.6", d: "0.7" },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta: "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 kg?}",
