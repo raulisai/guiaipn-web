@@ -836,7 +836,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se realizó una encuesta sobre la preferencia de vivir en la ciudad. ¿Cuál es la probabilidad de que un hombre desee vivir en la ciudad?}",
+      "Se realizó una encuesta sobre la preferencia de vivir en la ciudad. ¿Cuál es la probabilidad de que un hombre desee vivir en la ciudad?",
     opciones: {
       a: "\\frac{3}{10}",
       b: "\\frac{7}{20}",
@@ -845,7 +845,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
