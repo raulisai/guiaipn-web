@@ -31,6 +31,27 @@ export const signInWithEmail = async (email, password) => {
         password
     });
     
+    if (error) {
+        if (error.message === 'Email not confirmed') {
+            // Lanzar un error más descriptivo que se pueda capturar y manejar en la interfaz de usuario
+            throw { 
+                code: 'EMAIL_NOT_CONFIRMED',
+                message: 'Por favor, verifica tu correo electrónico y confirma tu cuenta antes de iniciar sesión.',
+                email
+            };
+        }
+        throw error;
+    }
+    return data;
+};
+
+// Función para reenviar el correo de confirmación
+export const resendConfirmationEmail = async (email) => {
+    const { data, error } = await supabase.auth.resend({
+        type: 'signup',
+        email
+    });
+
     if (error) throw error;
     return data;
 };
