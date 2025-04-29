@@ -231,7 +231,7 @@
 
 	/* Animación general de entrada mejorada */
 	.animate-fadeIn {
-		@apply opacity-0;
+		opacity: 0;
 		animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	}
 	@keyframes fadeInUp {
@@ -251,7 +251,7 @@
 
 	/* Animación deslizándose desde la derecha */
 	.slide-in-right {
-		@apply opacity-0;
+		opacity: 0;
 		animation: slideInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	}
 	@keyframes slideInRight {
@@ -267,7 +267,7 @@
 
 	/* Animación deslizándose desde la izquierda */
 	.slide-in-left {
-		@apply opacity-0;
+		opacity: 0;
 		animation: slideInLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	}
 	@keyframes slideInLeft {
@@ -283,7 +283,7 @@
 
 	/* Animación para elementos con efecto 'fade-in-up' */
 	.fade-in-up {
-		@apply opacity-0;
+		opacity: 0;
 		animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 	}
 </style>

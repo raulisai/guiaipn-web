@@ -20,6 +20,7 @@
 	let animateProgressOut = false;
 	let animateChartOut = false;
 	let mainContentFading = false;
+	let showMobileChart = false;
 
 	onMount(() => {
 		getQuestionRandom();
@@ -203,15 +204,16 @@
 		<div class="w-full max-w-4xl space-y-6">
 			<!-- Progress bar component -->
 			<div class="flex flex-wrap items-center justify-between gap-4">
-				<div class="flex-1 min-w-[65%] mt-12" class:animate-fade-out={animateProgressOut}>
+				<div class="flex-1 min-w-[65%] mt-20" class:animate-fade-out={animateProgressOut}>
 					<ExamProgress
 						currentQuestion={$examStore.currentQuestion}
 						totalQuestions={$examStore.totalQuestions}
 						answers={$examStore.answers}
 					/>
 				</div>
+				<!-- Radar chart (hidden on mobile by default, shown on desktop) -->
 				{#if Object.keys($examStore.answers).length > 0}
-					<div class="stat-chart-container animate-fadeIn" class:animate-fade-out={animateChartOut}>
+					<div class="stat-chart-container animate-fadeIn hidden sm:block" class:animate-fade-out={animateChartOut}>
 						<div class="stat-title text-xs text-center text-cyan-300 mb-1 font-medium">
 							<span class="flex items-center justify-center">
 								<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-1 animate-pulse"></span>
@@ -220,12 +222,63 @@
 						</div>
 						<RadarChart
 							answers={$examStore.answers}
-							size="140px"
-							height="140px"
+							size="160px"
+							height="160px"
 							customClass="compact-chart"
 							showTitle={false}
 						/>
 					</div>
+
+					<!-- Mobile floating button -->
+					<button 
+						class="sm:hidden fixed bottom-4 right-4 bg-gray-800/80 border border-cyan-500/50 shadow-lg rounded-full p-3 z-50 text-cyan-400 backdrop-blur-sm"
+						onclick={() => showMobileChart = !showMobileChart}
+						aria-label="Ver gráfico de rendimiento"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
+					</button>
+
+					<!-- Mobile chart modal -->
+					{#if showMobileChart}
+						<!-- svelte-ignore a11y_interactive_supports_focus -->
+						<div 
+							class="sm:hidden fixed inset-0 bg-black/70 flex items-center justify-center z-40" 
+							role="dialog"
+							aria-modal="true"
+							aria-labelledby="chart-modal-title"
+							onclick={() => showMobileChart = false}
+							onkeydown={(e) => e.key === 'Escape' && (showMobileChart = false)}
+						>
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<div 
+								class="stat-chart-container w-4/5 max-w-xs p-4 animate-fadeIn"
+								onclick={() => {}}
+							>
+								<div id="chart-modal-title" class="stat-title text-sm text-center text-cyan-300 mb-2 font-medium">
+									<span class="flex items-center justify-center">
+										<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-1 animate-pulse"></span>
+										Rendimiento
+									</span>
+								</div>
+								<RadarChart
+									answers={$examStore.answers}
+									size="240px"
+									height="240px"
+									customClass="compact-chart"
+									showTitle={false}
+								/>
+								<button 
+									class="mt-4 w-full py-2 bg-gray-700/80 border border-gray-600 rounded-md text-sm text-gray-200"
+									onclick={() => showMobileChart = false}
+								>
+									Cerrar
+								</button>
+							</div>
+						</div>
+					{/if}
 				{/if}
 			</div>
 

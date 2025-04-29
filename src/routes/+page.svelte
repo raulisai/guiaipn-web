@@ -4,6 +4,7 @@
 	import { elasticOut, backOut } from 'svelte/easing';
 	import { user } from '$lib/stores/authStore';
 	import { goto } from '$app/navigation';
+	import Footer from './components/footer.svelte';
 	
 	// Variables para la primera sección
 	let visible = false;
@@ -325,6 +326,7 @@
 	</div>
 </section>
 
+<Footer />
 
 
 <style>
