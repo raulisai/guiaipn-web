@@ -111,34 +111,18 @@
 		// Set flag to indicate we're returning from explanation page
 		localStorage.setItem('return_from_explanation', 'true');
 		
-		// Add exit animations with sequenced timing
-		const contentElement = document.querySelector('.animate-fadeIn') as HTMLElement;
-		if (contentElement) {
-			// First fade out the main container
-			contentElement.style.opacity = '0';
-			contentElement.style.transform = 'translateY(10px)';
-			contentElement.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out';
-			
-			// Get all animated elements in reverse order and apply exit animations
-			const animatedElements = [
-				...document.querySelectorAll('.slide-in-right, .slide-in-left, .fade-in-up')
-			].reverse();
-			
-			animatedElements.forEach((element, index) => {
-				const el = element as HTMLElement;
-				// Stagger the exit animations
-				setTimeout(() => {
-					el.style.opacity = '0';
-					el.style.transform = 'translateY(-15px)';
-					el.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-				}, index * 50);
-			});
+		// Simple fade-out animation for the whole page
+		const pageElement = document.querySelector('.animate-fadeIn') as HTMLElement;
+		if (pageElement) {
+			pageElement.style.opacity = '0';
+			pageElement.style.transform = 'translateY(15px)'; // Optional: slight upward movement
+			pageElement.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
 			
 			setTimeout(() => {
 				goto('/examen');
-			}, 400);
+			}, 300); // Match transition duration
 		} else {
-			goto('/examen');
+			goto('/examen'); // Fallback if element not found
 		}
 	}
 </script>
@@ -146,77 +130,73 @@
 {#if showPage}
 <div class="text-gray-100 overflow-hidden animate-fadeIn">
 	<!-- Main content container -->
-	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
-		<div class="w-full max-w-4xl space-y-6">
-			<div 
-				class="bg-gray-800/30 backdrop-blur-sm border border-cyan-500/30 rounded-lg shadow-lg shadow-cyan-500/20 relative"
-			>
-				<!-- Decorative elements -->
-				<div
-					class="absolute -top-1 left-10 w-40 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse"
-				></div>
-				<div
-					class="absolute -bottom-1 right-10 w-40 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse"
-				></div>
+	<div class="relative z-10 flex flex-col items-center justify-start min-h-screen p-4 sm:p-6 md:p-8 md:mt-36 mt-28">
+		<div class="w-full max-w-5xl space-y-8">
+			<!-- Removed empty class div wrapper -->
+			<!-- Removed Decorative elements -->
 
-				<div class="p-4 md:p-6 lg:p-8 relative">					<div class="mb-6 relative">
-						<!-- Header with back button -->
-						<div class="flex justify-between items-center mb-6 fade-in-up" style="animation-delay: 0.05s;">
-							<button
-								onclick={goBack}
-								class="text-cyan-300 hover:text-white transition-all duration-300 text-xl h-10 w-10 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-cyan-900/50 hover:scale-110 border border-cyan-500/30"
-							>
-								✕
-							</button>
-						</div>
-
-						<!-- Question and answers container -->
-						<div class="fade-in-up" style="animation-delay: 0.1s;">
-							<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} {lengMath} />
-						</div>
-					</div><div class="space-y-6">
-						{#if isLoading}
-							<LoadingAnimation />
-						{:else if explication}
-							<!-- Contenido responsivo con animaciones -->
-							<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-								<!-- Explicación Problema -->
-								<div class="slide-in-left" style="animation-delay: 0.1s;">
-									<ExplanationSection explanation={explication.explicacionRespuesta} />
-								</div>
-								
-								<!-- Tips Section -->
-								<div class="slide-in-right" style="animation-delay: 0.2s;">
-									<TipsSection tips={explication.Tip} />
-								</div>
-							</div>
-
-							<!-- Pasos para resolver -->
-							<div class="fade-in-up" style="animation-delay: 0.3s;">
-								<StepsSection steps={explication.pasosParaResolverElProblema} />
-							</div>
-
-							<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-								<!-- Formulas y Ejemplo sections -->
-								<div class="slide-in-left" style="animation-delay: 0.4s;">
-									<AdditionalSection 
-										title="Fórmulas" 
-										content={explication.conceptosORecordatorios} 
-										type="formula" 
-									/>
-								</div>
-								
-								<div class="slide-in-right" style="animation-delay: 0.5s;">
-									<AdditionalSection 
-										title="Ejemplo" 
-										content={explication.ejemploSimilar} 
-										type="example" 
-									/>
-								</div>
-							</div>
-						{/if}
-					</div>
+			<div class="relative">
+				<!-- Header with back button -->
+				<div class="flex justify-start items-center mb-6 fade-in-up" style="animation-delay: 0.05s;">
+					<button
+						onclick={goBack}
+						class="text-cyan-300 hover:text-white transition-all duration-300 text-2xl h-10 w-10 flex items-center justify-center rounded-full bg-gray-800/70 hover:bg-cyan-900/60 hover:scale-110 border border-cyan-500/30 shadow-md"
+						aria-label="Volver al examen"
+					>
+						←
+					</button>
 				</div>
+
+				<!-- Question and answers container -->
+				<div class="mb-8 fade-in-up" style="animation-delay: 0.1s;">
+					<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} {lengMath} />
+				</div>
+			</div>
+
+			<div class="space-y-8">
+				{#if isLoading}
+					<LoadingAnimation />
+				{:else if explication}
+					<!-- Responsive content with animations -->
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+						<!-- Explanation Section -->
+						<div class="slide-in-left bg-gray-800/50 p-6 rounded-lg shadow-lg" style="animation-delay: 0.15s;">
+							<ExplanationSection explanation={explication.explicacionRespuesta} />
+						</div>
+						
+						<!-- Tips Section -->
+						<div class="slide-in-right bg-gray-800/50 p-6 rounded-lg shadow-lg" style="animation-delay: 0.25s;">
+							<TipsSection tips={explication.Tip} />
+						</div>
+					</div>
+
+					<!-- Steps Section -->
+					<div class="fade-in-up bg-gray-800/50 p-6 rounded-lg shadow-lg" style="animation-delay: 0.35s;">
+						<StepsSection steps={explication.pasosParaResolverElProblema} />
+					</div>
+
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+						<!-- Formulas Section -->
+						<div class="slide-in-left bg-gray-800/50 p-6 rounded-lg shadow-lg" style="animation-delay: 0.45s;">
+							<AdditionalSection 
+								title="Fórmulas / Conceptos"
+								content={explication.conceptosORecordatorios} 
+								type="formula" 
+							/>
+						</div>
+						
+						<!-- Example Section -->
+						<div class="slide-in-right bg-gray-800/50 p-6 rounded-lg shadow-lg" style="animation-delay: 0.55s;">
+							<AdditionalSection 
+								title="Ejemplo Similar" 
+								content={explication.ejemploSimilar} 
+								type="example" 
+							/>
+						</div>
+					</div>
+				{:else}
+					<div class="text-center text-red-400 bg-red-900/30 p-4 rounded-md">No se pudo cargar la explicación. Intenta de nuevo más tarde.</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -224,6 +204,7 @@
 {/if}
 
 <style>
+	/* Keep existing keyframes */
 	.animate-fadeIn {
 		animation: fadeIn 0.5s ease-out forwards;
 	}
@@ -241,6 +222,7 @@
 	
 	.slide-in-right {
 		animation: slideInRight 0.6s ease-out forwards;
+		opacity: 0; /* Start hidden */
 	}
 	
 	@keyframes slideInRight {
@@ -256,6 +238,7 @@
 	
 	.slide-in-left {
 		animation: slideInLeft 0.6s ease-out forwards;
+		opacity: 0; /* Start hidden */
 	}
 	
 	@keyframes slideInLeft {
@@ -271,6 +254,7 @@
 	
 	.fade-in-up {
 		animation: fadeInUp 0.7s ease-out forwards;
+		opacity: 0; /* Start hidden */
 	}
 	
 	@keyframes fadeInUp {
