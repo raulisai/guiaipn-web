@@ -1,13 +1,25 @@
 <script lang="ts">
-	export let tips: string;
+  import { fly } from 'svelte/transition';
+  export let tips: string;
+  let hovering = false;
 </script>
 
-<div>
-	<p class="text-gray-300 text-xs sm:text-sm font-semibold uppercase mb-2 flex items-center">
-		<span class="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></span>
-		Tips
-	</p>
-	<div class="text-gray-200 text-sm sm:text-base bg-gray-800/20 p-4 rounded-lg border-l-2 border-gray-500/50">
-		{tips}
-	</div>
-</div>
+<button
+  on:mouseenter={() => hovering = true}
+  on:mouseleave={() => hovering = false}
+  class="relative inline-flex items-center justify-center p-2 bg-gray-700 text-gray-200 rounded hover:bg-gray-600 focus:outline-none"
+>
+  <!-- Icono de “i” o “?” -->
+  <span class="font-semibold">Tips</span>
+
+  {#if hovering}
+    <div
+      transition:fly={{ y: 8, duration: 200 }}
+      class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-56 bg-gray-800/90 text-gray-200 text-sm p-3 rounded shadow-lg z-10"
+    >
+      {tips}
+      <!-- Flecha en la parte inferior -->
+      <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-800/90 rotate-45"></div>
+    </div>
+  {/if}
+</button>

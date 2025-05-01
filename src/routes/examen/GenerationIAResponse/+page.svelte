@@ -146,7 +146,7 @@
 					>
 						<button
 							onclick={goBack}
-							class="text-gray-300 hover:text-white transition-all duration-300 text-2xl h-10 w-10 flex items-center justify-center rounded-full bg-gray-800/30 hover:bg-gray-700/40 hover:scale-105 border border-gray-700/50 shadow-md backdrop-blur-sm"
+							class="text-gray-300 hover:text-white transition-all duration-300 text-2xl h-10 w-10 flex items-center justify-center rounded-full "
 							aria-label="Volver al examen"
 						>
 							←
@@ -155,7 +155,7 @@
 
 					<!-- Question and answers container -->
 					<div
-						class="mb-8 fade-in-up bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg"
+						class="mb-8 fade-in-up"
 						style="animation-delay: 0.6s;"
 					>
 						<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} {lengMath} />
@@ -170,7 +170,7 @@
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							<!-- Explanation Section -->
 							<div
-								class="slide-in-left bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+								class="slide-in-left "
 								style="animation-delay: 0.15s;"
 							>
 								<ExplanationSection explanation={explication.explicacionRespuesta} />
@@ -178,7 +178,7 @@
 
 							<!-- Tips Section -->
 							<div
-								class="slide-in-right bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+								class="slide-in-righ"
 								style="animation-delay: 0.25s;"
 							>
 								<TipsSection tips={explication.Tip} />
@@ -187,7 +187,7 @@
 
 						<!-- Steps Section -->
 						<div
-							class="fade-in-up bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+							class="fade-in-up "
 							style="animation-delay: 0.35s;"
 						>
 							<StepsSection steps={explication.pasosParaResolverElProblema} />
@@ -196,7 +196,7 @@
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							<!-- Formulas Section -->
 							<div
-								class="slide-in-left bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+								class="slide-in-left "
 								style="animation-delay: 0.45s;"
 							>
 								<AdditionalSection
@@ -207,7 +207,7 @@
 
 							<!-- Example Section -->
 							<div
-								class="slide-in-right bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+								class="slide-in-right "
 								style="animation-delay: 0.55s;"
 							>
 								<AdditionalSection title="Ejemplo Similar" content={explication.ejemploSimilar} />
