@@ -1,7 +1,20 @@
-        <!-- Hero Section -->
+        <script>
+    import { onMount } from 'svelte';
+    import { user } from '$lib/stores/authStore';
+    import { goto } from '$app/navigation';
+    
+    onMount(() => {
+        // Verificar si el usuario está logueado
+        if (!$user) {
+            goto('/cuenta/login');
+        }
+    });
+</script>
+
+<!-- Hero Section -->
          
         <section class="hero gradient-bg min-h-[50vh] flex flex-col items-center justify-center p-8">
-            <h1 class="text-6xl font-bold text-white text-center drop-shadow-lg mb-4">
+            <h1 class="hero-text text-6xl font-bold text-white text-center drop-shadow-lg mb-4">
                 Explora tus <span class="text-amber-300">Materias</span>
             </h1>
             <p class="text-xl text-white/80 text-center max-w-3xl mb-8">
@@ -157,7 +170,7 @@
         <style>
 
           @media (max-width: 768px) {
-            .hero {
+            .hero-text {
               margin-top: 60px;
             }
           }

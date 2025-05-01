@@ -1,267 +1,375 @@
+<!-- filepath: c:\Users\raul_\Documents\code\guiaipn-web\src\routes\examen\+page.svelte -->
 <script lang="ts">
 	import { reactivos } from '$lib/reactivos';
-	import ExamProgress from './Examprogres.svelte';
-	import Estadisticas from './Estadisticas.svelte';
-	import ModalResponse from './ModalResponse.svelte';
-	import ModalFinish from './ModalFinish.svelte';
+	import { examStore } from '$lib/stores/examStore';
+	import ExamProgress from './componentes/Examprogres.svelte';
+	import ModalFinish from './componentes/ModalFinish.svelte';
+	import QuestionDisplay from './componentes/QuestionDisplay.svelte';
+	import QuestionHeader from './componentes/QuestionHeader.svelte';
+	import AnswerOptions from './componentes/AnswerOptions.svelte';
+	import RadarChart from './componentes/RadarChart.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	const totalQuestions = 4;
-	let answers = $state<{ [key: number]: string }>({});
 	let respuesta;
-	let currentQuestion = $state(0);
 
-	let finish = $state(false); // Estado para controlar el modal de finalización
-	
-	let modalRef ; // Referencia al componente hijo
-
-	let reactivo = $state({
-		id: 'exm2024V1Math04',
-		currentQuestion: '0',
-		pregunta: 'cuanto es 2+2',
-		iscorrectQuestion: false,
-		opciones: [],
-		respuestaCorrecta: 'A'
-	});
+	// Animation state variables
+	let isNavigating = false;
+	let animateQuestionLeft = false;
+	let animateAnswersRight = false;
+	let animateProgressOut = false;
+	let animateChartOut = false;
+	let mainContentFading = false;
+	let showMobileChart = false;
 
 	onMount(() => {
-		// Inicializar el temporizador
 		getQuestionRandom();
 	});
 
 	function finishExam() {
-		finish = true; // Cambia el estado para mostrar el modal de finalización
+		examStore.finishExam();
 	}
 
-	
-
-	function UpdateResponseOfModal(resp, resCorrect){
-		let opcionSeleccionada = reactivo.opciones.find(opcion => opcion.key === resp);
-		let opcionCorrecta = reactivo.opciones.find(opcion => opcion.key === resCorrect); // Correct answer
-        if (modalRef) {
-            modalRef.updateData(opcionSeleccionada.value, opcionCorrecta.value); // Llama a la función del hijo
-        }
-    }
-
+	function navigateToExplanation(resp, resCorrect) {
+		// Prevent multiple navigation attempts
+		if (isNavigating) return;
+		isNavigating = true;
+		
+		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
+		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
+		
+		// Save current question data to localStorage for possible recovery
+		localStorage.setItem('current_question_id', $examStore.reactivo.id);
+		localStorage.setItem('current_question_text', $examStore.reactivo.pregunta);
+		localStorage.setItem('current_user_answer', opcionSeleccionada.value);
+		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
+		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
+		localStorage.setItem('current_is_math', ($examStore.reactivo.lengMath || false).toString());
+		
+		// Create URL with query parameters
+		const queryParams = new URLSearchParams({
+			id: $examStore.reactivo.id,
+			pregunta: $examStore.reactivo.pregunta,
+			respuestaUsuario: opcionSeleccionada.value,
+			respuestaCorrecta: opcionCorrecta.value,
+			iscorrect: $examStore.reactivo.iscorrectQuestion.toString(),
+			lengMath: ($examStore.reactivo.lengMath || false).toString()
+		});
+		
+		// Trigger animations using Svelte reactivity
+		animateQuestionLeft = true;
+		animateAnswersRight = true;
+		animateProgressOut = true;
+		animateChartOut = true;
+		mainContentFading = true;
+		
+		// Wait for animations to complete before navigation
+		setTimeout(() => {
+			// Navigate to explanation page with parameters
+			goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
+		}, 600);
+	}	// When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
-		let idRandom = Math.floor(Math.random() * 18);
-		currentQuestion = currentQuestion + 1;
+		// Reset UI state
+		if ($examStore.showOptionalImage) {
+			examStore.toggleOptionalImage();
+		}
 
+		// Check if we're returning from explanation page
+		const returnFromExplanation = localStorage.getItem('return_from_explanation');
+		if (returnFromExplanation === 'true') {
+			// Clear the flag
+			localStorage.removeItem('return_from_explanation');
+			// Clear current question data
+			localStorage.removeItem('current_question_id');
+			localStorage.removeItem('current_question_text');
+			localStorage.removeItem('current_user_answer');
+			localStorage.removeItem('current_correct_answer');
+			localStorage.removeItem('current_is_correct');
+			localStorage.removeItem('current_is_math');
+			
+			// Add a subtle entrance animation when returning from explanation
+			const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
+			if (mainContent) {
+				mainContent.style.opacity = '0';
+				mainContent.style.transition = 'opacity 0.3s ease-in';
+				setTimeout(() => {
+					mainContent.style.opacity = '1';
+				}, 50);
+			}
+		}
 
-		if (currentQuestion > totalQuestions) {
-			finishExam(); // Llama a la función para finalizar el examen
+		// Increment question counter and check if exam is complete
+		examStore.nextQuestion();
+		if ($examStore.currentQuestion > $examStore.totalQuestions) {
+			finishExam();
 			return;
 		}
 
-		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
-		reactivo.pregunta = reactivos[idRandom].pregunta;
-		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
-			key,
-			value
-		}));
-		reactivo.currentQuestion = currentQuestion.toString();
-		
-		//console.log(reactivo.opciones);
-	}
+		// Validate reactivos data
+		if (!reactivos.length) {
+			console.error('Reactivos data is empty.');
 
-	function selectOption(resp) {
-		respuesta = resp;
-		//validar la respuesta
-		if (resp === reactivo.respuestaCorrecta) {
-			reactivo.iscorrectQuestion = true;
-			answers[currentQuestion] ="true"; // Store correct answer
-			alert('Correcto!');
-			
-		} else {
-			reactivo.iscorrectQuestion = false;
-			answers[currentQuestion] ="false"; // Store correct answer
-			modalRef.toogleModal(); // Abre el modal
-			UpdateResponseOfModal(resp, reactivo.respuestaCorrecta); // Pass the correct answer
-			
+			const updatedReactivo = { ...$examStore.reactivo };
+			updatedReactivo.pregunta = 'Error al cargar la pregunta.';
+			examStore.setReactivo(updatedReactivo);
+			return;
 		}
 
+		// Select random question
+		const idRandom = Math.floor(Math.random() * reactivos.length);
+		const selectedReactivo = reactivos[idRandom];
+
+		if (!selectedReactivo) {
+			console.error(`Reactivo with index ${idRandom} not found.`);
+
+			const updatedReactivo = { ...$examStore.reactivo };
+			updatedReactivo.pregunta = 'Error al cargar la pregunta.';
+			examStore.setReactivo(updatedReactivo);
+			return;
+		}
+
+		// Update reactivo state with selected question data
+		const { id, resuesta, pregunta, opciones, imgActive, lengMath } = selectedReactivo;
+
+		// Extract materia from id
+		const materia = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
+		examStore.updateMateria(materia);
+
+		// Format options
+		const formattedOptions = Object.entries(opciones).map(([key, value]) => ({
+			key,
+			value: String(value)
+		}));
+
+		// Update the reactivo in the store
+		const updatedReactivo = {
+			id,
+			respuestaCorrecta: resuesta,
+			pregunta,
+			imgAct: imgActive === true,
+			pathImg: $examStore.apiImg + id + '.png',
+			currentQuestion: $examStore.currentQuestion.toString(),
+			opciones: formattedOptions,
+			iscorrectQuestion: false,
+			altIMg: 'guia ipn Imagen de reactivo',
+			lengMath: lengMath
+		};
+
+		examStore.setReactivo(updatedReactivo);
+	}
+
+	// Función para alternar la visualización de la imagen opcional
+	function toggleOptionalImage() {
+		examStore.toggleOptionalImage();
+	}
+	// Función para alternar la visualización de la solución
+	function toggleSolution() {
+		examStore.toggleSolution();
+	}
+	function selectOption(resp) {
+		respuesta = resp;
+		// Validar la respuesta
+		if (resp === $examStore.reactivo.respuestaCorrecta) {
+			// Actualizar estado para marcar como correcta
+			const updatedReactivo = { ...$examStore.reactivo, iscorrectQuestion: true };
+			examStore.setReactivo(updatedReactivo);
+
+			// Guardar respuesta correcta
+			examStore.saveAnswer($examStore.currentQuestion, true);
+		} else {
+			// Actualizar estado para marcar como incorrecta
+			const updatedReactivo = { ...$examStore.reactivo, iscorrectQuestion: false };
+			examStore.setReactivo(updatedReactivo);
+
+			// Guardar respuesta incorrecta
+			examStore.saveAnswer($examStore.currentQuestion, false);
+
+			if ($examStore.showSolution) {
+				// Navigate to explanation page
+				navigateToExplanation(resp, $examStore.reactivo.respuestaCorrecta);
+				return; // Don't proceed to next question yet
+			}
+		}
+
+		// Pasar a la siguiente pregunta
 		getQuestionRandom();
 	}
 </script>
 
-<div class="mb-20 mt-36">
-	<div class="max-w-6xl px-6 text-center space-y-8">
-		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
-			<span
-				class="cyberpunk-title text-transparent bg-clip-text texto-rojo"
-			>
-				Examen del IPN
-			</span>
-			<span class="block text-3xl mt-1 text-cyan-300 font-light tracking-widest"
-				>Asistido por IA</span
-			>
-			<div class="absolute -left-2 top-1/2 w-4 h-8 bg-cyan-400/30 blur-sm"></div>
-			<div
-				class="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-cyan-500 to-transparent"
-			></div>
-		</h1>
-
-		<!-- Separador -->
-		<div class="border-t border-white/20 w-24 mx-auto"></div>
-
-		<ExamProgress {currentQuestion} {totalQuestions} {answers} />
-
-		<!-- Pregunta -->
-		<div
-			class="w-full px-6 py-4 rounded-md backdrop-blur-sm
-            border border-white/30 text-white card_color glow-effect"
-		>
-			<div class="question-container ">
-				<div class="question-header">
-					<span class="question-number">Pregunta {reactivo.currentQuestion}</span>
-					<span class="question-badge">Matemáticas</span>
+<!-- Add a wrapper for positioning bubbles -->
+<div class="text-gray-100 overflow-hidden" class:opacity-30={mainContentFading} class:transition-all={mainContentFading} class:duration-500={mainContentFading}>
+	<!-- Main content container -->
+	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
+		<div class="w-full max-w-4xl space-y-6">
+			<!-- Progress bar component -->
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<div class="flex-1 min-w-[65%] mt-20" class:animate-fade-out={animateProgressOut}>
+					<ExamProgress
+						currentQuestion={$examStore.currentQuestion}
+						totalQuestions={$examStore.totalQuestions}
+						answers={$examStore.answers}
+					/>
 				</div>
-				<div class="question-content">
-					<svg
-						class="question-icon"
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-						></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg
-					>
-					<p id="question" class="question-text">{reactivo.pregunta}</p>
-				</div>
-			</div>
-		</div>
-		<!-- Respuesta -->
-		<div class="relative mt-12 mx-auto">
-			<!-- Contenedor de tarjetas -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
-				{#each reactivo.opciones as respuesta, index}
-					<button
-						class="card card_color glow-effect backdrop-blur-sm border border-white/20 rounded-lg p-4
-                hover:shadow-lg cursor-pointer transition-all duration-300
-                min-h-[100px] flex items-center justify-center"
-						onclick={() => selectOption(respuesta.key)}
-						id="btn-{respuesta.key}"
-						aria-label="Respuesta {respuesta.key}"
-					>
-						<div class="w-full h-full flex flex-col justify-center">
-							<span class="text-white font-bold text-lg mb-1">{respuesta.key}</span>
-							<p class="text-white/90 text-sm sm:text-base line-clamp-3 overflow-hidden">
-								{respuesta.value}
-							</p>
+				<!-- Radar chart (hidden on mobile by default, shown on desktop) -->
+				{#if Object.keys($examStore.answers).length > 0}
+					<div class="stat-chart-container animate-fadeIn hidden sm:block" class:animate-fade-out={animateChartOut}>
+						<div class="stat-title text-xs text-center text-cyan-300 mb-1 font-medium">
+							<span class="flex items-center justify-center">
+								<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-1 animate-pulse"></span>
+								Rendimiento
+							</span>
 						</div>
+						<RadarChart
+							answers={$examStore.answers}
+							size="160px"
+							height="160px"
+							customClass="compact-chart"
+							showTitle={false}
+						/>
+					</div>
+
+					<!-- Mobile floating button -->
+					<button 
+						class="sm:hidden fixed bottom-4 right-4 bg-gray-800/80 border border-cyan-500/50 shadow-lg rounded-full p-3 z-50 text-cyan-400 backdrop-blur-sm"
+						onclick={() => showMobileChart = !showMobileChart}
+						aria-label="Ver gráfico de rendimiento"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+						</svg>
 					</button>
-				{/each}
+
+					<!-- Mobile chart modal -->
+					{#if showMobileChart}
+						<!-- svelte-ignore a11y_interactive_supports_focus -->
+						<div 
+							class="sm:hidden fixed inset-0 bg-black/70 flex items-center justify-center z-40" 
+							role="dialog"
+							aria-modal="true"
+							aria-labelledby="chart-modal-title"
+							onclick={() => showMobileChart = false}
+							onkeydown={(e) => e.key === 'Escape' && (showMobileChart = false)}
+						>
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<div 
+								class="stat-chart-container w-4/5 max-w-xs p-4 animate-fadeIn"
+								onclick={() => {}}
+							>
+								<div id="chart-modal-title" class="stat-title text-sm text-center text-cyan-300 mb-2 font-medium">
+									<span class="flex items-center justify-center">
+										<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-1 animate-pulse"></span>
+										Rendimiento
+									</span>
+								</div>
+								<RadarChart
+									answers={$examStore.answers}
+									size="240px"
+									height="240px"
+									customClass="compact-chart"
+									showTitle={false}
+								/>
+								<button 
+									class="mt-4 w-full py-2 bg-gray-700/80 border border-gray-600 rounded-md text-sm text-gray-200"
+									onclick={() => showMobileChart = false}
+								>
+									Cerrar
+								</button>
+							</div>
+						</div>
+					{/if}
+				{/if}
 			</div>
+
+			<!-- Question Card -->
+			<section
+				class="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+				class:animate-slide-left={animateQuestionLeft}
+			>
+				<!-- Question header with solution toggle -->
+				<QuestionHeader {toggleSolution} />
+
+				<!-- Question content and image -->
+				<QuestionDisplay {toggleOptionalImage} />
+			</section>
+			
+			<!-- Answer options component -->
+			<div class:animate-slide-right={animateAnswersRight}>
+				<AnswerOptions {selectOption} />
+			</div>
+
+			{#if $examStore.finish}
+				<ModalFinish answers={$examStore.answers} />
+			{/if}
 		</div>
-		<Estadisticas />
-		<ModalResponse bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
-		{#if finish}
-		<ModalFinish  {answers}/>
-		{/if}
-	   
-		
 	</div>
-	
-	
-	
 </div>
 
 <style>
-	.card {
-		transition: all 0.3s ease;
-	}
-
-	.question-container {
-		padding: 1.5rem;
-		border-radius: 0.5rem;
-		background-color: rgba(255, 255, 255, 0.05);
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		animation: fadeIn 0.5s ease-out;
-	}
-
-	.question-header {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 1rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding-bottom: 0.5rem;
-	}
-
-	.question-number {
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.9);
-	}
-
-	.question-badge {
-		background-color: rgba(59, 130, 246, 0.3);
-		padding: 0.25rem 0.75rem;
-		border-radius: 9999px;
-		font-size: 0.75rem;
-		font-weight: 600;
-	}
-
-	.question-content {
-		display: flex;
-		align-items: flex-start;
-		gap: 1rem;
-	}
-
-	.question-icon {
-		flex-shrink: 0;
-		color: rgba(255, 255, 255, 0.7);
-		margin-top: 0.25rem;
-	}
-
-	.question-text {
-		font-size: 1.25rem;
-		line-height: 1.6;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.95);
-		text-align: left;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(10px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-
-    .animate-text-glow {
-        animation: text-glow 2s ease-in-out infinite alternate;
+	   .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out forwards;
     }
-
-    .animate-line-glow {
-        animation: line-glow 1.5s ease-in-out infinite;
+    
+    
+    .stat-chart-container {
+        position: relative;
+        margin-top: 0.5rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 183, 255, 0.1);
+        transition: all 0.3s ease;
+        background: rgba(17, 24, 39, 0.7);
+        border: 1px solid rgba(0, 183, 255, 0.2);
+        backdrop-filter: blur(4px);
     }
-
-    @keyframes text-glow {
-        from {
-            filter: drop-shadow(0 0 5px rgba(32, 74, 44, 0.3));
-        }
-        to {
-            filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.6));
-        }
+    
+    .stat-title {
+        text-shadow: 0 0 5px rgba(0, 183, 255, 0.5);
+        letter-spacing: 0.5px;
     }
-
-    @keyframes line-glow {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
+    
+    .stat-chart-container:hover {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 0 15px rgba(0, 183, 255, 0.2);
     }
-
-	.texto-rojo {
-	    text-shadow: 0 0 10px #512a2aaa, 0 0 20px #82585855, 0 0 2px #ddc8c8;
-    color: #e30000;
-}
+    
+    /* New animations for transitions */
+	@keyframes slideLeft {
+		0% { transform: translateX(0); opacity: 1; }
+		100% { transform: translateX(-100px); opacity: 0; }
+	}
+	
+	@keyframes slideRight {
+		0% { transform: translateX(0); opacity: 1; }
+		100% { transform: translateX(100px); opacity: 0; }
+	}
+	
+	@keyframes fadeOut {
+		0% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+	
+	.animate-slide-left {
+		animation: slideLeft 0.5s ease-out forwards;
+	}
+	
+	.animate-slide-right {
+		animation: slideRight 0.5s ease-out forwards;
+	}
+	
+	.animate-fade-out {
+		animation: fadeOut 0.4s ease-out forwards;
+	}
+	
+	/* Add entrance animations for when returning from explanation */
+	@keyframes slideInLeft {
+		0% { transform: translateX(-100px); opacity: 0; }
+		100% { transform: translateX(0); opacity: 1; }
+	}
+	
+	@keyframes slideInRight {
+		0% { transform: translateX(100px); opacity: 0; }
+		100% { transform: translateX(0); opacity: 1; }
+	}
 </style>
