@@ -21,6 +21,7 @@
 	import { goto } from '$app/navigation';
 	import ExplanationSection from './components/ExplanationSection.svelte';
 	import { fade, fly, scale } from 'svelte/transition';
+	import CharacterIa from "../componentes/CharacterIA.svelte";
 	import QuestionSection from './components/QuestionSection.svelte';
 	import LoadingAnimation from './components/LoadingAnimation.svelte';
 	
@@ -141,15 +142,15 @@
 				<div class="relative">
 					<!-- Header with back button -->
 					<div
-						class="flex justify-start items-center mb-6 fade-in-up"
-						style="animation-delay: 0.5s; "
+						class="flex justify-center mb-6 fade-in-up"
+						style="animation-delay: 0.5s;"
 					>
 						<button
 							onclick={goBack}
-							class="text-gray-300 hover:text-white transition-all duration-300 text-2xl h-10 w-10 flex items-center justify-center rounded-full "
+							class="group bg-gray-800/50 text-gray-300 hover:text-white hover:bg-indigo-600/70 transition-all duration-300 text-xl h-12 w-12 flex items-center justify-center rounded-full border border-gray-700/50 shadow-lg transform hover:scale-110 hover:shadow-indigo-500/30 hover:-translate-y-1"
 							aria-label="Volver al examen"
 						>
-							←
+							<span class="transform transition-transform group-hover:translate-x-[-2px]">←</span>
 						</button>
 					</div>
 
@@ -197,15 +198,13 @@
 									content={explication.conceptosORecordatorios}
 								/>
 							</div>
+							 <div class="character-stats-container">
+            <!-- Character Mascot -->
+            <CharacterIa />
+        </div>
 
-							<!-- Example Section -->
-							<div
-								class="slide-in-right "
-								style="animation-delay: 0.55s;"
-							>
-								<AdditionalSection title="Ejemplo Similar" content={explication.ejemploSimilar} />
-							</div>
 						</div>
+						
 					{:else}
 						<div
 							class="text-center text-gray-300 bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 shadow-lg"
@@ -242,11 +241,6 @@
 		}
 	}
 
-	/* Animación deslizándose desde la derecha */
-	.slide-in-right {
-		opacity: 0;
-		animation: slideInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	}
 	@keyframes slideInRight {
 		0% {
 			opacity: 0;

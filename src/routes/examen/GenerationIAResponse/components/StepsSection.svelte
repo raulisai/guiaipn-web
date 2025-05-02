@@ -7,10 +7,10 @@
 
 <div class="flex justify-center w-full my-6">
 	<div class="w-full max-w-3xl">
-		<p class="text-gray-300 text-sm font-semibold uppercase mb-3 flex items-center justify-center">
-			<span class="inline-block w-2 h-2 bg-indigo-500 rounded-full mr-2 pulse-animation"></span>
+		<h3 class="text-gray-200 text-sm font-medium mb-3 flex items-center justify-center">
+			<span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2"></span>
 			Pasos para resolver
-		</p>
+		</h3>
 		
 		<div class="text-gray-200  p-5 rounded-lg border-l-2 border-indigo-500/70 shadow-lg">
 			<ol class="list-none pl-0 space-y-4">
@@ -35,6 +35,7 @@
 </div>
 
 <style>
+	
 	.step-item {
 		animation: fadeIn 0.5s ease-out forwards;
 		animation-delay: calc(0.1s * var(--index, 0));
