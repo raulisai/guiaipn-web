@@ -80,8 +80,6 @@
 				return;
 			}
 			
-			// Add cyberpunk effect to background
-			document.body.classList.add('cyber-background');
 			
 			// Set video URL based on topic - this would be replaced with real logic
 			// to determine appropriate videos based on the question content
@@ -109,10 +107,7 @@
 		// Call the initialization function
 		initializeData();
 		
-		// Clean up function returned directly (not as a Promise)
-		return () => {
-			document.body.classList.remove('cyber-background');
-		};
+		
 	});
 
 	async function enviarRespuesta(question, respuesta) {
@@ -179,7 +174,7 @@
 				<!-- Cyberpunk container -->
 				<div class="relative">
 					<!-- Header with back button -->
-					<div class="flex justify-between items-center mb-6">
+					<div class="flex justify-between items-center mt-20 mb-4">
 						<button
 							onclick={goBack}
 							class="cyber-btn bg-transparent text-cyan-400 hover:text-cyan-300 transition-all duration-300 text-xl h-12 w-12 flex items-center justify-center rounded-md border border-cyan-700/50 shadow-lg shadow-cyan-900/30 transform hover:scale-105 hover:shadow-cyan-500/30 hover:-translate-y-1 cyber-glow"
@@ -267,7 +262,7 @@
 							>
 								<div class="cyber-panel-header">
 									<span class="text-cyan-300 font-bold">Procedimiento</span>
-									<div class="cyber-data-label">4LGORITMO</div>
+									
 								</div>
 								<div class="cyber-panel-content">
 									<StepsSection steps={explication.pasosParaResolverElProblema} />
@@ -281,7 +276,7 @@
 							>
 								<div class="cyber-panel-header">
 									<span class="text-yellow-300 font-bold">Fórmulas / Conceptos</span>
-									<div class="cyber-data-label">DATA.SCI</div>
+									
 								</div>
 								<div class="cyber-panel-content">
 									<AdditionalSection
@@ -314,182 +309,7 @@
 {/if}
 
 <style>
-	/* ========= CYBERPUNK THEMED STYLES ========= */
-	
-	/* Grid overlay for cyberpunk aesthetic */
-	.cyberpunk-grid {
-		background-image: 
-			linear-gradient(to right, rgba(5, 220, 250, 0.07) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(5, 220, 250, 0.07) 1px, transparent 1px);
-		background-size: 40px 40px;
-		background-position: center center;
-	}
-	
-	/* Glowing orbs decoration */
-	.glow-orb {
-		width: 150px;
-		height: 150px;
-		border-radius: 50%;
-		filter: blur(50px);
-		opacity: 0.5;
-		animation: pulse 8s infinite alternate;
-	}
-	
-	.blue-orb {
-		background-color: rgba(32, 156, 238, 0.096);
-	}
-	
-	.purple-orb {
-		background-color: rgba(130, 40, 245, 0.3);
-	}
-	
-	@keyframes pulse {
-		0% {
-			transform: scale(0.8);
-			opacity: 0.3;
-		}
-		100% {
-			transform: scale(1.2);
-			opacity: 0.6;
-		}
-	}
-	
-	/* Cyberpunk panel styles */
-	.cyber-panel {
-		background: rgba(24, 27, 45, 0.164);
-		backdrop-filter: blur(3px);
-		border-radius: 8px;
-		border-left: 2px solid rgba(0, 220, 255, 0.5);
-		border-top: 1px solid rgba(0, 220, 255, 0.3);
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-		overflow: hidden;
-		position: relative;
-	}
-	
-	.cyber-panel::after {
-		content: '';
-		position: absolute;
-		top: 0;
-		right: 0;
-		height: 100%;
-		width: 10px;
-		background: linear-gradient(to bottom, rgba(0, 220, 255, 0.5), rgba(130, 40, 245, 0.5));
-		opacity: 0.5;
-	}
-	
-	.cyber-panel-header {
-		background: rgba(13, 17, 31, 0.7);
-		padding: 0.75rem 1.25rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-bottom: 1px solid rgba(0, 220, 255, 0.3);
-	}
-	
-	.cyber-panel-content {
-		padding: 1rem;
-		position: relative;
-	}
-	
-	.cyber-data-label {
-		font-family: monospace;
-		font-size: 0.75rem;
-		color: rgba(0, 220, 255, 0.7);
-		letter-spacing: 1px;
-	}
-	
-	.cyber-dots {
-		display: flex;
-		gap: 5px;
-	}
-	
-	.cyber-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: rgba(0, 220, 255, 0.7);
-	}
-	
-	/* Cyberpunk button */
-	.cyber-btn {
-		position: relative;
-		overflow: hidden;
-		transition: all 0.3s ease;
-	}
-	
-	.cyber-btn::before {
-		content: '';
-		position: absolute;
-		top: -2px;
-		left: -2px;
-		right: -2px;
-		bottom: -2px;
-		background: linear-gradient(45deg, #00ffff, #0077ff, #ff00ff, #ff7700);
-		z-index: -2;
-		animation: glowing 3s linear infinite;
-		background-size: 400%;
-		opacity: 0;
-		transition: opacity 0.3s ease;
-		border-radius: inherit;
-	}
-	
-	.cyber-btn:hover::before {
-		opacity: 1;
-	}
-	
-	.cyber-btn::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: inherit;
-		z-index: -1;
-		border-radius: inherit;
-	}
-	
-	@keyframes glowing {
-		0% { background-position: 0% 0%; }
-		50% { background-position: 400% 0%; }
-		100% { background-position: 0% 0%; }
-	}
-	
-	/* Panel specific styles */
-	.explanation-panel {
-		border-left-color: rgba(0, 220, 255, 0.5);
-	}
-	
-	.steps-panel {
-		border-left-color: rgba(95, 58, 255, 0.5);
-	}
-	
-	.formulas-panel {
-		border-left-color: rgba(255, 216, 0, 0.5);
-	}
-	
-	.error-panel {
-		border-left-color: rgba(255, 73, 73, 0.8);
-	}
-	
 
 	
-	/* Animation for scanner line effect */
-	@keyframes scannerLine {
-		0% { transform: translateY(-100%); }
-		100% { transform: translateY(100%); }
-	}
-	
-	/* Responsive adjustments */
-	@media (max-width: 640px) {
-		.glow-orb {
-			width: 100px;
-			height: 100px;
-		}
-		
-		.cyber-panel-header {
-			padding: 0.5rem 0.75rem;
-		}
-		
-		.cyber-panel-content {
-			padding: 0.75rem;
-		}
-	}
+
 </style>
