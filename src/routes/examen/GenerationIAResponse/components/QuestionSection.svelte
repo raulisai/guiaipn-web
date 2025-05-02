@@ -1,82 +1,149 @@
 <script lang="ts">
-	export let pregunta: string;
-	export let respuestaUsuario: string;
-	export let respuestaCorrecta: string;
-	export let lengMath: boolean;
+	const { pregunta, respuestaUsuario, respuestaCorrecta, lengMath } = $props<{
+		pregunta: string;
+		respuestaUsuario: string;
+		respuestaCorrecta: string;
+		lengMath: boolean;
+	}>();
 	
 	import MathForm from '../../componentes/Math.svelte';
+	import { slide } from 'svelte/transition'; // Import slide transition
+	import { onMount } from 'svelte'; // Import onMount lifecycle function
+	
+
+   let isMinimized: boolean = $state(false); // State for minimizing
+
+	function toggleMinimize() {
+		isMinimized = !isMinimized;
+	}
+
+
+	onMount(() => {
+		setTimeout(() => {
+			isMinimized = true;
+		}, 5000);
+	});
+	
+
 </script>
 
-<div>
-	<div class="question mb-4 break-words md:whitespace-normal relative">
-		<p class="text-gray-300 text-xs sm:text-sm font-semibold mb-2 uppercase flex items-center">
-			<span class="inline-block w-1.5 sm:w-2 h-1.5 sm:h-2 bg-gray-400 rounded-full mr-2"></span>
+<!-- Single container with animation -->
+<div
+	class="bg-gray-800/10 p-3 rounded border-l-2 border-gray-600/50 space-y-3 animate-fade-in transition-all duration-300 ease-in-out {isMinimized ? 'pb-2' : 'pb-3'}"
+>
+	<!-- Question Section Header with Toggle -->
+	<div class="flex justify-between items-center">
+		<p class="text-gray-400 text-xs font-medium uppercase flex items-center">
+			<!-- Yellow indicator -->
+			<span class="inline-block w-1 h-1 bg-yellow-500 rounded-full mr-1.5"></span>
 			Pregunta
 		</p>
-		<div
-			class="text-white text-secondary bg-gray-800/20 p-3 rounded-lg border-l-2 border-gray-500/50"
+		<button
+			onclick={toggleMinimize}
+			class="flex items-center justify-center rounded-full p-1.5 text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/20 shadow-sm hover:shadow-md hover:shadow-yellow-500/30 transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-yellow-500/40"
+			aria-label={isMinimized ? 'Expandir pregunta' : 'Minimizar pregunta'}
 		>
-			{#if lengMath}
-				<div class="question-text-content" class:long-question={lengMath}>
-					<MathForm isBlock={false} content={pregunta} />
-				</div>
-			{:else}
-				<p class="text-sm sm:text-base">{pregunta}</p>
-			{/if}
-		</div>
+			<!-- Enhanced Chevron with Animation -->
+			<span 
+				class="transition-all duration-300 inline-block {isMinimized ? 'rotate-180' : ''} 
+					   animate-pulse-subtle text-lg font-bold"
+			>
+				▲
+			</span>
+		</button>
 	</div>
 
-	<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-		<div>
-			<div
-				class="bg-gray-800/20 p-3 rounded-lg border-l-2 border-gray-500/50"
-			>
-				<p class="text-gray-300 text-xs sm:text-sm font-semibold mb-2 uppercase flex items-center">
-					<span class="inline-block w-1.5 sm:w-2 h-1.5 sm:h-2 bg-gray-400 rounded-full mr-2"></span>
+	<!-- Question Content -->
+	<div class="text-gray-100">
+		{#if lengMath}
+			<div class="question-text-content" class:long-question={lengMath}>
+				<MathForm isBlock={false} content={pregunta} />
+			</div>
+		{:else}
+			<p class="text-sm">{pregunta}</p>
+		{/if}
+	</div>
+
+	<!-- Conditionally Rendered Answers Section with Transition -->
+	{#if !isMinimized}
+		<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1" transition:slide|local={{ duration: 300 }}>
+			<!-- User Answer -->
+			<div>
+				<p class="text-gray-400 text-xs font-medium mb-1 uppercase flex items-center">
+					<!-- Wine/Rose indicator -->
+					<span class="inline-block w-1 h-1 bg-rose-500 rounded-full mr-1.5"></span>
 					Tu respuesta
 				</p>
-				<div class="text-gray-200 text-secondary text-sm sm:text-base">
+				<!-- Wine/Rose text color -->
+				<div class="text-rose-300 text-sm">
 					<MathForm isBlock={false} content={respuestaUsuario} />
 				</div>
 			</div>
-		</div>
 
-		<div>
-			<div
-				class="bg-gray-800/20 p-3 rounded-lg border-l-2 border-gray-500/50"
-			>
-				<p class="text-gray-300 text-xs sm:text-sm font-semibold mb-2 uppercase flex items-center">
-					<span class="inline-block w-1.5 sm:w-2 h-1.5 sm:h-2 bg-gray-400 rounded-full mr-2"></span>
+			<!-- Correct Answer -->
+			<div>
+				<p class="text-gray-400 text-xs font-medium mb-1 uppercase flex items-center">
+					<!-- Green indicator (no change) -->
+					<span class="inline-block w-1 h-1 bg-green-500 rounded-full mr-1.5"></span>
 					Respuesta correcta
 				</p>
-				<div class="text-gray-200 text-secondary text-sm sm:text-base">
+				<!-- Green text color (no change) -->
+				<div class="text-green-300 text-sm font-medium">
 					<MathForm isBlock={false} content={respuestaCorrecta} />
 				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
 </div>
 
 <style>
+
+
+/* Add this to your existing style block */
+			.animate-pulse-subtle {
+				animation: pulse-subtle 2s infinite;
+			}
+			
+			@keyframes pulse-subtle {
+				0%, 100% { opacity: 1; }
+				50% { opacity: 0.7; }
+			}
+    /* Fade-in animation */
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px); /* Optional: slight upward movement */
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
 	/* Apply horizontal scroll for long questions regardless of screen size */
     .long-question {
         overflow-x: auto; /* Enable horizontal scroll */
-        padding-bottom: 8px;
+        padding-bottom: 6px; /* Slightly reduced padding */
         scrollbar-width: thin;
-        scrollbar-color: rgba(107, 114, 128, 0.5) transparent;
+        scrollbar-color: rgba(107, 114, 128, 0.4) transparent; /* Lighter scrollbar */
     }
-    
+
     .long-question::-webkit-scrollbar {
-        height: 3px;
+        height: 2px; /* Thinner scrollbar */
     }
-    
+
     .long-question::-webkit-scrollbar-track {
         background: transparent;
     }
-    
+
     .long-question::-webkit-scrollbar-thumb {
-        background-color: rgba(107, 114, 128, 0.5);
-        border-radius: 20px;
-        border: 2px solid transparent;
+        background-color: rgba(107, 114, 128, 0.4); /* Lighter scrollbar thumb */
+        border-radius: 10px;
+        border: 1px solid transparent;
     }
 </style>

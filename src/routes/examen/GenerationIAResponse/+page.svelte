@@ -23,7 +23,7 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import QuestionSection from './components/QuestionSection.svelte';
 	import LoadingAnimation from './components/LoadingAnimation.svelte';
-	import TipsSection from './components/TipsSection.svelte';
+	
 	import StepsSection from './components/StepsSection.svelte';
 	import AdditionalSection from './components/AdditionalSection.svelte';
 
@@ -167,21 +167,14 @@
 						<LoadingAnimation />
 					{:else if explication}
 						<!-- Responsive content with animations -->
-						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+						<div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
 							<!-- Explanation Section -->
 							<div
 								class="slide-in-left "
 								style="animation-delay: 0.15s;"
-							>
-								<ExplanationSection explanation={explication.explicacionRespuesta} />
-							</div>
-
-							<!-- Tips Section -->
-							<div
-								class="slide-in-righ"
-								style="animation-delay: 0.25s;"
-							>
-								<TipsSection tips={explication.Tip} />
+							>  
+								<ExplanationSection explanation={explication.explicacionRespuesta} tips={explication.Tip} />
+								
 							</div>
 						</div>
 

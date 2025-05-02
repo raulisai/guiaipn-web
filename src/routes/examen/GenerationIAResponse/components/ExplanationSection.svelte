@@ -1,13 +1,18 @@
 <script lang="ts">
 	export let explanation: string;
+	export let tips: string = 'No hay tips disponibles para esta pregunta.'; // Default value if no tips are provided
+
+	import TipsSection from './TipsSection.svelte';
 </script>
 
-<div>
-	<p class="text-gray-300 text-xs sm:text-sm font-semibold uppercase mb-2 flex items-center">
-		<span class="inline-block w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></span>
-		Explicación Problema
-	</p>
-	<div class="text-gray-200 text-sm sm:text-base bg-gray-800/20 p-4 rounded-lg border-l-2 border-gray-500/50">
+<div class="relative border-b-2 border-indigo-700 ">
+	
+	<div class="text-gray-200 text-sm sm:text-base p-4 rounded-lg pb-10 text-center">
 		{explanation}
+	</div>
+	
+	<!-- Positioned at bottom right -->
+	<div class="absolute bottom-2 right-2">
+		<TipsSection tips={tips} />
 	</div>
 </div>
