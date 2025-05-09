@@ -176,10 +176,7 @@
 		transform: scale(1.2);
 		box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
 	}
-	
-	.pulse-animation {
-		animation: pulse 2s infinite;
-	}
+
 	
 	@keyframes pulse {
 		0% { transform: scale(1); opacity: 1; }

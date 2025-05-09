@@ -3,7 +3,7 @@
 	export let tips: string = 'No hay tips disponibles para esta pregunta.'; // Default value if no tips are provided
 
 	import TipsSection from './TipsSection.svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 
 	// Split explanation into paragraphs for better animation

@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { fly, scale } from 'svelte/transition';
-  import { elasticOut, cubicOut } from 'svelte/easing';
+  import { fly } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+
   
   export let tips: string;
   let hovering = false;
