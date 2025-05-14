@@ -577,7 +577,7 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
