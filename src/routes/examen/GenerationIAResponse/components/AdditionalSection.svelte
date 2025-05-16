@@ -1,8 +1,7 @@
 <script lang="ts">
 	
 	export let content: string;
-	import { fade, fly, scale } from 'svelte/transition';
-	import { elasticOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
 	
 	// Parse content to format code/formulas distinctly
 	$: formattedContent = formatContent(content);

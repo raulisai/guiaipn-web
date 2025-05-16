@@ -6,4 +6,7 @@
 
 
 	/* Global cyberpunk style for entire app */
-	
+
+body {
+ background-color: black;
+}

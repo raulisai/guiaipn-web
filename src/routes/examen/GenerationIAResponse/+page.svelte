@@ -20,9 +20,8 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import ExplanationSection from './components/ExplanationSection.svelte';
-	import { fade, fly, scale, draw, crossfade, slide } from 'svelte/transition';
-	import { elasticOut, cubicOut, bounceOut } from 'svelte/easing';
-	import CharacterIa from '../componentes/CharacterIA.svelte';
+	import { fade, fly, scale, slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import QuestionSection from './components/QuestionSection.svelte';
 	import LoadingAnimation from './components/LoadingAnimation.svelte';
 

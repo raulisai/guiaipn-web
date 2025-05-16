@@ -67,7 +67,7 @@
 		setTimeout(() => {
 			// Navigate to explanation page with parameters
 			goto(`/examen/GenerationIAResponse?${queryParams.toString()}`);
-		}, 600);
+		}, 900);
 	}	// When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
 		// Reset UI state
