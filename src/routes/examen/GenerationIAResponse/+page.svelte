@@ -250,6 +250,7 @@
 									<ExplanationSection
 										explanation={explication.explicacionRespuesta}
 										tips={explication.Tip}
+										lengMath={lengMath}
 									/>
 								</div>
 							</div>
@@ -264,7 +265,7 @@
 									
 								</div>
 								<div class="cyber-panel-content">
-									<StepsSection steps={explication.pasosParaResolverElProblema} />
+									<StepsSection steps={explication.pasosParaResolverElProblema} lengMath={lengMath} />
 								</div>
 							</div>
 
@@ -280,6 +281,8 @@
 								<div class="cyber-panel-content">
 									<AdditionalSection
 										content={explication.conceptosORecordatorios}
+										lengMath={lengMath}
+										
 									/>
 								</div>
 							</div>

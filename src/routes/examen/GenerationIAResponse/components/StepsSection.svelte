@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { fade, fly, slide } from 'svelte/transition';
 	import { cubicOut, elasticOut } from 'svelte/easing';
+	import MathForm from '../../componentes/Math.svelte';
 	
-	const { steps } = $props<{ steps: string[] }>();
+	const { steps, lengMath } = $props<{ steps: string[], lengMath: boolean }>();
 	
 	let activeStep = $state(-1);
 	
@@ -45,7 +46,11 @@
 							<!-- Step content collapses/expands when clicked -->
 							<div class="step-content-toggle">
 								<div class="step-content" class:expanded={activeStep === i}>
-									{paso}
+									{#if lengMath}
+										<MathForm isBlock={false} content={paso} />
+									{:else}
+										<p class="text-gray-200">{paso}</p>
+									{/if}
 									{#if activeStep === i}
 										<div class="cyber-underline mt-2" transition:slide={{ duration: 300 }}></div>
 									{/if}

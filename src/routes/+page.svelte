@@ -5,6 +5,37 @@
 	import { user } from '$lib/stores/authStore';
 	import { goto } from '$app/navigation';
 	import Footer from './components/footer.svelte';
+
+// Solo importa aquí, NO en archivos .js del lado del servidor
+let stagewiseToolbar;
+onMount(async () => {
+  if (import.meta.env.DEV) {
+	const { initToolbar } = await import('@stagewise/toolbar');
+	const stagewiseConfig = {
+	  plugins: [
+		{
+		  name: 'example-plugin',
+		  description: 'Adds additional context for your components',
+		  shortInfoForPrompt: () => {
+			return "Context information about the selected element";
+		  },
+		  mcp: null,
+		  actions: [
+			{
+			  name: 'Example Action',
+			  description: 'Demonstrates a custom action',
+			  execute: () => {
+				window.alert('This is a custom action!');
+			  },
+			},
+		  ],
+		},
+	  ],
+	};
+	initToolbar(stagewiseConfig);
+  }
+});
+	
 	
 	// Variables para la primera sección
 	let visible = false;

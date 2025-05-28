@@ -1,9 +1,11 @@
 <script lang="ts">
   import { fly } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
+  import MathForm from '../../componentes/Math.svelte';
 
   
   export let tips: string;
+  export let lengMath: boolean;
   let hovering = false;
 </script>
 
@@ -35,7 +37,11 @@
         </div>
       </div>
       <div class="cyber-tooltip-content">
-        {tips}
+        {#if lengMath}
+          <MathForm isBlock={false} content={tips} />
+        {:else}
+          <p class="text-gray-300">{tips}</p>
+        {/if}
       </div>
       <div class="cyber-tooltip-arrow"></div>
     </div>

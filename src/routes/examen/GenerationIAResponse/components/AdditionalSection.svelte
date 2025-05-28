@@ -1,7 +1,8 @@
 <script lang="ts">
-	
+	import { fly } from 'svelte/transition'; // Added import for fly
+	import MathForm from '../../componentes/Math.svelte';
 	export let content: string;
-	import { fly } from 'svelte/transition';
+	export let lengMath: boolean;
 	
 	// Parse content to format code/formulas distinctly
 	$: formattedContent = formatContent(content);
@@ -12,28 +13,38 @@
 	}
 </script>
 
-<div class="flex flex-col items-center">
-	<div class="cyber-concept-container">
-		<!-- Holographic effect elements -->
-		<div class="hologram-lines"></div>
-		<div class="hologram-grid"></div>
+{#if content}
+	<div class="prose prose-sm sm:prose-base max-w-none text-gray-300">
+		{#if lengMath}
+			<MathForm isBlock={false} content={content} />
+		{:else}
+			<div class="flex flex-col items-center">
+				<div class="cyber-concept-container">
+					<!-- Holographic effect elements -->
+					<div class="hologram-lines"></div>
+					<div class="hologram-grid"></div>
 
-		<!-- Formula content with glowing effect -->
-		<div class="cyber-formula-content">
-			{#each formattedContent as line, i}
-				<div 
-					class="formula-line" 
-					in:fly={{ x: 50, delay: i * 100, duration: 400, opacity: 0 }}
-				>
-					{line}
+					<!-- Formula content with glowing effect -->
+					<div class="cyber-formula-content">
+						{#each formattedContent as line, i}
+							<div 
+								class="formula-line" 
+								in:fly={{ x: 50, delay: i * 100, duration: 400, opacity: 0 }}
+							>
+								{line}
+							</div>
+						{/each}
+					</div>
+
+					<!-- Scanning effect -->
+					<div class="scan-line"></div>
 				</div>
-			{/each}
-		</div>
-
-		<!-- Scanning effect -->
-		<div class="scan-line"></div>
+			</div>
+		{/if}
 	</div>
-</div>
+{:else}
+	<p class="text-gray-400 italic text-sm">No hay información adicional disponible.</p>
+{/if}
 
 <style>
 	.cyber-concept-container {
