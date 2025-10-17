@@ -35,6 +35,7 @@
 	let respuestaCorrecta = $state('');
 	let iscorrect = $state(false);
 	let lengMath = $state(false);
+	let tipo = $state('');
 
 	let isLoading = $state(true);
 	let explication = $state(null);
@@ -59,6 +60,7 @@
 			respuestaCorrecta = urlParams.get('respuestaCorrecta') || '';
 			iscorrect = urlParams.get('iscorrect') === 'true';
 			lengMath = urlParams.get('lengMath') === 'true';
+			tipo = id.slice(4, -2);
 
 			// If we don't have necessary params, try to get from localStorage
 			if (!id || !pregunta) {
@@ -120,7 +122,8 @@
 					idreactivo: id,
 					respuesta: respuesta,
 					isCorrect: iscorrect,
-					pregunta: question
+					pregunta: question,
+					type: tipo,
 				})
 			});
 

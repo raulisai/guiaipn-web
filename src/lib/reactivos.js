@@ -188,11 +188,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?}",
+      "¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?",
     opciones: { a: "32", b: "25", c: "17", d: "9" },
     id: "2024Algebra32",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
