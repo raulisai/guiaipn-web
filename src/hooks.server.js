@@ -72,10 +72,10 @@ export function handleError({ error, event }) {
     const errorId = crypto.randomUUID();
     console.error(`Error ID ${errorId}:`, error);
     
-    // Create a standard Error object that matches the expected return type
-    const customError = new Error('Ocurrió un error inesperado. Por favor intenta nuevamente.');
-    // Add the ID as a property to the error object
-    /** @type {any} */ (customError).id = errorId;
-    
-    return customError;
+    // IMPORTANT: Return a plain serializable object to be used on the error page
+    // SvelteKit expects a POJO here; returning an Error instance causes DevalueError
+    return {
+        message: 'Ocurrió un error inesperado. Por favor intenta nuevamente.',
+        id: errorId
+    };
 }
