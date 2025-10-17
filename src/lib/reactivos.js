@@ -188,11 +188,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?}",
+      "¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?",
     opciones: { a: "32", b: "25", c: "17", d: "9" },
     id: "2024Algebra32",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
@@ -577,7 +577,7 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMath: true
   },
   {
     pregunta:
@@ -836,7 +836,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se realizó una encuesta sobre la preferencia de vivir en la ciudad. ¿Cuál es la probabilidad de que un hombre desee vivir en la ciudad?}",
+      "Se realizó una encuesta sobre la preferencia de vivir en la ciudad. ¿Cuál es la probabilidad de que un hombre desee vivir en la ciudad?",
     opciones: {
       a: "\\frac{3}{10}",
       b: "\\frac{7}{20}",
@@ -845,7 +845,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMath: false
   },
   {
     pregunta:
