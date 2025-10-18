@@ -25,7 +25,11 @@
                     {respuesta.key}
                 </span>
                 <div class="answer-text flex-1 text-gray-200 text-sm sm:text-base leading-relaxed">
-                    <MathForm isBlock={false} content={respuesta.value} />
+                    {#if $examStore.reactivo.lengMathOpciones === true}
+                        <MathForm isBlock={false} content={respuesta.value} />
+                    {:else}
+                        <span>{respuesta.value}</span>
+                    {/if}
                 </div>
             </div>
         </button>
