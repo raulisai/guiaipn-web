@@ -43,7 +43,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Relacionar cada producto notable con la expresión matemática que le corresponde:}",
+      "Relacionar cada producto notable con la expresión matemática que le corresponde:",
     opciones: {
       a: "1D, 2C, 3B, 4A",
       b: "1D, 2A, 3B, 4C",
@@ -52,7 +52,7 @@ export const reactivos = [
     },
     id: "2024Algebra17",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta: "\\text{Completar el binomio: } (3n-2s)^3 = 27n^3 + (\\_\\_) + 36ns^2 + (\\_\\_)",
@@ -293,7 +293,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta: 
-    "\\text{Relacionar cada conjunto con los números que le corresponden: }",
+    "Relacionar cada conjunto con los números que le corresponden:",
     opciones: {
       a: "1B, 2D, 3A, 4C",
       b: "1C, 2D, 3A, 4B",
@@ -482,7 +482,7 @@ export const reactivos = [
     opciones: { a: "40", b: "46", c: "50", d: "56" },
     id: "2024Estadistica03",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -923,11 +923,11 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
-      "\\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
+      "Ordenar ascendentemente los conjuntos de números según su mediana: {4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9}, {3,2,3,4,5,3,3,4,4,5,5,6,6,9,9}, {6,6,7,7,3,9,2,3,4,6,6,6,7,9,9}, {3,4,7,7,8,8,9,9,7,6,7,9,7,7,9}",
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:

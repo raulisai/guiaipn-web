@@ -11,7 +11,8 @@ type Reactivo = {
   pathImg: string;
   altIMg: string;
   imgAct: boolean;
-  lengMath?: boolean; // opcional, dependiendo de si se usa o no
+  lengMathPregunta?: boolean; // opcional, indica si la pregunta tiene matemáticas
+  lengMathOpciones?: boolean; // opcional, indica si las opciones tienen matemáticas
 };
 
 // Definición del tipo para respuestas
@@ -52,7 +53,8 @@ const initialState: ExamState = {
     pathImg: 'https://img-reactivos.s3.us-east-2.amazonaws.com/2024Algebra03.png',
     altIMg: 'guia ipn Imagen de reactivo',
     imgAct: false,
-    lengMath: true
+    lengMathPregunta: true,
+    lengMathOpciones: true
   },
   finish: false,
   showOptionalImage: false,

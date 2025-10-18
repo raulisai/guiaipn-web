@@ -14,7 +14,7 @@
     <!-- Container for question text - optimized for mobile -->
     <div id="question" class="question-text-container relative w-full px-3 py-4 sm:p-4" >
         <!-- Question text with improved mobile handling -->
-        {#if $examStore.reactivo.lengMath !== false}
+        {#if $examStore.reactivo.lengMathPregunta === true}
             <div class="question-text-content" class:long-question={isLongQuestion}>
                 <MathForm isBlock={false} content={$examStore.reactivo.pregunta} />
             </div>

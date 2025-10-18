@@ -1,9 +1,10 @@
 <script lang="ts">
-	const { pregunta, respuestaUsuario, respuestaCorrecta, lengMath } = $props<{
+	const { pregunta, respuestaUsuario, respuestaCorrecta, lengMath, lengMathOpciones } = $props<{
 		pregunta: string;
 		respuestaUsuario: string;
 		respuestaCorrecta: string;
 		lengMath: boolean;
+		lengMathOpciones: boolean;
 	}>();
 	
 	import MathForm from '../../componentes/Math.svelte';
@@ -78,7 +79,11 @@
 				</p>
 				<!-- Wine/Rose text color -->
 				<div class="text-rose-300 text-xs sm:text-sm leading-relaxed">
-					<MathForm isBlock={false} content={respuestaUsuario} />
+					{#if lengMathOpciones}
+						<MathForm isBlock={false} content={respuestaUsuario} />
+					{:else}
+						<span>{respuestaUsuario}</span>
+					{/if}
 				</div>
 			</div>
 
@@ -92,7 +97,11 @@
 				</p>
 				<!-- Green text color (no change) -->
 				<div class="text-green-300 text-xs sm:text-sm font-medium leading-relaxed">
-					<MathForm isBlock={false} content={respuestaCorrecta} />
+					{#if lengMathOpciones}
+						<MathForm isBlock={false} content={respuestaCorrecta} />
+					{:else}
+						<span>{respuestaCorrecta}</span>
+					{/if}
 				</div>
 			</div>
 		</div>

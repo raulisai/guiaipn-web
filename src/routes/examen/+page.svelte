@@ -44,7 +44,8 @@
 		localStorage.setItem('current_user_answer', opcionSeleccionada.value);
 		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
 		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
-		localStorage.setItem('current_is_math', ($examStore.reactivo.lengMath || false).toString());
+		localStorage.setItem('current_is_math_pregunta', ($examStore.reactivo.lengMathPregunta || false).toString());
+		localStorage.setItem('current_is_math_opciones', ($examStore.reactivo.lengMathOpciones || false).toString());
 		
 		// Create URL with query parameters
 		const queryParams = new URLSearchParams({
@@ -53,7 +54,8 @@
 			respuestaUsuario: opcionSeleccionada.value,
 			respuestaCorrecta: opcionCorrecta.value,
 			iscorrect: $examStore.reactivo.iscorrectQuestion.toString(),
-			lengMath: ($examStore.reactivo.lengMath || false).toString()
+			lengMathPregunta: ($examStore.reactivo.lengMathPregunta || false).toString(),
+			lengMathOpciones: ($examStore.reactivo.lengMathOpciones || false).toString()
 		});
 		
 		// Trigger animations using Svelte reactivity
@@ -130,7 +132,7 @@
 		}
 
 		// Update reactivo state with selected question data
-		const { id, resuesta, pregunta, opciones, imgActive, lengMath } = selectedReactivo;
+		const { id, resuesta, pregunta, opciones, imgActive, lengMathPregunta, lengMathOpciones } = selectedReactivo;
 
 		// Extract materia from id
 		const materia = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
@@ -153,7 +155,8 @@
 			opciones: formattedOptions,
 			iscorrectQuestion: false,
 			altIMg: 'guia ipn Imagen de reactivo',
-			lengMath: lengMath
+			lengMathPregunta: lengMathPregunta,
+			lengMathOpciones: lengMathOpciones
 		};
 
 		examStore.setReactivo(updatedReactivo);

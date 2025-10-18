@@ -34,7 +34,8 @@
 	let respuestaUsuario = $state('');
 	let respuestaCorrecta = $state('');
 	let iscorrect = $state(false);
-	let lengMath = $state(false);
+	let lengMathPregunta = $state(false);
+	let lengMathOpciones = $state(false);
 	let tipo = $state('');
 
 	let isLoading = $state(true);
@@ -59,7 +60,8 @@
 			respuestaUsuario = urlParams.get('respuestaUsuario') || '';
 			respuestaCorrecta = urlParams.get('respuestaCorrecta') || '';
 			iscorrect = urlParams.get('iscorrect') === 'true';
-			lengMath = urlParams.get('lengMath') === 'true';
+			lengMathPregunta = urlParams.get('lengMathPregunta') === 'true';
+			lengMathOpciones = urlParams.get('lengMathOpciones') === 'true';
 			tipo = id.slice(4, -2);
 
 			// If we don't have necessary params, try to get from localStorage
@@ -71,7 +73,8 @@
 					respuestaUsuario = localStorage.getItem('current_user_answer') || '';
 					respuestaCorrecta = localStorage.getItem('current_correct_answer') || '';
 					iscorrect = localStorage.getItem('current_is_correct') === 'true';
-					lengMath = localStorage.getItem('current_is_math') === 'true';
+					lengMathPregunta = localStorage.getItem('current_is_math_pregunta') === 'true';
+					lengMathOpciones = localStorage.getItem('current_is_math_opciones') === 'true';
 				}
 			}
 
@@ -197,7 +200,7 @@
 
 					<!-- Question and answers container -->
 					<div class="mb-8" in:fly={{ y: 30, duration: 500, delay: 300 }}>
-						<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} {lengMath} />
+						<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} lengMath={lengMathPregunta} lengMathOpciones={lengMathOpciones} />
 					</div>
 				</div>
 
@@ -253,7 +256,7 @@
 									<ExplanationSection
 										explanation={explication.explicacionRespuesta}
 										tips={explication.Tip}
-										lengMath={lengMath}
+										lengMath={lengMathPregunta}
 									/>
 								</div>
 							</div>
@@ -268,7 +271,7 @@
 									
 								</div>
 								<div class="cyber-panel-content">
-									<StepsSection steps={explication.pasosParaResolverElProblema} lengMath={lengMath} />
+									<StepsSection steps={explication.pasosParaResolverElProblema} lengMath={lengMathPregunta} />
 								</div>
 							</div>
 
@@ -284,7 +287,7 @@
 								<div class="cyber-panel-content">
 									<AdditionalSection
 										content={explication.conceptosORecordatorios}
-										lengMath={lengMath}
+										lengMath={lengMathPregunta}
 										
 									/>
 								</div>
