@@ -199,12 +199,12 @@
 
 <!-- Add a wrapper for positioning bubbles -->
 <div class="text-gray-100 overflow-hidden" class:opacity-30={mainContentFading} class:transition-all={mainContentFading} class:duration-500={mainContentFading}>
-	<!-- Main content container -->
-	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
-		<div class="w-full max-w-4xl space-y-6">
-			<!-- Progress bar component -->
-			<div class="flex flex-wrap items-center justify-between gap-4">
-				<div class="flex-1 min-w-[65%] mt-20" class:animate-fade-out={animateProgressOut}>
+	<!-- Main content container - Mobile optimized -->
+	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen container-mobile py-4 sm:py-6">
+		<div class="w-full max-w-4xl space-y-4 sm:space-y-6">
+			<!-- Progress bar component - Mobile optimized -->
+			<div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+				<div class="flex-1 min-w-[65%] mt-16 sm:mt-20 animate-mobile-fade" class:animate-fade-out={animateProgressOut}>
 					<ExamProgress
 						currentQuestion={$examStore.currentQuestion}
 						totalQuestions={$examStore.totalQuestions}
@@ -229,9 +229,9 @@
 						/>
 					</div>
 
-					<!-- Mobile floating button -->
+					<!-- Mobile floating button - Enhanced touch target -->
 					<button 
-						class="sm:hidden fixed bottom-4 right-4 bg-gray-800/80 border border-cyan-500/50 shadow-lg rounded-full p-3 z-50 text-cyan-400 backdrop-blur-sm"
+						class="sm:hidden fixed bottom-4 right-4 bg-gray-800/80 border border-cyan-500/50 shadow-lg rounded-full p-3 z-50 text-cyan-400 backdrop-blur-sm touch-target"
 						onclick={() => showMobileChart = !showMobileChart}
 						aria-label="Ver gráfico de rendimiento"
 					>
@@ -282,9 +282,9 @@
 				{/if}
 			</div>
 
-			<!-- Question Card -->
+			<!-- Question Card - Mobile optimized -->
 			<section
-				class="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 sm:p-6 shadow-lg space-y-4"
+				class="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg spacing-mobile sm:p-6 shadow-lg space-y-3 sm:space-y-4 animate-mobile-fade"
 				class:animate-slide-left={animateQuestionLeft}
 			>
 				<!-- Question header with solution toggle -->
@@ -294,8 +294,8 @@
 				<QuestionDisplay {toggleOptionalImage} />
 			</section>
 			
-			<!-- Answer options component -->
-			<div class:animate-slide-right={animateAnswersRight}>
+			<!-- Answer options component - Mobile optimized -->
+			<div class="animate-mobile-slide" class:animate-slide-right={animateAnswersRight}>
 				<AnswerOptions {selectOption} />
 			</div>
 

@@ -7,7 +7,8 @@ export const reactivos = [
     resuesta: "b",
     explicacion: "void",
     imgActive: false,
-    lengMath: true
+    lengMathPregunta: true,
+    lengMathOpciones: true
   },
   {
     pregunta:
@@ -22,7 +23,8 @@ export const reactivos = [
     resuesta: "c",
     explicacion: "void",
     imgActive: false,
-    lengMath: true
+    lengMathPregunta: true,
+    lengMathOpciones: true
   },
   {
     pregunta:
@@ -36,7 +38,8 @@ export const reactivos = [
     id: "2024Algebra12",
     resuesta: "d",
     explicacion: "void", imgActive: false,
-    lengMath: true
+    lengMathPregunta: true,
+    lengMathOpciones: true
   },
   {
     pregunta:
@@ -49,7 +52,7 @@ export const reactivos = [
     },
     id: "2024Algebra17",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Completar el binomio: } (3n-2s)^3 = 27n^3 + (\\_\\_) + 36ns^2 + (\\_\\_)",
@@ -61,7 +64,7 @@ export const reactivos = [
     },
     id: "2024Algebra15",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{La expresión } \\frac{x^2-4}{x-2}\\cdot\\frac{x+3}{x^2+4x+4}\\cdot\\frac{4x+8}{3x+9} \\text{ es equivalente a:}",
@@ -73,7 +76,7 @@ export const reactivos = [
     },
     id: "2024Algebra20",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -86,7 +89,7 @@ export const reactivos = [
     },
     id: "2024Algebra18",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -99,7 +102,7 @@ export const reactivos = [
     },
     id: "2024Algebra16",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Simplificar la expresión: } \\frac{x-5+\\frac{24}{x+5}}{x+1}",
@@ -111,7 +114,7 @@ export const reactivos = [
     },
     id: "2024Algebra19",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -119,7 +122,7 @@ export const reactivos = [
     opciones: { a: "-3xz, 2x^2", b: "-3xz, x^2", c: "3xz, 2x", d: "3x^2z, x" },
     id: "2024Algebra23",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -127,7 +130,7 @@ export const reactivos = [
     opciones: { a: "x^2-3", b: "x^2+9", c: "x^2+3", d: "x^2-9" },
     id: "2024Algebra21",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Factoriza la expresión: } \\ x^3z-x^2y^2-2x^2yz+2xy^3",
@@ -139,7 +142,7 @@ export const reactivos = [
     },
     id: "2024Algebra22",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Factorizar el polinomio: } y^3-27",
@@ -151,7 +154,7 @@ export const reactivos = [
     },
     id: "2024Algebra24",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{Realizar la operación: } \\text {f(x)-alpha g(x)+h(x)}\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
@@ -163,7 +166,7 @@ export const reactivos = [
     },
     id: "2024Algebra26",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -176,7 +179,7 @@ export const reactivos = [
     },
     id: "2024Algebra27",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -184,7 +187,7 @@ export const reactivos = [
     opciones: { a: "15", b: "30", c: "-15", d: "-30" },
     id: "2024Algebra29",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -192,7 +195,7 @@ export const reactivos = [
     opciones: { a: "32", b: "25", c: "17", d: "9" },
     id: "2024Algebra32",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -205,7 +208,7 @@ export const reactivos = [
     },
     id: "2024Algebra34",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -213,7 +216,7 @@ export const reactivos = [
     opciones: { a: "-\\frac{1}{2}", b: "1/2", c: "-1", d: "1" },
     id: "2024Algebra30",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{Resolver el sistema de ecuaciones lineales si se sabe que } \\text {z=2: } \\begin{align} -x+y+z=2 \\\\ x-3y-4z=5 \\end{align}",
@@ -225,7 +228,7 @@ export const reactivos = [
     },
     id: "2024Algebra33",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       '\\text{Identificar el sistema de ecuaciones que corresponde al siguiente planteamiento: "En un edificio inteligente de dos niveles (N1, N2) se arma una red para 170 usuarios en total. La velocidad de transferencia es de 590 Gbps, mismos que se reparten en cada nivel como sigue: 3 Gbps para cada usuario del primer nivel N1 y 4 Gbps para cada usuario del nivel N2."}',
@@ -237,7 +240,7 @@ export const reactivos = [
     },
     id: "2024Algebra37",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -250,7 +253,7 @@ export const reactivos = [
     },
     id: "2024Algebra36",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Indicar las soluciones de la ecuación: } \\frac{x}{x-4}=6-\\frac{x}{x+4}",
@@ -262,7 +265,7 @@ export const reactivos = [
     },
     id: "2024Algebra38",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -275,7 +278,7 @@ export const reactivos = [
     },
     id: "2024Algebra40",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\sqrt{18}+\\sqrt{12}-\\sqrt{\\frac{8}{9}}-\\sqrt{\\frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
@@ -287,7 +290,7 @@ export const reactivos = [
     },
     id: "2024Algebra02",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta: 
     "\\text{Relacionar cada conjunto con los números que le corresponden: }",
@@ -299,7 +302,7 @@ export const reactivos = [
     },
     id: "2024Algebra03",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -312,7 +315,7 @@ export const reactivos = [
     },
     id: "2024Algebra04",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{Realizar la siguiente operación con números decimales: } \\text{s= } \\frac{1}{1-(0.\\overline{3}+0.\\overline{4})}",
@@ -324,7 +327,7 @@ export const reactivos = [
     },
     id: "2024Algebra05",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -332,7 +335,7 @@ export const reactivos = [
     opciones: { a: "45\\,km", b: "32\\,km", c: "27\\,km", d: "19\\,km" },
     id: "2024Algebra06",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -345,7 +348,7 @@ export const reactivos = [
     },
     id: "2024Algebra07",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -353,7 +356,7 @@ export const reactivos = [
     opciones: { a: "12", b: "15", c: "20", d: "25" },
     id: "2024Algebra08",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -366,7 +369,7 @@ export const reactivos = [
     },
     id: "2024Algebra09",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -374,7 +377,7 @@ export const reactivos = [
     opciones: { a: "10 y 12", b: "12 y 18", c: "18 y 22", d: "22 y 30" },
     id: "2024Algebra10",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -387,7 +390,7 @@ export const reactivos = [
     },
     id: "2024Algebra13",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -395,7 +398,7 @@ export const reactivos = [
     opciones: { a: "-4", b: "-3", c: "-2", d: "-1" },
     id: "2024Algebra25",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -403,7 +406,7 @@ export const reactivos = [
     opciones: { a: "x=2", b: "x=4", c: "x=1/4", d: "x=1/2" },
     id: "2024Algebra28",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -416,7 +419,7 @@ export const reactivos = [
     },
     id: "2024Algebra01",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -429,7 +432,7 @@ export const reactivos = [
     },
     id: "2024Algebra31",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -437,7 +440,7 @@ export const reactivos = [
     opciones: { a: "2", b: "5", c: "10", d: "25" },
     id: "2024Algebra35",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -445,7 +448,7 @@ export const reactivos = [
     opciones: { a: "10", b: "32", c: "128", d: "256" },
     id: "2024Estadistica04",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -458,7 +461,7 @@ export const reactivos = [
     },
     id: "2024Estadistica01",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -471,7 +474,7 @@ export const reactivos = [
     },
     id: "2024Estadistica02",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -479,7 +482,7 @@ export const reactivos = [
     opciones: { a: "40", b: "46", c: "50", d: "56" },
     id: "2024Estadistica03",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -487,7 +490,7 @@ export const reactivos = [
     opciones: { a: "2084", b: "2048", c: "512", d: "256" },
     id: "2024Estadistica06",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta: 
     "\\text{Asociar la fórmula con el concepto correspondiente. }",
@@ -499,7 +502,7 @@ export const reactivos = [
     },
     id: "2024Estadistica09",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -507,7 +510,7 @@ export const reactivos = [
     opciones: { a: "660", b: "560", c: "280", d: "180" },
     id: "2024Estadistica10",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -515,7 +518,7 @@ export const reactivos = [
     opciones: { a: "10", b: "20", c: "200", d: "400" },
     id: "2024Estadistica08",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -523,7 +526,7 @@ export const reactivos = [
     opciones: { a: "24", b: "16", c: "9", d: "8" },
     id: "2024Estadistica07",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -536,7 +539,7 @@ export const reactivos = [
     },
     id: "2024Estadistica11",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -544,7 +547,7 @@ export const reactivos = [
     opciones: { a: "1", b: "\\frac{3}{4}", c: "\\frac{1}{2}", d: "\\frac{1}{4}" },
     id: "2024Estadistica15",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
@@ -552,7 +555,7 @@ export const reactivos = [
     opciones: { a: "6", b: "8", c: "12", d: "14" },
     id: "2024Estadistica13",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -565,7 +568,7 @@ export const reactivos = [
     },
     id: "2024Estadistica20",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta: 
     "\\text{Identificar cuál de los siguientes eventos no es aleatorio.}",
@@ -577,7 +580,7 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -590,7 +593,7 @@ export const reactivos = [
     },
     id: "2024Estadistica25",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -603,7 +606,7 @@ export const reactivos = [
     },
     id: "2024Estadistica22",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -616,7 +619,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -629,7 +632,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -642,7 +645,7 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{¿Cuál es el valor de la mediana?}",
@@ -654,7 +657,7 @@ export const reactivos = [
     },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -667,7 +670,7 @@ export const reactivos = [
     },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -680,7 +683,7 @@ export const reactivos = [
     },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -693,7 +696,7 @@ export const reactivos = [
     },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -706,7 +709,7 @@ export const reactivos = [
     },
     id: "2024Estadistica38",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -719,7 +722,7 @@ export const reactivos = [
     },
     id: "2024Estadistica40",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta: 
     "Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.",
@@ -731,7 +734,7 @@ export const reactivos = [
     },
     id: "2024Estadistica37",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },{
     pregunta:
       "Ordenar de forma ascendente los conjuntos de números según su mediana: {4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9} {3,2,3,4,5,3,3,4,4,5,5,6,6,9,9} {6,6,7,7,3,9,2,3,4,6,6,6,7,9,9} {3,4,7,7,8,8,9,9,7,6,7,9,7,7,9}",
@@ -743,7 +746,7 @@ export const reactivos = [
     },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -756,7 +759,7 @@ export const reactivos = [
     },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -769,7 +772,7 @@ export const reactivos = [
     },
     id: "2024Estadistica14",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -782,11 +785,11 @@ export const reactivos = [
     },
     id: "2024Estadistica21",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{Calcular la probabilidad de que al seleccionar una pieza al azar ésta sea defectuosa.}",
+      "Calcular la probabilidad de que al seleccionar una pieza al azar ésta sea defectuosa.",
     opciones: {
       a: "\\frac{2}{25}",
       b: "\\frac{2}{75}",
@@ -795,7 +798,7 @@ export const reactivos = [
     },
     id: "2024Estadistica16", // Hay dos preguntas en un mismo inciso se tiene que partir en dos la pregunta 
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -807,7 +810,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -820,7 +823,7 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -832,7 +835,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -845,7 +848,7 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -858,7 +861,7 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: 
@@ -871,7 +874,7 @@ export const reactivos = [
     },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -879,14 +882,14 @@ export const reactivos = [
     opciones: { a: "0.3", b: "0.4", c: "0.6", d: "0.7" },
     id: "2024Estadistica26",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta: "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 kg?}",
     opciones: { a: "5 \\%", b: "10 \\%", c: "15 \\%", d: "20 \\%" },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -894,14 +897,14 @@ export const reactivos = [
     opciones: { a: "1, 3, 2", b: "1, 2, 3", c: "3, 1, 2", d: "3, 2, 1" },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Determinar la media geométrica de } \\{1,16,81,256\\}",
     opciones: { a: "7", b: "9", c: "24", d: "30" },
     id: "2024Estadistica38",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -909,7 +912,7 @@ export const reactivos = [
     opciones: { a: "1 y 2", b: "1 y 3", c: "2 y 3", d: "2 y 4" },
     id: "2024Estadistica40",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -917,14 +920,14 @@ export const reactivos = [
     opciones: { a: "Mediana", b: "Armónica", c: "Aritmética", d: "Geométrica" },
     id: "2024Estadistica37",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{Ordenar ascendentemente los conjuntos de números según su mediana: }\\\\ \\{array}{rl} 1. & \\{4,5,6,7,7,7,4,4,4,5,5,5,8,9,9,9\\} \\\\ 2. & \\{3,2,3,4,5,3,3,4,4,5,5,6,6,9,9\\} \\\\ 3. & \\{6,6,7,7,3,9,2,3,4,6,6,6,7,9,9\\} \\\\ 4. & \\{3,4,7,7,8,8,9,9,7,6,7,9,7,7,9\\} \\end{array}",
     opciones: { a: "2,1,3,4", b: "2,3,1,4", c: "1,4,2,3", d: "1,2,4,3" },
     id: "2024Estadistica39",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -932,7 +935,7 @@ export const reactivos = [
     opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -940,7 +943,7 @@ export const reactivos = [
     opciones: { a: "0.012", b: "0.12", c: "0.5", d: "0.4" },
     id: "2024Estadistica14",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
       "\\text{De acuerdo con la definición de probabilidad condicional, la expresión } P(A\\cap B\\cap C) \\text{ es equivalente a:}",
@@ -952,7 +955,7 @@ export const reactivos = [
     },
     id: "2024Estadistica21",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -965,7 +968,7 @@ export const reactivos = [
     },
     id: "2024Estadistica16",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -978,7 +981,7 @@ export const reactivos = [
     },
     id: "2024Estadistica17",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -990,7 +993,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1003,7 +1006,7 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta: "\\text{Identificar la probabilidad equivalente a } P(A\\cap B^c)",
@@ -1015,7 +1018,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1028,7 +1031,7 @@ export const reactivos = [
     },
     id: "2024Estadistica18",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1041,7 +1044,7 @@ export const reactivos = [
     },
     id: "2024Estadistica23",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
 
   {
@@ -1055,7 +1058,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial01",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1068,7 +1071,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial17",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1081,7 +1084,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial21",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1094,7 +1097,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial24",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1107,7 +1110,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial27",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1120,7 +1123,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial25",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -1133,7 +1136,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial23",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1146,7 +1149,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial30",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1159,7 +1162,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial29",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1172,7 +1175,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial39",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1185,7 +1188,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial38",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1198,7 +1201,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial36",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1211,7 +1214,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial02",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1224,7 +1227,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial05",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1237,7 +1240,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial03",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1250,7 +1253,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial04",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1263,7 +1266,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial08",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1276,7 +1279,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial09",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1289,7 +1292,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial10",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1302,7 +1305,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial06",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1315,7 +1318,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial07",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1328,7 +1331,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial12",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1341,7 +1344,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial14",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1354,7 +1357,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial16",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1367,7 +1370,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial13",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1380,7 +1383,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial15",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1393,7 +1396,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial11",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   }, 
    {
     pregunta:
@@ -1406,7 +1409,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial20",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1419,7 +1422,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial18",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1432,7 +1435,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial19",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1445,7 +1448,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial22",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1458,7 +1461,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial26",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1471,7 +1474,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial31",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1484,7 +1487,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial28",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1497,7 +1500,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial35",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1510,7 +1513,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial33",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1523,7 +1526,7 @@ export const reactivos = [
     },
     id: "2024calculoDiferencial34",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMath: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1537,7 +1540,7 @@ export const reactivos = [
     id: "2024calculoDiferencial32",
     resuesta: "c",
     explicacion: "void",
-    imgActive: false, lengMath: true
+    imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1551,7 +1554,7 @@ export const reactivos = [
     id: "2024calculoDiferencial40",
     resuesta: "c",
     explicacion: "void",
-    imgActive: false, lengMath: true
+    imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
     pregunta:
@@ -1566,7 +1569,8 @@ export const reactivos = [
     resuesta: "d",
     explicacion: "void",
     imgActive: false,
-    lengMath: true
+    lengMathPregunta: true,
+    lengMathOpciones: true
   }
 ];
 export default reactivos;
