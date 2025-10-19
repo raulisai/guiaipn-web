@@ -452,7 +452,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:}",
+      "Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:",
     opciones: {
       a: "1A, 2C, 3D, 4B",
       b: "1A, 2D, 3B, 4C",
@@ -461,11 +461,11 @@ export const reactivos = [
     },
     id: "2024Estadistica01",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.}",
+      "Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.",
     opciones: {
       a: "\\{6,8,9,10,m\\}",
       b: "\\{6,8,9,10,m,n\\}",
@@ -474,11 +474,11 @@ export const reactivos = [
     },
     id: "2024Estadistica02",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{En un curso de verano se matricularon 60 niños en fútbol, 30 en básquetbol y 27 en voleibol. Si 80 niños se inscribieron en al menos una actividad y 7 en las tres, ¿cuántos se matricularon únicamente en un deporte?}",
+      "En un curso de verano se matricularon 60 niños en fútbol, 30 en básquetbol y 27 en voleibol. Si 80 niños se inscribieron en al menos una actividad y 7 en las tres, ¿cuántos se matricularon únicamente en un deporte?",
     opciones: { a: "40", b: "46", c: "50", d: "56" },
     id: "2024Estadistica03",
     resuesta: "c",
@@ -486,14 +486,14 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Calcular la cardinalidad del conjunto potencia de un conjunto de 11 elementos.}",
+      "Calcular la cardinalidad del conjunto potencia de un conjunto de 11 elementos.",
     opciones: { a: "2084", b: "2048", c: "512", d: "256" },
     id: "2024Estadistica06",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta: 
-    "\\text{Asociar la fórmula con el concepto correspondiente. }",
+    "Asociar la fórmula con el concepto correspondiente.",
     opciones: {
       a: "1C, 2B, 3D, 4A",
       b: "1C, 2A, 3D, 4B",
@@ -522,11 +522,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Cuál es la cardinalidad del espacio muestral al lanzar simultáneamente una moneda y una pirinola de 8 lados?}",
+      "¿Cuál es la cardinalidad del espacio muestral al lanzar simultáneamente una moneda y una pirinola de 8 lados?",
     opciones: { a: "24", b: "16", c: "9", d: "8" },
     id: "2024Estadistica07",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -543,11 +543,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan dos monedas, siendo la segunda de doble cara. ¿Cuál es la probabilidad de obtener cara en el segundo lanzamiento?}",
+      "Se lanzan dos monedas, siendo la segunda de doble cara. ¿Cuál es la probabilidad de obtener cara en el segundo lanzamiento?",
     opciones: { a: "1", b: "\\frac{3}{4}", c: "\\frac{1}{2}", d: "\\frac{1}{4}" },
     id: "2024Estadistica15",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -559,7 +559,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?}",
+      "¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?",
     opciones: {
       a: "\\frac{1}{20}",
       b: "\\frac{1}{10}",
@@ -568,10 +568,10 @@ export const reactivos = [
     },
     id: "2024Estadistica20",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta: 
-    "\\text{Identificar cuál de los siguientes eventos no es aleatorio.}",
+    "Identificar cuál de los siguientes eventos no es aleatorio.",
     opciones: {
       a: "Lanzar una moneda al aire",
       b: "Ir a la escuela todos los días",
@@ -580,11 +580,11 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{25}{66}",
       b: "\\frac{16}{41}",
@@ -593,11 +593,11 @@ export const reactivos = [
     },
     id: "2024Estadistica25",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{Si } P(A)=\\frac{2}{5},\\; P(B^c)=\\frac{7}{10},\\; P(A\\cup B)=\\frac{3}{5}, \\text{ determinar } P(A\\cap B^c)",
+      "Si P(A)=\\frac{2}{5},\\; P(B^c)=\\frac{7}{10},\\; P(A\\cup B)=\\frac{3}{5}, \\text{ determinar } P(A\\cap B^c)",
     opciones: {
       a: "\\frac{1}{5}",
       b: "\\frac{2}{5}",
@@ -636,7 +636,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
@@ -645,10 +645,10 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
-    pregunta: "\\text{¿Cuál es el valor de la mediana?}",
+    pregunta: "¿Cuál es el valor de la mediana?",
     opciones: {
       a: "61",
       b: "62",
@@ -657,7 +657,7 @@ export const reactivos = [
     },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
@@ -674,7 +674,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 \\text{ kg}?}",
+      "¿Qué porcentaje de trabajadores pesa menos de 55kg?",
     opciones: {
       a: "5 \\%",
       b: "10 \\%",
@@ -683,11 +683,11 @@ export const reactivos = [
     },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.}",
+      "Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.",
     opciones: {
       a: "1, 3, 2",
       b: "1, 2, 3",
@@ -696,7 +696,7 @@ export const reactivos = [
     },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
@@ -852,7 +852,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Un mazo de 10 cartas (con 5 pares de colores) se extraen 2 al azar. ¿Cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Un mazo de 10 cartas (con 5 pares de colores) se extraen 2 al azar. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
@@ -916,7 +916,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
+      "Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.",
     opciones: { a: "Mediana", b: "Armónica", c: "Aritmética", d: "Geométrica" },
     id: "2024Estadistica37",
     resuesta: "b",
@@ -931,11 +931,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan una moneda y una pirinola de 8 lados } n \\text{ veces. ¿Cuántos resultados distintos se pueden obtener?}",
+      "Se lanzan una moneda y una pirinola de 8 lados n veces. ¿Cuántos resultados distintos se pueden obtener?",
     opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
