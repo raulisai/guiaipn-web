@@ -9,21 +9,11 @@
 </script>
 
 <div
-	class="progress-container bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg shadow-lg card_color w-full max-w-full transition-colors duration-300"
+	class="w-full max-w-full transition-colors duration-300"
 >
 	<div class="progress-header flex justify-between text-sm text-gray-300 mb-3">
 		<span>Pregunta {currentQuestion} de {totalQuestions}</span>
-		<span>{answeredQuestions} respondidas</span>
-	</div>
-
-	<div class="progress-bar-container mb-6 h-2 bg-gray-800 rounded-full overflow-hidden shadow-inner">
-		<div
-			class="progress-bar h-full bg-gradient-to-r from-blue-500 to-yellow-400 rounded-full transition-all duration-400 shadow-md"
-			style="width: {progress}%"
-		></div>
-	</div>
-
-	<div class="question-indicators flex gap-1 mt-4 overflow-x-auto pb-2 scrollbar-thin flex-wrap">
+		<div class="question-indicators flex gap-1 mt-4 overflow-x-auto pb-2 scrollbar-thin flex-wrap">
 		{#each Array(totalQuestions) as _, i}
 			<div
 				class="indicator w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300"
@@ -34,6 +24,16 @@
 			></div>
 		{/each}
 	</div>
+	</div>
+
+	<div class="progress-bar-container mb-6 h-2 bg-gray-800 rounded-full overflow-hidden shadow-inner">
+		<div
+			class="progress-bar h-full bg-gradient-to-r from-blue-500 to-yellow-400 rounded-full transition-all duration-400 shadow-md"
+			style="width: {progress}%"
+		></div>
+	</div>
+
+	
 
 	
 </div>
