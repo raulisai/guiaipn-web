@@ -59,6 +59,7 @@
 		class:text-red-300={ultimaPregunta > 0 && $examStore.answers[ultimaPregunta] === 'false'}
 	>
 		{mensajeMostrado}
+		
 		<!-- Triangle pointer -->
 		<div
 			class="absolute bottom-0 left-1/2 w-4 h-4 bg-gray-700/80 border-r border-b border-gray-600 transform translate-y-2 -translate-x-2 rotate-45"
