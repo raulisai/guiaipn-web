@@ -39,22 +39,6 @@
 </div>
 
 <style>
-	.progress-container {
-		margin-bottom: 1.5rem;
-		padding: 1rem;
-		border-radius: 0.75rem;
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(55, 65, 81, 0.5); /* gris-700/50 */
-		background: rgba(31, 41, 55, 0.3); /* bg-gray-800/30 */
-		box-shadow:
-			0 4px 24px 0 rgba(0, 0, 0, 0.1),
-			0 1.5px 4px 0 rgba(59, 130, 246, 0.05);
-		color: #e5e7eb;
-		width: 100%;
-		max-width: 100%;
-		transition: background 0.3s;
-	}
-
 	.progress-header {
 		display: flex;
 		justify-content: space-between;
@@ -129,10 +113,6 @@
 	}
 
 	@media (max-width: 640px) {
-		.progress-container {
-			padding: 0.75rem;
-		}
-
 		.indicator {
 			width: 0.4rem;
 			height: 0.4rem;

@@ -236,33 +236,6 @@
 </div>
 
 <style>
-	   .animate-fadeIn {
-        animation: fadeIn 0.5s ease-out forwards;
-    }
-    
-    
-    .stat-chart-container {
-        position: relative;
-        margin-top: 0.5rem;
-        border-radius: 0.5rem;
-        overflow: hidden;
-        box-shadow: 0 0 10px rgba(0, 183, 255, 0.1);
-        transition: all 0.3s ease;
-        background: rgba(17, 24, 39, 0.7);
-        border: 1px solid rgba(0, 183, 255, 0.2);
-        backdrop-filter: blur(4px);
-    }
-    
-    .stat-title {
-        text-shadow: 0 0 5px rgba(0, 183, 255, 0.5);
-        letter-spacing: 0.5px;
-    }
-    
-    .stat-chart-container:hover {
-        transform: translateY(-2px) scale(1.03);
-        box-shadow: 0 0 15px rgba(0, 183, 255, 0.2);
-    }
-    
     /* New animations for transitions */
 	@keyframes slideLeft {
 		0% { transform: translateX(0); opacity: 1; }
