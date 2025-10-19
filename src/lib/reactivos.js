@@ -281,7 +281,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
-      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\sqrt{18}+\\sqrt{12}-\\sqrt{\\frac{8}{9}}-\\sqrt{\\frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
+      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\newline \\sqrt{18}+\\sqrt{12}-\\sqrt{\\frac{8}{9}}-\\sqrt{\\frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
     opciones: {
       a: "Conmutativa para el producto",
       b: "Inverso para la suma",
@@ -331,11 +331,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{La delegación dispone de 120\\,km de cable para electrificar las avenidas principales y las colonias aledañas en una razón } 3:5. \\text{ La parte de menor longitud se divide, a su vez, para iluminar parques y calles en una razón } 2:3. \\text{ ¿Cuál es la longitud de cable que se utiliza para electrificar las calles?}",
-    opciones: { a: "45\\,km", b: "32\\,km", c: "27\\,km", d: "19\\,km" },
+      "La delegación dispone de 120 km de cable para electrificar las avenidas principales y las colonias aledañas en una razón 3:5. La parte de menor longitud se divide, a su vez, para iluminar parques y calles en una razón 2:3. ¿Cuál es la longitud de cable que se utiliza para electrificar las calles?",
+    opciones: { a: "45,km", b: "32,km", c: "27,km", d: "19,km" },
     id: "2024Algebra06",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
