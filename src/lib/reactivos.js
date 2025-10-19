@@ -2,13 +2,18 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Simplificar la expresión: } 2 - \\frac{2}{1 - \\frac{2}{2 - \\frac{2}{x^2}}}",
-    opciones: { a: "2x", b: "2x^2", c: "2x^3", d: "2x^4" },
+    opciones: { 
+      a: "2x", 
+      b: "2x^2", 
+      c: "2x^3", 
+      d: "2x^4" 
+    },
     id: "2024Algebra11",
     resuesta: "b",
     explicacion: "void",
     imgActive: false,
     lengMathPregunta: true,
-    lengMathOpciones: true
+    lengMathOpciones: false
   },
   {
     pregunta:
@@ -64,7 +69,7 @@ export const reactivos = [
     },
     id: "2024Algebra15",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },  {
     pregunta:
       "\\text{La expresión } \\frac{x^2-4}{x-2}\\cdot\\frac{x+3}{x^2+4x+4}\\cdot\\frac{4x+8}{3x+9} \\text{ es equivalente a:}",
@@ -119,21 +124,31 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Completar la factorización: } \\ 9x^4-3x^3z+x^2z^2-9x^2z^2+3xz^3-z^4=(9x^2+(\\_\\_\\_)+z^2)(\\_\\_\\_) -z^2)",
-    opciones: { a: "-3xz, 2x^2", b: "-3xz, x^2", c: "3xz, 2x", d: "3x^2z, x" },
+    opciones: { 
+      a: "-3xz, 2x^2", 
+      b: "-3xz, x^2", 
+      c: "3xz, 2x", 
+      d: "3x^2z, x" 
+    },
     id: "2024Algebra23",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
     pregunta:
       "\\text{Simplificar la expresion : } \\frac{\\left(\\frac{3}{x-3}+\\frac{x}{x+3}\\right)}{\\frac{1}{x^2-9}}",
-    opciones: { a: "x^2-3", b: "x^2+9", c: "x^2+3", d: "x^2-9" },
+    opciones: { 
+      a: "x^2-3", 
+      b: "x^2+9", 
+      c: "x^2+3", 
+      d: "x^2-9" 
+    },
     id: "2024Algebra21",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
-    pregunta: "\\text{Factoriza la expresión: } \\ x^3z-x^2y^2-2x^2yz+2xy^3",
+    pregunta: "Factoriza la expresión: x^3z-x^2y^2-2x^2yz+2xy^3",
     opciones: {
       a: "x(2y-x)(y^2-xz)",
       b: "x(y-2x)(y^2+xz)",
@@ -142,10 +157,10 @@ export const reactivos = [
     },
     id: "2024Algebra22",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
-    pregunta: "\\text{Factorizar el polinomio: } y^3-27",
+    pregunta: "Factorizar el polinomio: y^3-27",
     opciones: {
       a: "(y+3)(y^2+3y+9)",
       b: "(y-3)(y^2+3y+9)",
@@ -154,7 +169,7 @@ export const reactivos = [
     },
     id: "2024Algebra24",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta:
       "\\text{Realizar la operación: } \\text {f(x)-alpha g(x)+h(x)}\\quad\\text{Si }\\alpha=2,\\quad f(x)=2y^2-2xy-2x^2\\quad g(x)=y^2+4xy+3x^2\\quad h(x)=3x^2+2xy",
@@ -166,7 +181,7 @@ export const reactivos = [
     },
     id: "2024Algebra26",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
     pregunta:
@@ -184,15 +199,24 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Encontrar el valor de } s \\text{ que satisface la igualdad: } \\frac{3s+25}{4}=10+\\frac{7}{8}s",
-    opciones: { a: "15", b: "30", c: "-15", d: "-30" },
+    opciones: { 
+      a: "15", 
+      b: "30", 
+      c: "-15", 
+      d: "-30" 
+    },
     id: "2024Algebra29",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
-    pregunta:
-      "¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?",
-    opciones: { a: "32", b: "25", c: "17", d: "9" },
+    pregunta: "¿Cuál es la ganancia en mdp que obtiene el inversionista mayoritario?",
+    opciones: { 
+      a: "32", 
+      b: "25", 
+      c: "17",
+      d: "9" 
+    },
     id: "2024Algebra32",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
@@ -213,7 +237,12 @@ export const reactivos = [
   {
     pregunta:
       "\\text{La velocidad con la que se desplaza una larva está descrita por la ecuación: } v(t)=-\\frac{1}{3}t^2+\\alpha t+3 \\quad \\text{Calcular la constante } \\alpha \\text{ si su velocidad cuando } t=2 \\text{ es } v(2)=\\frac{2}{3}",
-    opciones: { a: "-\\frac{1}{2}", b: "1/2", c: "-1", d: "1" },
+    opciones: { 
+      a: "-\\frac{1}{2}", 
+      b: "1/2", 
+      c: "-1", 
+      d: "1" 
+    },
     id: "2024Algebra30",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
@@ -230,8 +259,7 @@ export const reactivos = [
     resuesta: "d",
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
-    pregunta:
-      '\\text{Identificar el sistema de ecuaciones que corresponde al siguiente planteamiento: "En un edificio inteligente de dos niveles (N1, N2) se arma una red para 170 usuarios en total. La velocidad de transferencia es de 590 Gbps, mismos que se reparten en cada nivel como sigue: 3 Gbps para cada usuario del primer nivel N1 y 4 Gbps para cada usuario del nivel N2."}',
+    pregunta: 'Identificar el sistema de ecuaciones que corresponde al siguiente planteamiento: "En un edificio inteligente de dos niveles (N1, N2) se arma una red para 170 usuarios en total. La velocidad de transferencia es de 590 Gbps, mismos que se reparten en cada nivel como sigue: 3 Gbps para cada usuario del primer nivel N1 y 4 Gbps para cada usuario del nivel N2."',
     opciones: {
       a: "\\begin{cases} N1+N2=590 \\\\ 3N1+4N2=170 \\end{cases}",
       b: "\\begin{cases} N1+N2=170 \\\\ 4N1+3N2=590 \\end{cases}",
@@ -240,11 +268,11 @@ export const reactivos = [
     },
     id: "2024Algebra37",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{¿Cuántos ejemplares se pueden colocar en cada espacio (CI, BM y SA), respectivamente?}",
+      "¿Cuántos ejemplares se pueden colocar en cada espacio (CI, BM y SA), respectivamente?",
     opciones: {
       a: "420, 150 y 95",
       b: "360, 120 y 95",
@@ -253,7 +281,7 @@ export const reactivos = [
     },
     id: "2024Algebra36",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta: "\\text{Indicar las soluciones de la ecuación: } \\frac{x}{x-4}=6-\\frac{x}{x+4}",
@@ -290,7 +318,7 @@ export const reactivos = [
     },
     id: "2024Algebra02",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },  {
     pregunta: 
     "Relacionar cada conjunto con los números que le corresponden:",
@@ -330,12 +358,16 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },
   {
-    pregunta:
-      "\\text{La delegación dispone de 120\\,km de cable para electrificar las avenidas principales y las colonias aledañas en una razón } 3:5. \\text{ La parte de menor longitud se divide, a su vez, para iluminar parques y calles en una razón } 2:3. \\text{ ¿Cuál es la longitud de cable que se utiliza para electrificar las calles?}",
-    opciones: { a: "45\\,km", b: "32\\,km", c: "27\\,km", d: "19\\,km" },
+    pregunta: "La delegación dispone de 120,km de cable para electrificar las avenidas principales y las colonias aledañas en una razón } 3:5. La parte de menor longitud se divide, a su vez, para iluminar parques y calles en una razón } 2:3. ¿Cuál es la longitud de cable que se utiliza para electrificar las calles?",
+    opciones: { 
+      a: "45,km", 
+      b: "32,km", 
+      c: "27,km", 
+      d: "19,km" 
+    },
     id: "2024Algebra06",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -348,19 +380,23 @@ export const reactivos = [
     },
     id: "2024Algebra07",
     resuesta: "d",
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
+  },
+  {
+    pregunta:
+      "Una línea de producción consiste en 3 telares que producen 600 m de tela en 2 hrs. Si se requiere incrementar la producción a través de 3 telares más, ¿en cuántas horas se producirán 12000 m de tela?",
+    opciones: { 
+      a: "12", 
+      b: "15", 
+      c: "20", 
+      d: "25" 
+    },
+    id: "2024Algebra08",
+    resuesta: "c",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
-    pregunta:
-      "\\text{Una línea de producción consiste en 3 telares que producen 600 m de tela en 2 hrs. Si se requiere incrementar la producción a través de 3 telares más, ¿en cuántas horas se producirán 12000 m de tela?}",
-    opciones: { a: "12", b: "15", c: "20", d: "25" },
-    id: "2024Algebra08",
-    resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
-  },
-  {
-    pregunta:
-      "Identificar la expresión que corresponde al siguiente lenguaje algebraico para un entero positivo: La razón de la raíz cúbica de un número par disminuido en cinco, entre la quinta parte del cuadrado de la diferencia del siguiente número impar menos su impar consecutivo.",
+    pregunta: "Identificar la expresión que corresponde al siguiente lenguaje algebraico para un entero positivo: La razón de la raíz cúbica de un número par disminuido en cinco, entre la quinta parte del cuadrado de la diferencia del siguiente número impar menos su impar consecutivo.",
     opciones: {
       a: "\\frac{\\sqrt[3]{n}-5}{5\\left[(2n+1)-(2n+1)+1\\right]^2}",
       b: "\\frac{\\sqrt[3]{2n}-5}{\\frac{1}{5}\\left[(2n+1)-(2n+3)\\right]^2}",
@@ -369,19 +405,22 @@ export const reactivos = [
     },
     id: "2024Algebra09",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
-    pregunta:
-      "\\text{Encontrar dos números tales que si uno de ellos se suma a la mitad del otro se obtiene 21, y si la tercera parte de este último número se resta al doble del primero, resulta 18.}",
-    opciones: { a: "10 y 12", b: "12 y 18", c: "18 y 22", d: "22 y 30" },
+    pregunta: "Encontrar dos números tales que si uno de ellos se suma a la mitad del otro se obtiene 21, y si la tercera parte de este último número se resta al doble del primero, resulta 18.",
+    opciones: { 
+      a: "10 y 12", 
+      b: "12 y 18", 
+      c: "18 y 22", 
+      d: "22 y 30" 
+    },
     id: "2024Algebra10",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
-    pregunta:
-      "\\text{Simplificar la expresión: } \\sqrt[3]{\\frac{8x^{3n+1}y^6}{27xy^9}}",
+    pregunta: "\\text{Simplificar la expresión: } \\sqrt[3]{\\frac{8x^{3n+1}y^6}{27xy^9}}",
     opciones: {
       a: "\\frac{4x^n}{9y}",
       b: "\\frac{2x^n}{3y}",
@@ -395,22 +434,32 @@ export const reactivos = [
   {
     pregunta:
       "\\text{Calcular el valor de la función para } x=0,\\; f(x)=\\frac{(x+1)+\\sqrt{x+9}}{x^2-2}",
-    opciones: { a: "-4", b: "-3", c: "-2", d: "-1" },
+    opciones: { 
+      a: "-4", 
+      b: "-3", 
+      c: "-2", 
+      d: "-1" 
+    },
     id: "2024Algebra25",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
     pregunta:
       "\\text{Encontrar el valor de } x \\text{ (}x\\neq0\\text{) de la igualdad: } 3x^2+2x+2=\\frac{1}{2}x^2+4\\left(3x+\\frac{1}{2}\\right)",
-    opciones: { a: "x=2", b: "x=4", c: "x=1/4", d: "x=1/2" },
+    opciones: { 
+      a: "x=2", 
+      b: "x=4", 
+      c: "x=1/4", 
+      d: "x=1/2" 
+    },
     id: "2024Algebra28",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Identificar la contención correcta de los conjuntos de números:}",
+      "Identificar la contención correcta de los conjuntos de números:",
     opciones: {
       a: "a",
       b: "b",
@@ -419,11 +468,11 @@ export const reactivos = [
     },
     id: "2024Algebra01",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Calcular el valor de } x \\text{ en la ecuación: } 26x+3(2x-8)=14x+6",
+      "Calcular el valor de x en la ecuación: 26x+3(2x-8)=14x+6",
     opciones: {
       a: "-\\frac{5}{3}",
       b: "\\frac{5}{2}",
@@ -432,27 +481,37 @@ export const reactivos = [
     },
     id: "2024Algebra31",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
       "\\text{La velocidad de un procesador en una máquina es de } 2\\times10^9 \\text{ ciclos/s. Si se requiere } 60\\times10^{10} \\text{ ciclos, ¿cuántos minutos tardará?}",
-    opciones: { a: "2", b: "5", c: "10", d: "25" },
+    opciones: { 
+      a: "2", 
+      b: "5", 
+      c: "10",
+      d: "25" 
+    },
     id: "2024Algebra35",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: false
   },
   {
     pregunta:
       "Si el conjunto A tiene 1024 subconjuntos, indicar su cardinalidad.",
-    opciones: { a: "10", b: "32", c: "128", d: "256" },
+    opciones: { 
+      a: "10", 
+      b: "32", 
+      c: "128", 
+      d: "256" 
+    },
     id: "2024Estadistica04",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:}",
+      "Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:",
     opciones: {
       a: "1A, 2C, 3D, 4B",
       b: "1A, 2D, 3B, 4C",
@@ -461,39 +520,49 @@ export const reactivos = [
     },
     id: "2024Estadistica01",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.}",
+      "Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.",
     opciones: {
-      a: "\\{6,8,9,10,m\\}",
-      b: "\\{6,8,9,10,m,n\\}",
-      c: "\\{6,8,9,10,d,e,i,f,m,n\\}",
-      d: "\\{3,6,8,9,10,d,e,i,f,m,n\\}",
+      a: "{6,8,9,10,m}",
+      b: "{6,8,9,10,m,n}",
+      c: "{6,8,9,10,d,e,i,f,m,n}",
+      d: "{3,6,8,9,10,d,e,i,f,m,n}",
     },
     id: "2024Estadistica02",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{En un curso de verano se matricularon 60 niños en fútbol, 30 en básquetbol y 27 en voleibol. Si 80 niños se inscribieron en al menos una actividad y 7 en las tres, ¿cuántos se matricularon únicamente en un deporte?}",
-    opciones: { a: "40", b: "46", c: "50", d: "56" },
+      "En un curso de verano se matricularon 60 niños en fútbol, 30 en básquetbol y 27 en voleibol. Si 80 niños se inscribieron en al menos una actividad y 7 en las tres, ¿cuántos se matricularon únicamente en un deporte?",
+    opciones: { 
+      a: "40", 
+      b: "46", 
+      c: "50", 
+      d: "56" 
+    },
     id: "2024Estadistica03",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Calcular la cardinalidad del conjunto potencia de un conjunto de 11 elementos.}",
-    opciones: { a: "2084", b: "2048", c: "512", d: "256" },
+      "Calcular la cardinalidad del conjunto potencia de un conjunto de 11 elementos.",
+    opciones: { 
+      a: "2084", 
+      b: "2048", 
+      c: "512", 
+      d: "256" 
+    },
     id: "2024Estadistica06",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta: 
-    "\\text{Asociar la fórmula con el concepto correspondiente. }",
+    "Asociar la fórmula con el concepto correspondiente.",
     opciones: {
       a: "1C, 2B, 3D, 4A",
       b: "1C, 2A, 3D, 4B",
@@ -507,7 +576,12 @@ export const reactivos = [
   {
     pregunta:
       "Un profesor tiene 3 ejemplares de un libro de matemáticas, 3 de español y 2 de literatura. ¿De cuántas maneras puede acomodarlos en un estante?",
-    opciones: { a: "660", b: "560", c: "280", d: "180" },
+    opciones: { 
+      a: "660", 
+      b: "560", 
+      c: "280", 
+      d: "180" 
+    },
     id: "2024Estadistica10",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
@@ -515,27 +589,37 @@ export const reactivos = [
   {
     pregunta:
       "En un salón con 6 niños y 5 niñas, formar un equipo de 3 niños y 2 niñas. ¿De cuántas maneras se puede formar el equipo?",
-    opciones: { a: "10", b: "20", c: "200", d: "400" },
+    opciones: { 
+      a: "10", 
+      b: "20", 
+      c: "200", 
+      d: "400" 
+    },
     id: "2024Estadistica08",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{¿Cuál es la cardinalidad del espacio muestral al lanzar simultáneamente una moneda y una pirinola de 8 lados?}",
-    opciones: { a: "24", b: "16", c: "9", d: "8" },
+      "¿Cuál es la cardinalidad del espacio muestral al lanzar simultáneamente una moneda y una pirinola de 8 lados?",
+    opciones: { 
+      a: "24", 
+      b: "16", 
+      c: "9", 
+      d: "8" 
+    },
     id: "2024Estadistica07",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
       "Una urna contiene 11 bolas numeradas del 10 al 20, de dos colores: azul y blanco. Identificar el espacio muestral del experimento de extraer una bola.",
     opciones: {
-      a: "\\{1,2,3,4,5,6,7,8,9,10\\}",
-      b: "\\{0,1,2,3,4,5,6,7,8,9,10\\}",
-      c: "\\{11,12,13,14,15,16,17,18,19,20\\}",
-      d: "\\{10,11,12,13,14,15,16,17,18,19,20\\}",
+      a: "{1,2,3,4,5,6,7,8,9,10}",
+      b: "{0,1,2,3,4,5,6,7,8,9,10}",
+      c: "{11,12,13,14,15,16,17,18,19,20}",
+      d: "{10,11,12,13,14,15,16,17,18,19,20}",
     },
     id: "2024Estadistica11",
     resuesta: "d",
@@ -543,8 +627,13 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan dos monedas, siendo la segunda de doble cara. ¿Cuál es la probabilidad de obtener cara en el segundo lanzamiento?}",
-    opciones: { a: "1", b: "\\frac{3}{4}", c: "\\frac{1}{2}", d: "\\frac{1}{4}" },
+      "Se lanzan dos monedas, siendo la segunda de doble cara. ¿Cuál es la probabilidad de obtener cara en el segundo lanzamiento?",
+    opciones: { 
+      a: "1", 
+      b: "\\frac{3}{4}", 
+      c: "\\frac{1}{2}", 
+      d: "\\frac{1}{4}" 
+    },
     id: "2024Estadistica15",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
@@ -552,14 +641,19 @@ export const reactivos = [
   {
     pregunta:
       "Los equipos de fútbol A y B juegan un torneo. El primer que gane 4 juegos en total o 2 seguidos, gana. ¿Cuál es el número de puntos muestrales?",
-    opciones: { a: "6", b: "8", c: "12", d: "14" },
+    opciones: { 
+      a: "6", 
+      b: "8", 
+      c: "12",
+      d: "14"
+    },
     id: "2024Estadistica13",
     resuesta: "d",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?}",
+      "¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?",
     opciones: {
       a: "\\frac{1}{20}",
       b: "\\frac{1}{10}",
@@ -568,10 +662,10 @@ export const reactivos = [
     },
     id: "2024Estadistica20",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },  {
     pregunta: 
-    "\\text{Identificar cuál de los siguientes eventos no es aleatorio.}",
+    "Identificar cuál de los siguientes eventos no es aleatorio.",
     opciones: {
       a: "Lanzar una moneda al aire",
       b: "Ir a la escuela todos los días",
@@ -580,11 +674,11 @@ export const reactivos = [
     },
     id: "2024Estadistica19",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{25}{66}",
       b: "\\frac{16}{41}",
@@ -593,7 +687,7 @@ export const reactivos = [
     },
     id: "2024Estadistica25",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
@@ -610,7 +704,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Determinar la probabilidad de la intersección de eventos independientes } A \\text{ y } B",
+      "Determinar la probabilidad de la intersección de eventos independientes A y B",
     opciones: {
       a: "P(A)\\cdot P(B)",
       b: "P(A)+P(B)",
@@ -619,7 +713,7 @@ export const reactivos = [
     },
     id: "2024Estadistica24",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
@@ -632,11 +726,11 @@ export const reactivos = [
     },
     id: "2024Estadistica27",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
@@ -645,10 +739,10 @@ export const reactivos = [
     },
     id: "2024Estadistica28",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
-    pregunta: "\\text{¿Cuál es el valor de la mediana?}",
+    pregunta: "¿Cuál es el valor de la mediana?",
     opciones: {
       a: "61",
       b: "62",
@@ -657,7 +751,7 @@ export const reactivos = [
     },
     id: "2024Estadistica29",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -674,20 +768,20 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{¿Qué porcentaje de trabajadores pesa menos de 55 \\text{ kg}?}",
+      "¿Qué porcentaje de trabajadores pesa menos de 55 kg}?",
     opciones: {
-      a: "5 \\%",
-      b: "10 \\%",
-      c: "15 \\%",
-      d: "20 \\%",
+      a: "5%",
+      b: "10%",
+      c: "15%",
+      d: "20%",
     },
     id: "2024Estadistica30",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.}",
+      "Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.",
     opciones: {
       a: "1, 3, 2",
       b: "1, 2, 3",
@@ -696,11 +790,11 @@ export const reactivos = [
     },
     id: "2024Estadistica36",
     resuesta: "b",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{Determinar la media geométrica de los datos: } \\{1,16,81,256\\}",
+      "Determinar la media geométrica de los datos: 1,16,81,256",
     opciones: {
       a: "7",
       b: "9",
@@ -709,7 +803,7 @@ export const reactivos = [
     },
     id: "2024Estadistica38",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -763,7 +857,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Sean A y B dos eventos tales que } P(A)=0.4 \\text{ y } P(A\\cup B)=0.7, \\text{ ¿cuál es el valor de } P(B) \\text{ para que A y B sean independientes?}",
+      "Sean A y B dos eventos tales que P(A)=0.4 y P(Acup B)=0.7, ¿cuál es el valor de } P(B) para que A y B sean independientes?",
     opciones: {
       a: "0.012",
       b: "0.12",
@@ -772,11 +866,11 @@ export const reactivos = [
     },
     id: "2024Estadistica14",
     resuesta: "c",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
-      "\\text{De acuerdo con la definición de probabilidad condicional, seleccionar la opción equivalente a } P(A\\cap B\\cap C)",
+      "De acuerdo con la definición de probabilidad condicional, seleccionar la opción equivalente a P(Acap Bcap C)",
     opciones: {
       a: "P(A)\\cdot P(B)\\cdot P(C)",
       b: "P(A)\\cdot P(B|A)\\cdot P(C|A)",
@@ -785,7 +879,7 @@ export const reactivos = [
     },
     id: "2024Estadistica21",
     resuesta: "d",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
