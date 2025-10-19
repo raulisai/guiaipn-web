@@ -309,7 +309,7 @@ export const reactivos = [
     explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
   },  {
     pregunta:
-      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\sqrt{18}+\\sqrt{12}-\\sqrt{\\frac{8}{9}}-\\sqrt{\\frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
+      "\\text{¿Qué propiedad permite pasar del lado izquierdo al derecho de la igualdad en: } \\newline \\sqrt{18}+\\sqrt{12}-\\sqrt{\\frac{8}{9}}-\\sqrt{\\frac{3}{4}}=\\frac{7}{3}\\sqrt{2}+\\frac{3}{2}\\sqrt{3}",
     opciones: {
       a: "Conmutativa para el producto",
       b: "Inverso para la suma",
@@ -512,6 +512,7 @@ export const reactivos = [
   {
     pregunta:
       "Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:",
+      "Asociar la operación con el conjunto que le corresponde, según el diagrama de Venn:",
     opciones: {
       a: "1A, 2C, 3D, 4B",
       b: "1A, 2D, 3B, 4C",
@@ -521,9 +522,11 @@ export const reactivos = [
     id: "2024Estadistica01",
     resuesta: "c",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
+      "Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.",
       "Dada la siguiente figura, determinar el complemento de la diferencia simétrica de entre A y B.",
     opciones: {
       a: "{6,8,9,10,m}",
@@ -560,8 +563,10 @@ export const reactivos = [
     id: "2024Estadistica06",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },  {
     pregunta: 
+    "Asociar la fórmula con el concepto correspondiente.",
     "Asociar la fórmula con el concepto correspondiente.",
     opciones: {
       a: "1C, 2B, 3D, 4A",
@@ -611,6 +616,7 @@ export const reactivos = [
     id: "2024Estadistica07",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -636,7 +642,7 @@ export const reactivos = [
     },
     id: "2024Estadistica15",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
@@ -654,6 +660,7 @@ export const reactivos = [
   {
     pregunta:
       "¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?",
+      "¿Cuál es la probabilidad de que un estudiante elegido al azar sea mujer y juegue básquetbol?",
     opciones: {
       a: "\\frac{1}{20}",
       b: "\\frac{1}{10}",
@@ -666,6 +673,7 @@ export const reactivos = [
   },  {
     pregunta: 
     "Identificar cuál de los siguientes eventos no es aleatorio.",
+    "Identificar cuál de los siguientes eventos no es aleatorio.",
     opciones: {
       a: "Lanzar una moneda al aire",
       b: "Ir a la escuela todos los días",
@@ -675,9 +683,11 @@ export const reactivos = [
     id: "2024Estadistica19",
     resuesta: "b",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: false
   },
   {
     pregunta:
+      "Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
       "Una urna contiene 6 bolas guindas y 5 azules. Se extrae una y se reemplaza por 2 del otro color; luego se extrae otra. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{25}{66}",
@@ -688,10 +698,11 @@ export const reactivos = [
     id: "2024Estadistica25",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:
-      "\\text{Si } P(A)=\\frac{2}{5},\\; P(B^c)=\\frac{7}{10},\\; P(A\\cup B)=\\frac{3}{5}, \\text{ determinar } P(A\\cap B^c)",
+      "Si P(A)=\\frac{2}{5},\\; P(B^c)=\\frac{7}{10},\\; P(A\\cup B)=\\frac{3}{5}, \\text{ determinar } P(A\\cap B^c)",
     opciones: {
       a: "\\frac{1}{5}",
       b: "\\frac{2}{5}",
@@ -731,6 +742,7 @@ export const reactivos = [
   {
     pregunta:
       "Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?",
+      "Un mazo de 10 cartas está formado por pares de 5 colores. Si se extraen 2 al azar, ¿cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
@@ -740,8 +752,10 @@ export const reactivos = [
     id: "2024Estadistica28",
     resuesta: "a",
     explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
+    pregunta: "¿Cuál es el valor de la mediana?",
     pregunta: "¿Cuál es el valor de la mediana?",
     opciones: {
       a: "61",
@@ -768,7 +782,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "¿Qué porcentaje de trabajadores pesa menos de 55 kg}?",
+      "¿Qué porcentaje de trabajadores pesa menos de 55kg?",
     opciones: {
       a: "5%",
       b: "10%",
@@ -781,6 +795,7 @@ export const reactivos = [
   },
   {
     pregunta:
+      "Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.",
       "Ordenar de menor a mayor los conjuntos de datos según el valor de su promedio.",
     opciones: {
       a: "1, 3, 2",
@@ -946,7 +961,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Un mazo de 10 cartas (con 5 pares de colores) se extraen 2 al azar. ¿Cuál es la probabilidad de que ambas sean del mismo color?}",
+      "Un mazo de 10 cartas (con 5 pares de colores) se extraen 2 al azar. ¿Cuál es la probabilidad de que ambas sean del mismo color?",
     opciones: {
       a: "\\frac{1}{9}",
       b: "\\frac{2}{9}",
@@ -1010,7 +1025,7 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.}",
+      "Identificar el tipo de media que determina mejor la velocidad media de un automóvil que recorre 60 km a 50 km/h y 40 km a 70 km/h.",
     opciones: { a: "Mediana", b: "Armónica", c: "Aritmética", d: "Geométrica" },
     id: "2024Estadistica37",
     resuesta: "b",
@@ -1025,11 +1040,11 @@ export const reactivos = [
   },
   {
     pregunta:
-      "\\text{Se lanzan una moneda y una pirinola de 8 lados } n \\text{ veces. ¿Cuántos resultados distintos se pueden obtener?}",
+      "Se lanzan una moneda y una pirinola de 8 lados n veces. ¿Cuántos resultados distintos se pueden obtener?",
     opciones: { a: "12^n", b: "6^n", c: "8n", d: "12n" },
     id: "2024Estadistica12",
     resuesta: "a",
-    explicacion: "void", imgActive: false, lengMathPregunta: true, lengMathOpciones: true
+    explicacion: "void", imgActive: false, lengMathPregunta: false, lengMathOpciones: true
   },
   {
     pregunta:

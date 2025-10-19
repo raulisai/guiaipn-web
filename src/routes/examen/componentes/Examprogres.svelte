@@ -9,21 +9,11 @@
 </script>
 
 <div
-	class="progress-container bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-lg shadow-lg card_color w-full max-w-full transition-colors duration-300"
+	class="w-full max-w-full transition-colors duration-300"
 >
 	<div class="progress-header flex justify-between text-sm text-gray-300 mb-3">
 		<span>Pregunta {currentQuestion} de {totalQuestions}</span>
-		<span>{answeredQuestions} respondidas</span>
-	</div>
-
-	<div class="progress-bar-container mb-6 h-2 bg-gray-800 rounded-full overflow-hidden shadow-inner">
-		<div
-			class="progress-bar h-full bg-gradient-to-r from-blue-500 to-yellow-400 rounded-full transition-all duration-400 shadow-md"
-			style="width: {progress}%"
-		></div>
-	</div>
-
-	<div class="question-indicators flex gap-1 mt-4 overflow-x-auto pb-2 scrollbar-thin flex-wrap">
+		<div class="question-indicators flex gap-1 mt-4 overflow-x-auto pb-2 scrollbar-thin flex-wrap">
 		{#each Array(totalQuestions) as _, i}
 			<div
 				class="indicator w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300"
@@ -34,27 +24,21 @@
 			></div>
 		{/each}
 	</div>
+	</div>
+
+	<div class="progress-bar-container mb-6 h-2 bg-gray-800 rounded-full overflow-hidden shadow-inner">
+		<div
+			class="progress-bar h-full bg-gradient-to-r from-blue-500 to-yellow-400 rounded-full transition-all duration-400 shadow-md"
+			style="width: {progress}%"
+		></div>
+	</div>
+
+	
 
 	
 </div>
 
 <style>
-	.progress-container {
-		margin-bottom: 1.5rem;
-		padding: 1rem;
-		border-radius: 0.75rem;
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(55, 65, 81, 0.5); /* gris-700/50 */
-		background: rgba(31, 41, 55, 0.3); /* bg-gray-800/30 */
-		box-shadow:
-			0 4px 24px 0 rgba(0, 0, 0, 0.1),
-			0 1.5px 4px 0 rgba(59, 130, 246, 0.05);
-		color: #e5e7eb;
-		width: 100%;
-		max-width: 100%;
-		transition: background 0.3s;
-	}
-
 	.progress-header {
 		display: flex;
 		justify-content: space-between;
@@ -129,10 +113,6 @@
 	}
 
 	@media (max-width: 640px) {
-		.progress-container {
-			padding: 0.75rem;
-		}
-
 		.indicator {
 			width: 0.4rem;
 			height: 0.4rem;
