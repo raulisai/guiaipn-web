@@ -4,7 +4,7 @@
  */
 
 // Por ahora re-exportamos el archivo original
-export { reactivos } from '../reactivos.js';
+export { reactivos } from './reactivos.js';
 
 // Configuración de materias
 export const MATERIAS_CONFIG = [
