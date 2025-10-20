@@ -1,15 +1,12 @@
-import { redirect } from '@sveltejs/kit';
-
 // Esta función se ejecuta en el servidor antes de cargar la página
-export const load = async ({ url, locals, cookies }) => {
+export const load = async ({ url, locals }) => {
     const code = url.searchParams.get('code');
     
-    if (code) {
+    if (code && locals.supabaseServerClient) {
         // Intercambiar el código temporal por una sesión permanente
-        const supabaseServerClient = locals.supabaseServerClient;
-        await supabaseServerClient.auth.exchangeCodeForSession(code);
+        await locals.supabaseServerClient.auth.exchangeCodeForSession(code);
     }
     
-    // Redirigir a la página principal
-    throw redirect(303, '/');
+    // No redirigir aquí - dejar que el componente cliente maneje la lógica
+    return {};
 };

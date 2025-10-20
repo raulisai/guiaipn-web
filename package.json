@@ -41,6 +41,7 @@
 		"@supabase/supabase-js": "^2.49.4",
 		"chart.js": "^4.4.9",
 		"katex": "^0.16.22",
-		"lucide-svelte": "^0.501.0"
+		"lucide-svelte": "^0.501.0",
+		"socket.io-client": "^4.8.1"
 	}
 }

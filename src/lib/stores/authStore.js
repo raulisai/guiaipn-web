@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import { supabase } from '$lib/supabase';
 import { browser } from '$app/environment';
+import { authAPI } from '$lib/api';
 
 // Crear la store con el valor inicial null (se actualizará después con el estado de la sesión)
 export const user = writable(null);
@@ -42,6 +43,32 @@ export const signInWithEmail = async (email, password) => {
         }
         throw error;
     }
+
+    // Si el login fue exitoso, verificar/inicializar el perfil
+    // (por si es la primera vez que inicia sesión después de confirmar el email)
+    if (data.session) {
+        try {
+            // Primero intentar obtener el perfil existente
+            let profile = null;
+            try {
+                profile = await getUserProfile();
+                console.log('✅ Perfil encontrado - Usuario existente');
+            } catch (profileError) {
+                // Si el perfil no existe (404), crearlo
+                if (profileError.status === 404) {
+                    console.log('⚠️ Perfil no encontrado - Creando perfil nuevo');
+                    await initializeUserProfile();
+                    console.log('✅ Perfil creado exitosamente');
+                } else {
+                    throw profileError;
+                }
+            }
+        } catch (profileError) {
+            console.error('⚠️ Error al verificar perfil:', profileError);
+            // No lanzar error, el perfil se puede crear después
+        }
+    }
+
     return data;
 };
 
@@ -70,6 +97,28 @@ export const signUpWithEmail = async (email, password, name) => {
     });
     
     if (error) throw error;
+
+    console.log('📧 Usuario registrado:', { 
+        email, 
+        hasSession: !!data.session,
+        needsConfirmation: !data.session 
+    });
+
+    // Si el usuario se creó exitosamente y la sesión está activa
+    // (depende de si Supabase requiere confirmación de email)
+    if (data.session) {
+        console.log('✅ Sesión activa - Inicializando perfil inmediatamente');
+        try {
+            // Inicializar el perfil en el backend
+            await initializeUserProfile();
+        } catch (profileError) {
+            console.error('❌ Error al inicializar perfil después del registro:', profileError);
+            // No lanzar error, el perfil se puede crear después
+        }
+    } else {
+        console.log('📬 Se requiere confirmación de email - El perfil se creará al confirmar');
+    }
+    
     return data;
 };
 
@@ -100,4 +149,59 @@ export const isAuthenticated = () => {
     });
     unsubscribe();
     return !!currentUser;
+};
+
+/**
+ * Inicializa el perfil del usuario en el backend Flask
+ * Se debe llamar después del primer login con Google OAuth o registro
+ * @returns {Promise<{profile: object, isNewUser: boolean, progressInitialized: number}>}
+ */
+export const initializeUserProfile = async () => {
+    try {
+        // Obtener la sesión actual
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError || !session) {
+            throw new Error('No hay sesión activa');
+        }
+
+        const token = session.access_token;
+
+        // Llamar al endpoint de inicialización
+        const response = await authAPI.initialize(token);
+
+        // Determinar si es un usuario nuevo basado en la respuesta
+        const isNewUser = response.message === 'Perfil inicializado exitosamente';
+
+        return {
+            profile: response.profile,
+            isNewUser,
+            progressInitialized: response.progress_initialized || 0
+        };
+    } catch (error) {
+        console.error('Error al inicializar perfil:', error);
+        throw error;
+    }
+};
+
+/**
+ * Obtiene el perfil completo del usuario desde el backend
+ * @returns {Promise<object>}
+ */
+export const getUserProfile = async () => {
+    try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError || !session) {
+            throw new Error('No hay sesión activa');
+        }
+
+        const token = session.access_token;
+        const profile = await authAPI.getProfile(token);
+
+        return profile;
+    } catch (error) {
+        console.error('Error al obtener perfil:', error);
+        throw error;
+    }
 };

@@ -3,32 +3,32 @@
 ## 📦 Fase 1: Configuración Inicial
 
 ### Instalación de Dependencias
-- [ ] Instalar `socket.io-client`
-- [ ] Instalar `@supabase/supabase-js`
-- [ ] Configurar variables de entorno (.env)
+- [x] Instalar `socket.io-client`
+- [x] Instalar `@supabase/supabase-js`
+- [x] Configurar variables de entorno (.env)
 
 ### Configuración de Supabase
-- [ ] Crear cliente de Supabase
-- [ ] Configurar Google OAuth
-- [ ] Implementar callback de OAuth
-- [ ] Crear hook `useAuth()`
+- [x] Crear cliente de Supabase
+- [x] Configurar Google OAuth
+- [x] Implementar callback de OAuth
+- [x] Crear hook `useAuth()` (authStore.js)
  
 ---
 
 ## 🔐 Fase 2: Autenticación
 
 ### Login
-- [ ] Botón "Iniciar con Google"
-- [ ] Función `signInWithGoogle()`
-- [ ] Redireccionamiento a callback
-- [ ] Manejo de errores de OAuth
+- [x] Botón "Iniciar con Google"
+- [x] Función `signInWithGoogle()`
+- [x] Redireccionamiento a callback
+- [x] Manejo de errores de OAuth
 
 ### Callback
-- [ ] Página `/auth/callback`
-- [ ] Extraer token de Supabase
-- [ ] Llamar a `POST /auth/initialize`
-- [ ] Guardar token en localStorage/sessionStorage
-- [ ] Redirigir a dashboard
+- [x] Página `/auth/callback`
+- [x] Extraer token de Supabase
+- [x] Llamar a `POST /auth/initialize`
+- [x] Guardar token en localStorage/sessionStorage (manejado por Supabase)
+- [x] Redirigir a dashboard
 
 ### Protección de Rutas
 - [ ] Componente `<ProtectedRoute>`
@@ -45,18 +45,21 @@
 
 ## 🌐 Fase 3: Cliente HTTP
 
-### Configuración de Axios
-- [ ] Crear instancia de axios con baseURL
-- [ ] Interceptor para agregar token en headers
-- [ ] Interceptor para manejar errores 401
+### Configuración de Cliente HTTP
+- [x] Crear cliente HTTP con baseURL (api.js usando fetch)
+- [x] Agregar token en headers
+- [x] Manejo de errores HTTP
 - [ ] Interceptor para renovar token expirado
 
 ### Endpoints Implementados
-- [ ] `POST /auth/initialize`
-- [ ] `GET /auth/profile`
-- [ ] `GET /questions/random`
-- [ ] `POST /questions/{id}/answer`
-- [ ] `GET /sessions/{id}`
+- [x] `POST /auth/initialize`
+- [x] `POST /auth/verify`
+- [x] `GET /auth/profile`
+- [x] `GET /questions/random`
+- [x] `POST /questions/{id}/answer`
+- [x] `GET /questions/{id}`
+- [x] `GET /sessions/{id}`
+- [x] `GET /health`
 
 ### Manejo de Errores HTTP
 - [ ] Mostrar mensaje de error al usuario

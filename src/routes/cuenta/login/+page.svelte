@@ -87,7 +87,7 @@
             >
                 <h1 
                     in:scale={{ duration: 400, delay: 300, easing: quartOut }}
-                    class="text-3xl font-bold text-white text-center mb-8 bg-gradient-to-r from-white to-cyan-200 
+                    class="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-white to-cyan-200 
                     bg-clip-text text-transparent drop-shadow-lg"
                 >
                     {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
