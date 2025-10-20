@@ -1,16 +1,8 @@
-        <script>
-    import { onMount } from 'svelte';
-    import { user } from '$lib/stores/authStore';
-    import { goto } from '$app/navigation';
-    
-    onMount(() => {
-        // Verificar si el usuario está logueado
-        if (!$user) {
-            goto('/cuenta/login');
-        }
-    });
+<script>
+    import ProtectedRoute from '$lib/components/ProtectedRoute.svelte';
 </script>
 
+<ProtectedRoute>
 <!-- Hero Section -->
          
         <section class="hero gradient-bg min-h-[50vh] flex flex-col items-center justify-center p-8">
@@ -175,3 +167,4 @@
             }
           }
           </style>
+</ProtectedRoute>

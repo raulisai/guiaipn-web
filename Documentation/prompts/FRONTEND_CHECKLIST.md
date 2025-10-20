@@ -31,15 +31,15 @@
 - [x] Redirigir a dashboard
 
 ### Protección de Rutas
-- [ ] Componente `<ProtectedRoute>`
-- [ ] Verificar token en cada ruta protegida
-- [ ] Redirigir a login si no autenticado
-- [ ] Mostrar loading mientras verifica
+- [x] Componente `<ProtectedRoute>` (src/lib/components/ProtectedRoute.svelte)
+- [x] Verificar token en cada ruta protegida (+layout.svelte)
+- [x] Redirigir a login si no autenticado
+- [x] Mostrar loading mientras verifica
 
 ### Renovación de Token
-- [ ] Listener de `onAuthStateChange`
-- [ ] Renovación automática antes de expiración
-- [ ] Actualizar token en requests activos
+- [x] Listener de `onAuthStateChange` (+layout.svelte)
+- [x] Renovación automática (manejado por Supabase)
+- [x] Actualizar token en requests activos (invalidate 'supabase:auth')
 
 ---
 

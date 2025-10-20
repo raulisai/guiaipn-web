@@ -13,6 +13,7 @@
     let activo = $state(false);
     let scrolled = $state(false);
     let isHovered = $state(false);
+    let isCheckingAuth = $state(true);
     let { children } = $props();
     
     // Rutas protegidas que requieren autenticación
@@ -22,7 +23,7 @@
     let isProtectedRoute = $derived(protectedRoutes.some(route => $page.url.pathname.startsWith(route)));
     
     $effect(() => {
-        if (isProtectedRoute && !$user) {
+        if (isProtectedRoute && !$user && !isCheckingAuth) {
             // Redirigir al login si intenta acceder a una ruta protegida sin estar autenticado
             goto('/cuenta/login');
         }
@@ -47,6 +48,9 @@
     }
 
     onMount(() => {
+        // Marcar que ya terminó de verificar autenticación inicial
+        isCheckingAuth = false;
+        
         // Handle click outside menu
         function handleClickOutside(event) {
             if (menuBtn && !menuBtn.contains(event.target)) {
@@ -190,7 +194,17 @@
 
 <!-- Mejorar legibilidad en móviles -->
 <main class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#030e27]/90 to-black/90">
-    {@render children()}
+    {#if isProtectedRoute && isCheckingAuth}
+        <!-- Loading state para rutas protegidas -->
+        <div class="flex justify-center items-center min-h-screen">
+            <div class="text-center text-white">
+                <div class="inline-block w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p class="text-lg">Verificando acceso...</p>
+            </div>
+        </div>
+    {:else}
+        {@render children()}
+    {/if}
 </main>
 
 
