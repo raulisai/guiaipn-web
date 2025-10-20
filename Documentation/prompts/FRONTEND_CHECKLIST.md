@@ -49,7 +49,7 @@
 - [x] Crear cliente HTTP con baseURL (api.js usando fetch)
 - [x] Agregar token en headers
 - [x] Manejo de errores HTTP
-- [ ] Interceptor para renovar token expirado
+- [x] Interceptor para renovar token expirado
 
 ### Endpoints Implementados
 - [x] `POST /auth/initialize`
@@ -62,10 +62,10 @@
 - [x] `GET /health`
 
 ### Manejo de Errores HTTP
-- [ ] Mostrar mensaje de error al usuario
-- [ ] Logging de errores
-- [ ] Retry automático en errores de red
-- [ ] Timeout configurado
+- [x] Mostrar mensaje de error al usuario (errores tipificados)
+- [x] Logging de errores (con emojis y detalles)
+- [ ] Retry automático en errores de red (no necesario para MVP)
+- [x] Timeout configurado (30s default, configurable)
 
 ---
 
