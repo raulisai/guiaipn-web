@@ -5,8 +5,6 @@
 ### Instalación de Dependencias
 - [ ] Instalar `socket.io-client`
 - [ ] Instalar `@supabase/supabase-js`
-- [ ] Instalar `axios` (o fetch wrapper)
-- [ ] Instalar librería de estado global (zustand/redux/jotai)
 - [ ] Configurar variables de entorno (.env)
 
 ### Configuración de Supabase
@@ -14,7 +12,7 @@
 - [ ] Configurar Google OAuth
 - [ ] Implementar callback de OAuth
 - [ ] Crear hook `useAuth()`
-
+ 
 ---
 
 ## 🔐 Fase 2: Autenticación
