@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { supabase } from '$lib/supabase';
+import { supabase } from '$lib/services';
 import { browser } from '$app/environment';
 import { authAPI } from '$lib/api';
 

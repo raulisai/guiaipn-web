@@ -4,7 +4,7 @@
     import { fade, fly, scale } from 'svelte/transition';
     import { elasticOut, backOut, quartOut } from 'svelte/easing';
     import { goto } from '$app/navigation';
-    import { supabase } from '$lib/supabase';
+    import { supabase } from '$lib/services';
 
     let isLoginMode = true;
     let email = '';

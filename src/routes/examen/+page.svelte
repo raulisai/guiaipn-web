@@ -1,6 +1,6 @@
 <!-- filepath: c:\Users\raul_\Documents\code\guiaipn-web\src\routes\examen\+page.svelte -->
 <script lang="ts">
-	import { reactivos } from '$lib/reactivos';
+	import { reactivos } from '$lib/data';
 	import { examStore } from '$lib/stores/examStore';
 	import ExamProgress from './componentes/Examprogres.svelte';
 	import ModalFinish from './componentes/ModalFinish.svelte';

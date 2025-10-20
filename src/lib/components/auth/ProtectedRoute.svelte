@@ -1,6 +1,6 @@
 <script>
     import { goto } from '$app/navigation';
-    import { user } from '$lib/stores/authStore';
+    import { user } from '$lib/stores';
     import { onMount } from 'svelte';
     
     let { children, redirectTo = '/cuenta/login' } = $props();

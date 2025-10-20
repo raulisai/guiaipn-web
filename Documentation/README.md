@@ -4,313 +4,256 @@ Bienvenido a la documentación completa del proyecto **Guía IPN Web**, una plat
 
 ---
 
-## 📖 Índice de Documentación
+## 🎯 Visión General
 
-### 1. [ARQUITECTURA.md](./ARQUITECTURA.md)
+**Guía IPN Web** es una plataforma educativa que ayuda a estudiantes a prepararse para el examen de admisión del IPN mediante:
+
+- ✅ **Exámenes de práctica** con 863+ preguntas
+- ✅ **Explicaciones con IA** en tiempo real (Socket.IO + OpenAI)
+- ✅ **Seguimiento de progreso** personalizado
+- ✅ **Renderizado matemático** con KaTeX
+- ✅ **Autenticación segura** con Supabase
+
+---
+
+## 📖 Documentación Disponible
+
+### 1. [ARQUITECTURA.md](./ARQUITECTURA.md) 🏗️
 **Documentación técnica completa del sistema**
 
-Incluye:
-- ✅ Visión general del proyecto
-- ✅ Stack tecnológico detallado
-- ✅ Estructura del proyecto
-- ✅ Arquitectura de componentes
-- ✅ Flujos de datos
-- ✅ Sistema de autenticación
-- ✅ Sistema de exámenes
-- ✅ Schema de base de datos
-- ✅ Diagramas de flujo en ASCII
+**Incluye:**
+- Stack tecnológico (SvelteKit 2, Svelte 5, Supabase, TailwindCSS 4)
+- Estructura modular del proyecto (api/, components/, stores/, utils/, services/, data/)
+- Arquitectura de componentes
+- Sistema de autenticación (Email/Password + Google OAuth)
+- Sistema de exámenes (863+ reactivos)
+- Schema de base de datos Supabase
+- Row Level Security (RLS)
 
-**Para quién**: Desarrolladores que necesitan entender la arquitectura completa
+**Para quién:** Desarrolladores que necesitan entender la arquitectura completa
 
 ---
 
-### 2. [DIAGRAMAS.md](./DIAGRAMAS.md)
-**Diagramas visuales del sistema**
+### 2. [FLUJOS.md](./FLUJOS.md) 🔄
+**Diagramas visuales y flujos del sistema**
 
-Incluye:
-- ✅ Arquitectura general del sistema
-- ✅ Flujo de datos del examen
-- ✅ Flujo de autenticación
-- ✅ Arquitectura de componentes
-- ✅ Ciclo de vida de una pregunta
-- ✅ Gestión de estado (State Management)
+**Incluye:**
+- Arquitectura general (Frontend ↔ Backend ↔ Servicios)
+- Flujo de autenticación (Email, Google OAuth)
+- Flujo del examen (inicio, respuesta, finalización)
+- Flujo de explicación con IA (Socket.IO streaming)
+- Gestión de estado (authStore, examStore)
+- Ciclo de vida de una pregunta
+- Esquema de base de datos con triggers
+- Algoritmo de tipografía inteligente (KaTeX)
 
-**Para quién**: Desarrolladores y diseñadores que prefieren visualizaciones
+**Para quién:** Desarrolladores y diseñadores que prefieren visualizaciones
 
 ---
 
-### 3. [GUIA-RAPIDA.md](./GUIA-RAPIDA.md)
+### 3. [GUIA-RAPIDA.md](./GUIA-RAPIDA.md) ⚡
 **Referencia rápida para desarrollo**
 
-Incluye:
-- ✅ Inicio rápido
-- ✅ Estructura de archivos clave
-- ✅ Conceptos clave
-- ✅ Flujos principales
-- ✅ Tareas comunes
-- ✅ Configuración
-- ✅ Componentes principales
-- ✅ Debugging
-- ✅ Convenciones de código
-- ✅ Errores comunes
+**Incluye:**
+- Comandos de inicio rápido
+- Estructura de archivos clave
+- Conceptos clave (Stores, Runes, Rutas protegidas)
+- Tareas comunes (agregar preguntas, crear componentes)
+- Componentes principales
+- Debugging y errores comunes
+- Convenciones de código
 
-**Para quién**: Desarrolladores que necesitan referencias rápidas durante el desarrollo
+**Para quién:** Desarrolladores que necesitan referencia rápida
 
 ---
 
-## 🎯 ¿Por Dónde Empezar?
+### 4. [API.md](./API.md) 🌐
+**Backend, endpoints y Socket.IO**
 
-### Si eres nuevo en el proyecto:
-1. Lee el **README.md** principal (en la raíz del proyecto)
-2. Revisa **ARQUITECTURA.md** para entender el sistema completo
-3. Consulta **DIAGRAMAS.md** para visualizar los flujos
-4. Usa **GUIA-RAPIDA.md** como referencia durante el desarrollo
+**Incluye:**
+- Endpoints REST (Auth, Questions, Sessions, Health)
+- Eventos Socket.IO (Cliente ↔ Servidor)
+- Manejo de errores HTTP (HTTP_ERROR, TIMEOUT_ERROR, NETWORK_ERROR)
+- Códigos de estado
+- Cliente HTTP en frontend
+- Configuración y variables de entorno
 
-### Si necesitas implementar una feature:
-1. Consulta **GUIA-RAPIDA.md** → "Tareas Comunes"
-2. Revisa **ARQUITECTURA.md** → Sección relevante
-3. Verifica **DIAGRAMAS.md** → Flujo correspondiente
-
-### Si estás debuggeando:
-1. **GUIA-RAPIDA.md** → "Debugging" y "Errores Comunes"
-2. **ARQUITECTURA.md** → Flujos de datos
-3. **DIAGRAMAS.md** → Visualizar el flujo problemático
-
----
-
-## 🏗️ Estructura del Proyecto
-
-```
-guiaipn-web/
-│
-├── Documentation/              ← Estás aquí
-│   ├── README.md              ← Este archivo
-│   ├── ARQUITECTURA.md        ← Documentación técnica completa
-│   ├── DIAGRAMAS.md           ← Diagramas visuales
-│   └── GUIA-RAPIDA.md         ← Referencia rápida
-│
-├── src/
-│   ├── lib/
-│   │   ├── stores/            ← State management
-│   │   ├── reactivos.js       ← Base de datos de preguntas
-│   │   └── supabase.js        ← Cliente Supabase
-│   │
-│   └── routes/
-│       ├── +layout.svelte     ← Layout principal
-│       ├── +page.svelte       ← Página de inicio
-│       ├── examen/            ← Sistema de exámenes
-│       └── cuenta/            ← Autenticación
-│
-├── static/                    ← Archivos estáticos
-├── package.json
-├── svelte.config.js
-├── vite.config.js
-└── README.md                  ← README principal
-```
-
----
-
-## 🔑 Conceptos Clave del Proyecto
-
-### 1. **SvelteKit 2.x (Svelte 5)**
-Framework principal con:
-- Runes (`$state`, `$derived`, `$effect`, `$props`)
-- File-based routing
-- Server-side rendering (SSR)
-- API routes
-
-### 2. **Supabase**
-Backend as a Service:
-- Autenticación (Email/Password, OAuth)
-- Base de datos PostgreSQL
-- Row Level Security (RLS)
-- Real-time subscriptions
-
-### 3. **Stores (State Management)**
-Gestión de estado global:
-- `authStore`: Usuario y autenticación
-- `examStore`: Estado del examen
-
-### 4. **Reactivos**
-Base de datos de preguntas:
-- 863+ preguntas
-- Álgebra y Estadística
-- Soporte para LaTeX (KaTeX)
-
-### 5. **Componentes Reutilizables**
-- `Math.svelte`: Renderizador de fórmulas
-- `QuestionDisplay.svelte`: Mostrar preguntas
-- `AnswerOptions.svelte`: Opciones de respuesta
-- `ModalFinish.svelte`: Resultados finales
-
----
-
-## 📊 Métricas del Proyecto
-
-### Código
-- **Lenguajes**: JavaScript, TypeScript, Svelte
-- **Componentes**: 15+ componentes reutilizables
-- **Rutas**: 10+ páginas
-- **Stores**: 2 stores principales
-
-### Datos
-- **Preguntas**: 863+ reactivos
-- **Materias**: Álgebra, Estadística
-- **Tipos**: Texto y matemáticas (LaTeX)
-
-### Funcionalidades
-- ✅ Sistema de exámenes
-- ✅ Autenticación completa
-- ✅ Renderizado de matemáticas
-- ✅ Explicaciones con IA
-- ✅ Seguimiento de progreso
-- ✅ Responsive design
-- ✅ Animaciones fluidas
-
----
-
-## 🛠️ Stack Tecnológico
-
-### Frontend
-- **Framework**: SvelteKit 2.x
-- **Estilos**: TailwindCSS 4.0
-- **Matemáticas**: KaTeX 0.16.22
-- **Gráficas**: Chart.js 4.4.9
-- **Iconos**: Lucide Svelte
-
-### Backend
-- **BaaS**: Supabase
-- **Auth**: Supabase Auth
-- **Database**: PostgreSQL
-
-### DevTools
-- **Build**: Vite 6.0
-- **Linting**: ESLint 9.x
-- **Formatting**: Prettier 3.x
-- **Type Checking**: TypeScript 5.x
-
-### Deployment
-- **Platform**: Vercel
-- **Adapter**: @sveltejs/adapter-vercel
+**Para quién:** Desarrolladores trabajando con la API o Socket.IO
 
 ---
 
 ## 🚀 Inicio Rápido
 
 ```bash
-# Clonar repositorio
-git clone <repo-url>
-
-# Instalar dependencias
+# 1. Instalar dependencias
 npm install
 
-# Configurar variables de entorno
+# 2. Configurar variables de entorno
 cp .env.example .env
 # Editar .env con tus credenciales de Supabase
 
-# Iniciar desarrollo
+# 3. Iniciar desarrollo
 npm run dev
 
-# Build para producción
-npm run build
-npm run preview
+# 4. Abrir en navegador
+http://localhost:5173
 ```
 
 ---
 
-## 📝 Convenciones de Documentación
+## 🛠️ Stack Tecnológico
 
-### Formato de Archivos
-- **Markdown**: Todos los archivos de documentación
-- **Diagramas**: ASCII art para compatibilidad
-- **Código**: Bloques con syntax highlighting
+### Frontend
+- **Framework:** SvelteKit 2.x con Svelte 5 (runes)
+- **Estilos:** TailwindCSS 4.0
+- **Matemáticas:** KaTeX 0.16.22
+- **Gráficas:** Chart.js 4.4.9
+- **Build:** Vite 6.0
 
-### Estructura de Documentos
-1. **Título y descripción**
-2. **Índice** (si es largo)
-3. **Contenido principal**
-4. **Ejemplos de código**
-5. **Referencias**
-6. **Última actualización**
+### Backend
+- **BaaS:** Supabase (Auth + PostgreSQL)
+- **API:** Flask + Flask-SocketIO
+- **Cache:** Redis (sesiones)
+- **IA:** OpenAI GPT-4
 
-### Estilo de Escritura
-- **Claro y conciso**
-- **Ejemplos prácticos**
-- **Diagramas cuando sea necesario**
-- **Links a recursos externos**
+### Deployment
+- **Frontend:** Vercel (adapter-vercel)
+- **Backend:** Railway/Render
 
 ---
 
-## 🤝 Contribuir a la Documentación
+## 📁 Estructura del Proyecto
 
-### Agregar Nueva Documentación
-1. Crea un nuevo archivo `.md` en esta carpeta
-2. Actualiza este `README.md` con el nuevo documento
-3. Sigue las convenciones de formato
-4. Incluye ejemplos y diagramas
-
-### Actualizar Documentación Existente
-1. Edita el archivo correspondiente
-2. Actualiza la fecha de "Última actualización"
-3. Verifica que los links funcionen
-4. Mantén consistencia con el resto
-
-### Reportar Errores
-Si encuentras errores en la documentación:
-1. Abre un issue en GitHub
-2. Especifica el archivo y sección
-3. Sugiere la corrección
+```
+src/lib/
+├── api/                    # Comunicación con backend
+│   ├── client.js          # Cliente HTTP base
+│   └── endpoints/         # auth, questions, sessions
+│
+├── components/            # Componentes reutilizables
+│   └── auth/             # ProtectedRoute
+│
+├── stores/               # Estado global
+│   ├── authStore.js      # Autenticación
+│   └── examStore.ts      # Examen
+│
+├── utils/                # Utilidades
+│   ├── constants.js      # Constantes
+│   ├── validators.js     # Validaciones
+│   └── formatters.js     # Formateo
+│
+├── services/             # Servicios externos
+│   └── supabase.js       # Cliente Supabase
+│
+└── data/                 # Datos estáticos
+    └── index.js          # reactivos + config
+```
 
 ---
 
-## 📚 Recursos Adicionales
+## 🔑 Características Principales
 
-### Documentación Oficial
+### 1. Sistema de Exámenes
+- 863+ preguntas de Álgebra y Estadística
+- 20 preguntas aleatorias por examen
+- Validación en tiempo real
+- Estadísticas y gráficas
+
+### 2. Autenticación
+- Email/Password con confirmación
+- Google OAuth
+- JWT tokens
+- Rutas protegidas
+
+### 3. Explicaciones con IA
+- Streaming en tiempo real (Socket.IO)
+- Profesor virtual animado
+- Pizarrón interactivo
+- Pasos detallados
+
+### 4. Renderizado Matemático
+- KaTeX para fórmulas LaTeX
+- Tipografía inteligente
+- Responsive design
+- Scroll horizontal para ecuaciones largas
+
+---
+
+## 📊 Métricas del Proyecto
+
+- **Preguntas:** 863+
+- **Materias:** 8 (Matemáticas, Física, Química, etc.)
+- **Componentes:** 20+
+- **Rutas:** 10+
+- **Stores:** 2 (auth, exam)
+- **Endpoints API:** 8
+
+---
+
+## 🔗 Enlaces Útiles
+
+### Documentación Externa
 - [SvelteKit](https://kit.svelte.dev/)
 - [Svelte 5](https://svelte.dev/docs/svelte/overview)
 - [Supabase](https://supabase.com/docs)
 - [TailwindCSS](https://tailwindcss.com/docs)
 - [KaTeX](https://katex.org/docs/api.html)
-- [Chart.js](https://www.chartjs.org/docs/)
+- [Socket.IO](https://socket.io/docs/v4/)
 
-### Tutoriales
-- [SvelteKit Tutorial](https://learn.svelte.dev/)
-- [Supabase Auth Tutorial](https://supabase.com/docs/guides/auth)
-- [TailwindCSS Tutorial](https://tailwindcss.com/docs/installation)
-
-### Comunidad
-- [Svelte Discord](https://svelte.dev/chat)
-- [Supabase Discord](https://discord.supabase.com/)
-- [GitHub Discussions](https://github.com/sveltejs/kit/discussions)
+### Carpeta prompts/
+Documentación técnica detallada para implementación:
+- `FRONTEND_CHECKLIST.md` - Checklist de implementación
+- `SOCKET_IO_COMPLETE.md` - Documentación Socket.IO completa
+- `HTTP_ROUTES.md` - Documentación API REST
+- `FLOW_DIAGRAMS.md` - Diagramas de flujo detallados
 
 ---
 
-## 🔄 Historial de Cambios
+## 🤝 Contribuir
 
-### v1.0.0 - Octubre 2024
-- ✅ Documentación inicial completa
-- ✅ ARQUITECTURA.md creado
-- ✅ DIAGRAMAS.md creado
-- ✅ GUIA-RAPIDA.md creado
-- ✅ README.md de documentación creado
+1. Lee la documentación completa
+2. Revisa [ARQUITECTURA.md](./ARQUITECTURA.md) para entender el sistema
+3. Consulta [GUIA-RAPIDA.md](./GUIA-RAPIDA.md) para tareas comunes
+4. Sigue las convenciones de código
 
 ---
 
-## 📞 Contacto
+## 📝 Notas Importantes
 
-Si tienes preguntas sobre la documentación o el proyecto:
-- Abre un issue en GitHub
-- Contacta al equipo de desarrollo
-- Revisa las discusiones existentes
-
----
-
-## 📄 Licencia
-
-Este proyecto y su documentación están bajo la misma licencia que el proyecto principal.
+- **Estructura modular:** Todo en `src/lib/` está organizado por dominio
+- **Imports limpios:** Usa `from '$lib/api'`, `from '$lib/stores'`, etc.
+- **Rutas protegidas:** `/progreso` y `/materias` requieren autenticación
+- **Timeout API:** 30 segundos por defecto (configurable)
+- **Sesiones Socket.IO:** TTL 30 minutos en Redis
 
 ---
 
-**Última actualización**: Octubre 2024  
-**Versión de documentación**: 1.0.0  
-**Mantenido por**: Equipo de desarrollo Guía IPN Web
+## 🎯 Próximos Pasos
+
+### Fase 4: Socket.IO (En progreso)
+- [ ] Crear `SocketService.js`
+- [ ] Crear `explanationStore.js`
+- [ ] Implementar componentes del salón
+- [ ] Integrar con backend Flask
+
+### Futuro
+- [ ] Más materias (Física, Química, etc.)
+- [ ] Sistema de progreso avanzado
+- [ ] Modo oscuro
+- [ ] PWA (Progressive Web App)
+- [ ] Notificaciones push
+
+---
+
+## 📞 Soporte
+
+Para dudas o problemas:
+1. Revisa [GUIA-RAPIDA.md](./GUIA-RAPIDA.md) - Sección "Debugging"
+2. Consulta [API.md](./API.md) - Manejo de errores
+3. Revisa [FLUJOS.md](./FLUJOS.md) - Diagramas visuales
+
+---
+
+**Última actualización:** 2025-01-20  
+**Versión:** 1.0.0  
+**Estado:** ✅ Estructura modular completada, listo para Socket.IO

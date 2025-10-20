@@ -1,7 +1,7 @@
 <script>
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
-    import { supabase } from '$lib/supabase';
+    import { supabase } from '$lib/services';
     import { initializeUserProfile, getUserProfile } from '$lib/stores/authStore';
 
     let status = 'Procesando inicio de sesión...';

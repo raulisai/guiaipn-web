@@ -1,5 +1,5 @@
 <script>
-    import ProtectedRoute from '$lib/components/ProtectedRoute.svelte';
+    import { ProtectedRoute } from '$lib/components';
 </script>
 
 <ProtectedRoute>

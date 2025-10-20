@@ -1,7 +1,7 @@
 <script>
     // Esto se ejecuta en el lado del cliente (browser)
     import '../app.css';
-    import { supabase } from '$lib/supabase';
+    import { supabase } from '$lib/services';
     import { onMount } from 'svelte';
     import { user, logout } from '$lib/stores/authStore';
     import { page } from '$app/stores';;

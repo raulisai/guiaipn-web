@@ -54,12 +54,40 @@
 guiaipn-web/
 ├── src/
 │   ├── lib/
-│   │   ├── stores/
-│   │   │   ├── authStore.js          # Store de autenticación
-│   │   │   └── examStore.ts          # Store del examen
-│   │   ├── reactivos.js              # Base de datos de preguntas
-│   │   ├── supabase.js               # Cliente de Supabase
-│   │   └── index.js
+│   │   ├── api/                      # Comunicación con backend
+│   │   │   ├── client.js            # Cliente HTTP base
+│   │   │   ├── endpoints/           # Endpoints por dominio
+│   │   │   │   ├── auth.js
+│   │   │   │   ├── questions.js
+│   │   │   │   ├── sessions.js
+│   │   │   │   └── index.js
+│   │   │   └── index.js
+│   │   │
+│   │   ├── components/              # Componentes reutilizables
+│   │   │   ├── auth/
+│   │   │   │   └── ProtectedRoute.svelte
+│   │   │   └── index.js
+│   │   │
+│   │   ├── stores/                  # Estado global
+│   │   │   ├── authStore.js        # Store de autenticación
+│   │   │   ├── examStore.ts        # Store del examen
+│   │   │   └── index.js
+│   │   │
+│   │   ├── utils/                   # Utilidades
+│   │   │   ├── constants.js        # Constantes globales
+│   │   │   ├── validators.js       # Validaciones
+│   │   │   ├── formatters.js       # Formateo
+│   │   │   └── index.js
+│   │   │
+│   │   ├── services/                # Servicios externos
+│   │   │   ├── supabase.js         # Cliente Supabase
+│   │   │   └── index.js
+│   │   │
+│   │   ├── data/                    # Datos estáticos
+│   │   │   └── index.js            # reactivos + config
+│   │   │
+│   │   ├── reactivos.js             # Base de datos de preguntas (863+)
+│   │   └── index.js                 # Punto de entrada principal
 │   │
 │   ├── routes/
 │   │   ├── +layout.server.js         # Layout server-side
