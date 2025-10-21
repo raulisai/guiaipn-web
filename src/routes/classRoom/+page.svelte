@@ -13,6 +13,7 @@
 	import FeedbackPanel from './components/FeedbackPanel.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
+	import CanvasVisualization from './components/CanvasVisualization.svelte';
 	import Math from '../examen/componentes/Math.svelte';
 
 	// Estados
@@ -244,15 +245,24 @@
 
 			<!-- Contenedor de explicación -->
 			{#if $explanationStore.steps.length > 0}
-				<ExplanationContainer>
-					{#each $explanationStore.steps as step (step.step)}
-						<StepCard 
-							step={step}
-							isActive={step.step === $explanationStore.currentStep}
-							canvasCommands={getCanvasCommandsForStep(step.step)}
-						/>
-					{/each}
-				</ExplanationContainer>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+					<!-- Columna izquierda: Pasos de explicación -->
+					<div class="space-y-4">
+						<ExplanationContainer>
+							{#each $explanationStore.steps as step (step.step)}
+								<StepCard 
+									step={step}
+									isActive={step.step === $explanationStore.currentStep}
+								/>
+							{/each}
+						</ExplanationContainer>
+					</div>
+
+					<!-- Columna derecha: Pizarrón único -->
+					<div class="sticky top-4 h-fit">
+						<CanvasVisualization commands={$explanationStore.canvasCommands} />
+					</div>
+				</div>
 			{/if}
 
 			<!-- Panel de feedback (solo cuando la explicación está completa) -->

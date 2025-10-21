@@ -4,142 +4,100 @@
 
 	let { commands = [], stepNumber = 0 } = $props();
 	
-	let canvasRef = $state(null);
-	let ctx = $state(null);
-	// currentYOffset no debe ser reactivo para evitar loops infinitos
-	let currentYOffset = 50;
-
-	onMount(() => {
-		if (canvasRef) {
-			ctx = canvasRef.getContext('2d');
-			// Configurar canvas con mayor resolución para mejor calidad
-			const dpr = window.devicePixelRatio || 1;
-			const rect = canvasRef.getBoundingClientRect();
-			canvasRef.width = rect.width * dpr;
-			canvasRef.height = rect.height * dpr;
-			ctx.scale(dpr, dpr);
-			
-			// Fondo inicial
-			clearCanvas();
-		}
-	});
-
-	// Ejecutar comandos cuando cambien - redibujar todo el canvas
-	$effect(() => {
-		if (ctx && commands.length > 0) {
-			clearCanvas();
-			currentYOffset = 50;
-			executeAllCommands();
-		}
-	});
-
-	function executeAllCommands() {
-		if (!ctx) return;
-
-		// Si solo hay comandos de un paso (el actual), no mostrar etiquetas
-		// porque ya están en el StepCard
-		const uniqueSteps = [...new Set(commands.map(cmd => cmd.step))];
-		const showStepLabels = uniqueSteps.length > 1;
-
-		// Agrupar comandos por paso
-		const commandsByStep = {};
+	// Agrupar comandos por paso
+	let canvasByStep = $derived.by(() => {
+		const grouped = {};
 		commands.forEach(command => {
 			const step = command.step || 1;
-			if (!commandsByStep[step]) {
-				commandsByStep[step] = [];
+			if (!grouped[step]) {
+				grouped[step] = [];
 			}
-			commandsByStep[step].push(command);
+			grouped[step].push(command);
 		});
+		return grouped;
+	});
 
-		// Ejecutar comandos por paso en orden
-		Object.keys(commandsByStep).sort((a, b) => Number(a) - Number(b)).forEach(step => {
-			// Solo dibujar etiqueta si hay múltiples pasos
-			if (showStepLabels) {
-				drawStepLabel(step, currentYOffset);
-				currentYOffset += 35;
-			}
+	// Obtener pasos ordenados
+	let sortedSteps = $derived(Object.keys(canvasByStep).sort((a, b) => Number(a) - Number(b)));
 
-			// Ejecutar comandos del paso
-			commandsByStep[step].forEach(command => {
-				executeCommand(command.command, step);
+	// Referencias a los canvas (reactivo)
+	let canvasRefs = $state({});
+
+	// Redibujar canvas cuando cambien los comandos
+	$effect(() => {
+		if (commands.length > 0) {
+			sortedSteps.forEach(step => {
+				const canvasElement = canvasRefs[step];
+				if (canvasElement) {
+					drawCanvas(canvasElement, canvasByStep[step]);
+				}
 			});
+		}
+	});
 
-			// Espacio entre pasos (solo si hay múltiples)
-			if (showStepLabels) {
-				currentYOffset += 30;
-			}
+	// Dibujar en un canvas individual
+	function drawCanvas(canvasElement, stepCommands) {
+		if (!canvasElement || !stepCommands) return;
+		
+		const ctx = canvasElement.getContext('2d');
+		const dpr = window.devicePixelRatio || 1;
+		const rect = canvasElement.getBoundingClientRect();
+		
+		canvasElement.width = rect.width * dpr;
+		canvasElement.height = 300 * dpr;
+		ctx.scale(dpr, dpr);
+		
+		// Fondo
+		ctx.fillStyle = '#1f2937';
+		ctx.fillRect(0, 0, rect.width, 300);
+		
+		// Ejecutar comandos del paso
+		let currentYOffset = 40;
+		stepCommands.forEach(command => {
+			executeCommand(ctx, command.command, rect.width, currentYOffset);
+			currentYOffset += 30;
 		});
 	}
 
-	function drawStepLabel(step, y) {
-		if (!ctx) return;
-		
-		ctx.save();
-		ctx.fillStyle = '#3b82f6';
-		ctx.strokeStyle = '#3b82f6';
-		ctx.lineWidth = 2;
-		
-		// Dibujar línea decorativa
-		ctx.beginPath();
-		ctx.moveTo(20, y);
-		ctx.lineTo(60, y);
-		ctx.stroke();
-		
-		// Dibujar texto del paso
-		ctx.font = 'bold 16px sans-serif';
-		ctx.fillText(`Paso ${step}`, 70, y + 5);
-		
-		// Línea decorativa derecha
-		ctx.beginPath();
-		ctx.moveTo(140, y);
-		ctx.lineTo(760, y);
-		ctx.stroke();
-		
-		ctx.restore();
-	}
-
-	function executeCommand(cmd, step) {
+	function executeCommand(ctx, cmd, canvasWidth, yOffset = 40) {
 		if (!ctx || !cmd) return;
 
 		ctx.save();
 
 		// El backend puede enviar cmd.command o directamente cmd.type
 		const commandType = cmd.command || cmd.type;
-		const params = { ...cmd.parameters || cmd, step };
+		const params = { ...cmd.parameters || cmd, yOffset, canvasWidth };
 
 		switch (commandType) {
 			case 'draw_axis':
-				drawAxis(params);
+				drawAxis(ctx, params);
 				break;
 			case 'draw_line':
-				drawLine(params);
+				drawLine(ctx, params);
 				break;
 			case 'draw_circle':
-				drawCircle(params);
+				drawCircle(ctx, params);
 				break;
 			case 'draw_arrow':
-				drawArrow(params);
+				drawArrow(ctx, params);
 				break;
 			case 'draw_text':
-				drawText(params);
+				drawText(ctx, params);
 				break;
 			case 'draw_triangle':
-				drawTriangle(params);
+				drawTriangle(ctx, params);
 				break;
 			case 'draw_vector':
-				drawVector(params);
+				drawVector(ctx, params);
 				break;
 			case 'draw_diagram':
-				drawDiagram(params);
+				drawDiagram(ctx, params);
 				break;
 			case 'draw_equation':
-				drawEquation(params);
+				drawEquation(ctx, params);
 				break;
 			case 'highlight':
-				drawHighlight(params);
-				break;
-			case 'clear':
-				clearCanvas();
+				drawHighlight(ctx, params);
 				break;
 			default:
 				console.warn('Comando de canvas desconocido:', commandType, cmd);
@@ -148,20 +106,22 @@
 		ctx.restore();
 	}
 
-	function drawAxis(cmd) {
+	function drawAxis(ctx, cmd) {
+		const width = cmd.canvasWidth || 800;
+		const height = 300;
 		ctx.strokeStyle = cmd.color || '#6b7280';
 		ctx.lineWidth = 2;
 		ctx.beginPath();
 		// Eje X
-		ctx.moveTo(0, cmd.y || canvasRef.height / 2);
-		ctx.lineTo(canvasRef.width, cmd.y || canvasRef.height / 2);
+		ctx.moveTo(0, cmd.y || height / 2);
+		ctx.lineTo(width, cmd.y || height / 2);
 		// Eje Y
-		ctx.moveTo(cmd.x || canvasRef.width / 2, 0);
-		ctx.lineTo(cmd.x || canvasRef.width / 2, canvasRef.height);
+		ctx.moveTo(cmd.x || width / 2, 0);
+		ctx.lineTo(cmd.x || width / 2, height);
 		ctx.stroke();
 	}
 
-	function drawLine(cmd) {
+	function drawLine(ctx, cmd) {
 		ctx.strokeStyle = cmd.color || '#10b981';
 		ctx.lineWidth = cmd.width || 2;
 		ctx.beginPath();
@@ -170,7 +130,7 @@
 		ctx.stroke();
 	}
 
-	function drawCircle(cmd) {
+	function drawCircle(ctx, cmd) {
 		ctx.strokeStyle = cmd.color || '#3b82f6';
 		ctx.lineWidth = cmd.width || 2;
 		ctx.beginPath();
@@ -182,7 +142,7 @@
 		ctx.stroke();
 	}
 
-	function drawArrow(cmd) {
+	function drawArrow(ctx, cmd) {
 		const headLength = cmd.headLength || 10;
 		const angle = Math.atan2(cmd.y2 - cmd.y1, cmd.x2 - cmd.x1);
 		
@@ -211,14 +171,14 @@
 		ctx.fill();
 	}
 
-	function drawText(cmd) {
+	function drawText(ctx, cmd) {
 		ctx.fillStyle = cmd.color || '#f3f4f6';
 		ctx.font = cmd.font || '16px sans-serif';
 		ctx.textAlign = cmd.align || 'left';
 		ctx.fillText(cmd.text, cmd.x, cmd.y);
 	}
 
-	function drawTriangle(cmd) {
+	function drawTriangle(ctx, cmd) {
 		ctx.strokeStyle = cmd.color || '#8b5cf6';
 		ctx.lineWidth = cmd.width || 2;
 		ctx.beginPath();
@@ -233,8 +193,8 @@
 		ctx.stroke();
 	}
 
-	function drawVector(cmd) {
-		drawArrow({
+	function drawVector(ctx, cmd) {
+		drawArrow(ctx, {
 			x1: cmd.x || 0,
 			y1: cmd.y || 0,
 			x2: (cmd.x || 0) + (cmd.dx || 0),
@@ -245,19 +205,13 @@
 		});
 	}
 
-	function clearCanvas() {
-		if (!ctx || !canvasRef) return;
-		const rect = canvasRef.getBoundingClientRect();
-		ctx.fillStyle = '#1f2937';
-		ctx.fillRect(0, 0, rect.width, rect.height);
-	}
 
-	function drawDiagram(params) {
+	function drawDiagram(ctx, params) {
 		// Dibujar elementos de un diagrama (textos, flechas, etc.)
 		if (params.elements && Array.isArray(params.elements)) {
 			params.elements.forEach(element => {
 				if (element.type === 'text') {
-					drawText({
+					drawText(ctx, {
 						text: element.content,
 						x: element.position?.x || 100,
 						y: element.position?.y || 100,
@@ -265,7 +219,7 @@
 						font: element.font || '16px sans-serif'
 					});
 				} else if (element.type === 'arrow') {
-					drawArrow({
+					drawArrow(ctx, {
 						x1: element.from?.x || 0,
 						y1: element.from?.y || 0,
 						x2: element.to?.x || 0,
@@ -277,12 +231,12 @@
 		}
 	}
 
-	function drawHighlight(params) {
+	function drawHighlight(ctx, params) {
 		// Resaltar respuesta correcta con razón
 		const content = params.content || '';
 		const reason = params.reason || '';
 		const x = params.x || params.position?.x || 40;
-		const y = params.y || params.position?.y || currentYOffset;
+		const y = params.y || params.position?.y || params.yOffset || 40;
 		
 		// Si tiene formato antiguo con elements, usar ese
 		if (params.elements && Array.isArray(params.elements)) {
@@ -299,7 +253,7 @@
 					);
 					
 					// Dibujar texto
-					drawText({
+					drawText(ctx, {
 						text: element.content,
 						x: element.position?.x || 100,
 						y: element.position?.y || 100,
@@ -361,7 +315,7 @@
 		}
 		
 		// Dibujar recuadro resaltado
-		const boxWidth = 700;
+		const boxWidth = Math.min(700, (params.canvasWidth || 800) - 60);
 		const boxHeight = reason ? 60 : 35;
 		ctx.strokeStyle = '#10b981';
 		ctx.lineWidth = 3;
@@ -369,17 +323,14 @@
 		ctx.fillRect(x - 10, y - 25, boxWidth, boxHeight);
 		ctx.strokeRect(x - 10, y - 25, boxWidth, boxHeight);
 		
-		// Actualizar offset vertical
-		currentYOffset = y + boxHeight + 20;
-		
 		ctx.restore();
 	}
 
-	function drawEquation(params) {
+	function drawEquation(ctx, params) {
 		// Renderizar ecuación matemática usando KaTeX
 		const equation = params.equation || params.latex || '';
 		const x = params.x || params.position?.x || 40;
-		const y = params.y || params.position?.y || currentYOffset;
+		const y = params.y || params.position?.y || params.yOffset || 40;
 		const color = params.color || '#f3f4f6';
 		const displayMode = params.displayMode !== false;
 		
@@ -429,9 +380,6 @@
 			}
 			ctx.fillText(line, x, lineY);
 			
-			// Actualizar offset vertical
-			currentYOffset = lineY + 30;
-			
 			// Limpiar elemento temporal
 			document.body.removeChild(tempDiv);
 			
@@ -447,36 +395,110 @@
 			ctx.fillStyle = color;
 			ctx.font = '16px monospace';
 			ctx.fillText(equation, x, y);
-			currentYOffset = y + 30;
 		}
 	}
 </script>
 
-<div class="canvas-container bg-gray-900 rounded-lg p-4 border border-gray-700">
-	<canvas
-		bind:this={canvasRef}
-		class="w-full rounded"
-		style="height: auto; min-height: 500px;"
-	></canvas>
+<div class="blackboard-container bg-gray-900 rounded-lg p-6 border-2 border-gray-700">
+	<div class="blackboard-header mb-4 pb-3 border-b border-gray-600">
+		<h3 class="text-xl font-bold text-blue-400 flex items-center gap-2">
+			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+			</svg>
+			Pizarrón de Visualización
+		</h3>
+		<p class="text-sm text-gray-400 mt-1">{sortedSteps.length} {sortedSteps.length === 1 ? 'paso' : 'pasos'} con diagramas</p>
+	</div>
+	
+	<div class="mini-canvas-stack space-y-4 max-h-[600px] overflow-y-auto pr-2">
+		{#each sortedSteps as step (step)}
+			<div class="mini-canvas-wrapper bg-gray-800 rounded-lg p-4 border border-gray-600 shadow-lg">
+				<div class="step-label flex items-center gap-2 mb-3">
+					<div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
+						{step}
+					</div>
+					<span class="text-blue-300 font-semibold">Paso {step}</span>
+					<div class="flex-1 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+					<span class="text-xs text-gray-400">{canvasByStep[step].length} {canvasByStep[step].length === 1 ? 'comando' : 'comandos'}</span>
+				</div>
+				<canvas
+					bind:this={canvasRefs[step]}
+					class="w-full rounded border border-gray-700"
+					style="height: 300px;"
+				></canvas>
+			</div>
+		{/each}
+		
+		{#if sortedSteps.length === 0}
+			<div class="empty-state text-center py-12 text-gray-500">
+				<svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+				</svg>
+				<p class="text-lg font-medium">No hay visualizaciones disponibles</p>
+				<p class="text-sm mt-2">Los diagramas aparecerán aquí cuando el profesor los dibuje</p>
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style>
-	.canvas-container {
+	.blackboard-container {
 		animation: fadeIn 0.5s ease-in;
 	}
 
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
+			transform: translateY(10px);
 		}
 		to {
 			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.mini-canvas-wrapper {
+		animation: slideIn 0.3s ease-out;
+		transition: all 0.2s ease;
+	}
+
+	.mini-canvas-wrapper:hover {
+		border-color: #3b82f6;
+		box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+	}
+
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateX(-20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
 		}
 	}
 
 	canvas {
 		max-width: 100%;
-		height: auto;
 		display: block;
+		background: #1f2937;
+	}
+
+	.mini-canvas-stack::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.mini-canvas-stack::-webkit-scrollbar-track {
+		background: #1f2937;
+		border-radius: 4px;
+	}
+
+	.mini-canvas-stack::-webkit-scrollbar-thumb {
+		background: #4b5563;
+		border-radius: 4px;
+	}
+
+	.mini-canvas-stack::-webkit-scrollbar-thumb:hover {
+		background: #6b7280;
 	}
 </style>

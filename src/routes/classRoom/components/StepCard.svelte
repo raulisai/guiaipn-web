@@ -1,8 +1,7 @@
 <script>
 	import ContentRenderer from './ContentRenderer.svelte';
-	import CanvasVisualization from './CanvasVisualization.svelte';
 
-	let { step, isActive = false, canvasCommands = [] } = $props();
+	let { step, isActive = false } = $props();
 </script>
 
 <div 
@@ -52,13 +51,6 @@
 	<div class="step-content">
 		<ContentRenderer content={step.content} type={step.type} />
 	</div>
-
-	<!-- Canvas para visualizaciones (si hay comandos) -->
-	{#if canvasCommands.length > 0}
-		<div class="mt-4">
-			<CanvasVisualization commands={canvasCommands} stepNumber={step.step} />
-		</div>
-	{/if}
 </div>
 
 <style>
