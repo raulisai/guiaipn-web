@@ -23,7 +23,7 @@
 
 	<!-- Contenido del Paso -->
 	<div class="step-content">
-		<ContentRenderer content={step.content} type={step.type} />
+		<ContentRenderer content={step.content} type={step.type} isComplete={step.isComplete} />
 	</div>
 </div>
 

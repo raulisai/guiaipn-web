@@ -28,7 +28,25 @@ function createExplanationStore() {
 		// Contenido de los pasos
 		steps: [], // Array de { step, title, type, content, isComplete }
 
-		// Comandos del canvas
+		// SISTEMA DE BUFFER
+		// Almacena TODA la información recibida del backend
+		buffer: {
+			steps: [], // Pasos completos con todo su contenido
+			canvasCommands: [], // Todos los comandos de canvas
+			isComplete: false // Si ya se recibió toda la información
+		},
+
+		// ESTADO DE RENDERIZADO
+		// Controla qué se está mostrando actualmente
+		render: {
+			currentStepIndex: 0, // Índice del paso que se está renderizando
+			currentCharIndex: 0, // Índice del carácter dentro del paso
+			currentCanvasIndex: 0, // Índice del comando de canvas
+			isRendering: false, // Si está en proceso de renderizado
+			renderSpeed: 30 // Milisegundos por carácter
+		},
+
+		// Comandos del canvas (para compatibilidad)
 		canvasCommands: [],
 
 		// Errores
@@ -120,6 +138,7 @@ function createExplanationStore() {
 
 		/**
 		 * Inicia un nuevo paso
+		 * ALMACENA EN BUFFER
 		 * @param {Object} data - Datos del paso
 		 */
 		startStep(data) {
@@ -136,34 +155,45 @@ function createExplanationStore() {
 				return {
 					...state,
 					currentStep: stepNumber,
-					steps: [...state.steps, newStep]
+					buffer: {
+						...state.buffer,
+						steps: [...state.buffer.steps, newStep]
+					}
 				};
 			});
 		},
 
 		/**
 		 * Agrega contenido a un paso (streaming)
+		 * ALMACENA EN BUFFER sin renderizar inmediatamente
 		 * @param {Object} data - Chunk de contenido
 		 */
 		addContentChunk(data) {
 			update((state) => {
-				const steps = [...state.steps];
+				const bufferSteps = [...state.buffer.steps];
 				const stepNumber = data.step_number || data.step;
-				const stepIndex = steps.findIndex((s) => s.step === stepNumber);
+				const stepIndex = bufferSteps.findIndex((s) => s.step === stepNumber);
 
 				if (stepIndex !== -1) {
-					steps[stepIndex] = {
-						...steps[stepIndex],
-						content: steps[stepIndex].content + data.chunk
+					bufferSteps[stepIndex] = {
+						...bufferSteps[stepIndex],
+						content: bufferSteps[stepIndex].content + data.chunk
 					};
 				}
 
-				return { ...state, steps };
+				return { 
+					...state, 
+					buffer: {
+						...state.buffer,
+						steps: bufferSteps
+					}
+				};
 			});
 		},
 
 		/**
 		 * Agrega un comando de canvas
+		 * ALMACENA EN BUFFER
 		 * @param {Object} data - Datos del comando (puede tener step_number y command anidado)
 		 */
 		addCanvasCommand(data) {
@@ -174,39 +204,50 @@ function createExplanationStore() {
 				
 				const normalizedCommand = {
 					step: stepNumber,
-					command: command
+					command: command,
+					renderedAt: null // Timestamp de cuándo se renderizó
 				};
 				
 				return {
 					...state,
-					canvasCommands: [...state.canvasCommands, normalizedCommand]
+					buffer: {
+						...state.buffer,
+						canvasCommands: [...state.buffer.canvasCommands, normalizedCommand]
+					}
 				};
 			});
 		},
 
 		/**
-		 * Marca un paso como completado
+		 * Marca un paso como completado en el buffer
 		 * @param {Object} data - Datos del paso completado
 		 */
 		completeStep(data) {
 			update((state) => {
-				const steps = [...state.steps];
+				const bufferSteps = [...state.buffer.steps];
 				const stepNumber = data.step_number || data.step;
-				const stepIndex = steps.findIndex((s) => s.step === stepNumber);
+				const stepIndex = bufferSteps.findIndex((s) => s.step === stepNumber);
 
 				if (stepIndex !== -1) {
-					steps[stepIndex] = {
-						...steps[stepIndex],
+					bufferSteps[stepIndex] = {
+						...bufferSteps[stepIndex],
 						isComplete: true
 					};
 				}
 
-				return { ...state, steps };
+				return { 
+					...state, 
+					buffer: {
+						...state.buffer,
+						steps: bufferSteps
+					}
+				};
 			});
 		},
 
 		/**
 		 * Finaliza la explicación
+		 * Marca el buffer como completo
 		 * @param {Object} data - Datos de finalización
 		 */
 		completeExplanation(data) {
@@ -214,7 +255,11 @@ function createExplanationStore() {
 				...state,
 				isExplaining: false,
 				isLoading: false,
-				isPaused: false
+				isPaused: false,
+				buffer: {
+					...state.buffer,
+					isComplete: true
+				}
 			}));
 		},
 
@@ -273,6 +318,217 @@ function createExplanationStore() {
 		},
 
 		/**
+		 * Actualiza el estado de renderizado
+		 * @param {Object} renderState - Nuevo estado de renderizado
+		 */
+		updateRenderState(renderState) {
+			update((state) => ({
+				...state,
+				render: {
+					...state.render,
+					...renderState
+				}
+			}));
+		},
+
+		/**
+		 * Renderiza el siguiente fragmento (carácter o comando)
+		 * Retorna true si hay más para renderizar
+		 */
+		renderNextChunk() {
+			let hasMore = false;
+			
+			update((state) => {
+				const { buffer, render, steps, canvasCommands } = state;
+				
+				// Si no hay pasos en buffer, no hay nada que renderizar
+				if (buffer.steps.length === 0) {
+					return state;
+				}
+				
+				const currentBufferStep = buffer.steps[render.currentStepIndex];
+				
+				if (!currentBufferStep) {
+					// No hay más pasos
+					return {
+						...state,
+						render: { ...render, isRendering: false }
+					};
+				}
+				
+				// Clonar arrays para modificar
+				const newSteps = [...steps];
+				const newCanvasCommands = [...canvasCommands];
+				
+				// Buscar o crear el paso en el array de renderizado
+				let renderStepIndex = newSteps.findIndex(s => s.step === currentBufferStep.step);
+				
+				if (renderStepIndex === -1) {
+					// Crear nuevo paso
+					newSteps.push({
+						step: currentBufferStep.step,
+						title: currentBufferStep.title,
+						type: currentBufferStep.type,
+						content: '',
+						isComplete: false
+					});
+					renderStepIndex = newSteps.length - 1;
+				}
+				
+				const renderStep = newSteps[renderStepIndex];
+				
+				// Renderizar siguiente carácter del contenido
+				if (render.currentCharIndex < currentBufferStep.content.length) {
+					renderStep.content = currentBufferStep.content.substring(0, render.currentCharIndex + 1);
+					newSteps[renderStepIndex] = renderStep;
+					hasMore = true;
+					
+					return {
+						...state,
+						steps: newSteps,
+						currentStep: currentBufferStep.step,
+						render: {
+							...render,
+							currentCharIndex: render.currentCharIndex + 1,
+							isRendering: true
+						}
+					};
+				}
+				
+				// Contenido completo, renderizar comandos de canvas de este paso
+				const stepCanvasCommands = buffer.canvasCommands.filter(cmd => cmd.step === currentBufferStep.step);
+				
+				if (render.currentCanvasIndex < stepCanvasCommands.length) {
+					const canvasCmd = stepCanvasCommands[render.currentCanvasIndex];
+					newCanvasCommands.push(canvasCmd);
+					hasMore = true;
+					
+					return {
+						...state,
+						steps: newSteps,
+						canvasCommands: newCanvasCommands,
+						render: {
+							...render,
+							currentCanvasIndex: render.currentCanvasIndex + 1,
+							isRendering: true
+						}
+					};
+				}
+				
+				// Paso completado, marcar como completo
+				renderStep.isComplete = currentBufferStep.isComplete;
+				newSteps[renderStepIndex] = renderStep;
+				
+				// Avanzar al siguiente paso
+				if (render.currentStepIndex < buffer.steps.length - 1) {
+					hasMore = true;
+					const nextStepIndex = render.currentStepIndex + 1;
+					const nextBufferStep = buffer.steps[nextStepIndex];
+					
+					console.log(' Avanzando al paso:', nextStepIndex, 'Step number:', nextBufferStep?.step);
+					
+					return {
+						...state,
+						steps: newSteps,
+						currentStep: nextBufferStep ? nextBufferStep.step : state.currentStep,
+						render: {
+							...render,
+							currentStepIndex: nextStepIndex,
+							currentCharIndex: 0,
+							currentCanvasIndex: 0,
+							isRendering: true
+						}
+					};
+				}
+				
+				// Todo renderizado
+				return {
+					...state,
+					steps: newSteps,
+					render: {
+						...render,
+						isRendering: false
+					}
+				};
+			});
+			
+			return hasMore;
+		},
+
+		/**
+		 * Inicia el proceso de renderizado progresivo
+		 */
+		startRendering() {
+			update((state) => ({
+				...state,
+				render: {
+					...state.render,
+					isRendering: true,
+					currentStepIndex: 0,
+					currentCharIndex: 0,
+					currentCanvasIndex: 0
+				}
+			}));
+		},
+
+		/**
+		 * Detiene el renderizado progresivo
+		 */
+		stopRendering() {
+			update((state) => ({
+				...state,
+				render: {
+					...state.render,
+					isRendering: false
+				}
+			}));
+		},
+
+		/**
+		 * Actualiza el contenido de un paso específico (para renderizado progresivo)
+		 */
+		updateStepContent(stepIndex, content) {
+			update(state => {
+				const newSteps = [...state.steps];
+				if (newSteps[stepIndex]) {
+					newSteps[stepIndex] = {
+						...newSteps[stepIndex],
+						content: content
+					};
+				}
+				return {
+					...state,
+					steps: newSteps
+				};
+			});
+		},
+
+		/**
+		 * Actualiza el paso actual
+		 */
+		setCurrentStep(stepNumber) {
+			update(state => ({
+				...state,
+				currentStep: stepNumber
+			}));
+		},
+
+		/**
+		 * Inicializa los pasos en el store (para syncService)
+		 */
+		initializeSteps(steps) {
+			update(state => ({
+				...state,
+				steps: steps.map(step => ({
+					step: step.step,
+					title: step.title,
+					content: step.content || '',
+					isComplete: step.isComplete || false
+				}))
+			}));
+		},
+
+		/**
 		 * Resetea el store a su estado inicial
 		 */
 		reset() {
@@ -290,6 +546,18 @@ function createExplanationStore() {
 				questionHash: null,
 				steps: [],
 				canvasCommands: [],
+				buffer: {
+					steps: [],
+					canvasCommands: [],
+					isComplete: false
+				},
+				render: {
+					currentStepIndex: 0,
+					currentCharIndex: 0,
+					currentCanvasIndex: 0,
+					isRendering: false,
+					renderSpeed: 15  // Más rápido para sincronizar mejor con voz
+				},
 				error: null,
 				currentQuestion: null
 			});

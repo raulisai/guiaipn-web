@@ -5,6 +5,7 @@
 	import { socketService } from '$lib/api/socket';
 	import { explanationStore } from '$lib/stores';
 	import { supabase } from '$lib/services';
+	import { syncService } from '$lib/services/syncService';
 	
 	// Componentes
 	import StepCard from './components/StepCard.svelte';
@@ -23,12 +24,28 @@
 	let showFeedbackModal = $state(false);
 	let feedbackRating = $state(null);
 	let feedbackComment = $state('');
-	let voiceEnabled = $state(false);
+	let voiceEnabled = $state(true); // Activar voz por defecto
+	let voiceMuted = $state(false); // Control de muteo
+	let renderProgress = $state(0);
+	let hasStarted = $state(false); // Si ya inició la explicación
+	let completedSteps = $state([]); // Pasos que ya terminaron de renderizar
+
+	// Comandos de canvas filtrados por pasos COMPLETADOS
+	// Solo muestra comandos de pasos que ya terminaron de renderizar su texto
+	const currentCanvasCommands = $derived(
+		$explanationStore.buffer.canvasCommands.filter(
+			cmd => completedSteps.includes(cmd.step)
+		)
+	);
 
 	// Obtener parámetros de la URL
 	const searchParams = $derived($page.url.searchParams);
 
 	onMount(async () => {
+		// Habilitar voz cuando el usuario interactúe (click en play)
+		speechService.setEnabled(true);
+		console.log('📍 Sistema listo');
+		
 		// Extraer datos de la pregunta desde URL
 		questionData = {
 			id: searchParams.get('id'),
@@ -103,14 +120,13 @@
 		// Listener de inicio de explicación
 		socketService.onExplanationStart((data) => {
 			explanationStore.startExplanation(data);
+			console.log('✅ Explicación iniciada, esperando buffer completo...');
 		});
 
 		// Listener de inicio de paso
 		socketService.onStepStart((data) => {
 			explanationStore.startStep(data);
-			if (voiceEnabled && data.title) {
-				speechService.speak(`Paso ${data.step}: ${data.title}`);
-			}
+			// No hablar aquí, se hará cuando empiece a renderizar
 		});
 
 		// Listener de chunks de contenido
@@ -126,27 +142,12 @@
 		// Listener de paso completado
 		socketService.onStepComplete((data) => {
 			explanationStore.completeStep(data);
-			
-			// Hablar el contenido completo del paso cuando termine
-			if (voiceEnabled) {
-				// Obtener el contenido acumulado del paso desde el store
-				const stepNumber = data.step_number || data.step;
-				const currentState = $explanationStore;
-				const step = currentState.steps.find(s => s.step === stepNumber);
-				
-				if (step && step.content) {
-					console.log('Hablando paso:', stepNumber, step.content.substring(0, 50));
-					speechService.speak(step.content);
-				}
-			}
 		});
 
 		// Listener de explicación completada
 		socketService.onExplanationComplete((data) => {
 			explanationStore.completeExplanation(data);
-			if (voiceEnabled) {
-				speechService.speak('Explicación completada');
-			}
+			console.log('✅ Buffer completo, listo para iniciar');
 		});
 
 		// Listener de errores
@@ -170,6 +171,8 @@
 	}
 
 	function handleStop() {
+		// Detener sincronización
+		syncService.stop();
 		// Desconectar socket
 		socketService.disconnect();
 		// Resetear store
@@ -203,34 +206,81 @@
 	}
 
 	function skipFeedback() {
+		// Detener sincronización
+		syncService.stop();
 		// Volver sin dar feedback
 		socketService.disconnect();
 		explanationStore.reset();
 		goto('/examen');
 	}
 
+	// Configurar callbacks del syncService
+	syncService.onStepStart((checkpoint, stepIndex) => {
+		console.log('🎬 Paso iniciado:', checkpoint.title);
+		// Actualizar currentStep en el store
+		explanationStore.setCurrentStep(checkpoint.step);
+	});
+
+	syncService.onStepComplete((checkpoint, stepIndex) => {
+		console.log('✅ Paso completado:', checkpoint.title);
+		// Agregar este paso a los completados para mostrar sus comandos de canvas
+		completedSteps = [...completedSteps, checkpoint.step];
+	});
+
+	syncService.onCharRender((checkpoint, charIndex) => {
+		// Tracking opcional
+		});
+
 	// Filtrar comandos de canvas por paso
 	function getCanvasCommandsForStep(stepNumber) {
 		return $explanationStore.canvasCommands.filter(cmd => cmd.step === stepNumber);
 	}
 
-	// Función para alternar voz
-	function toggleVoice() {
-		voiceEnabled = !voiceEnabled;
-		speechService.setEnabled(voiceEnabled);
+	// Función para iniciar la explicación
+	function handlePlay() {
+		if (hasStarted) return;
 		
-		if (voiceEnabled) {
-			console.log('Voz activada');
-			// Mensaje de confirmación
-			speechService.speak('Voz activada. Te explicaré paso a paso.');
+		hasStarted = true;
+		console.log('▶️ Iniciando explicación...');
+		
+		// Iniciar syncService INMEDIATAMENTE
+		syncService.start();
+		startProgressTracking();
+	}
+
+	// Función para mutear/desmutear voz (NO detiene nada)
+	function toggleVoice() {
+		voiceMuted = !voiceMuted;
+		syncService.toggleVoice(!voiceMuted);
+		
+		if (voiceMuted) {
+			console.log('🔇 Voz muteada');
 		} else {
-			console.log('Voz desactivada');
-			speechService.stop();
+			console.log('🔊 Voz activada');
 		}
+	}
+
+	// Tracking de progreso
+	let progressInterval = null;
+	function startProgressTracking() {
+		if (progressInterval) clearInterval(progressInterval);
+		
+		progressInterval = setInterval(() => {
+			renderProgress = syncService.getProgress();
+			
+			if (renderProgress >= 100) {
+				clearInterval(progressInterval);
+				progressInterval = null;
+			}
+		}, 100);
 	}
 
 	// Limpiar al desmontar
 	onDestroy(() => {
+		if (progressInterval) {
+			clearInterval(progressInterval);
+		}
+		syncService.stop();
 		if (socketService.isSocketConnected()) {
 			socketService.disconnect();
 		}
@@ -241,10 +291,16 @@
 <!-- Fondo dark futurista - Single page sin scroll -->
 <div class="h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white">
 	<div class="h-full flex flex-col px-6 py-6">
-		<!-- Header compacto -->
+		<!-- Header compacto con indicador de progreso -->
 		<div class="flex-shrink-0 mb-4">
-			<div class="flex items-center justify-center">
+			<div class="flex items-center justify-center gap-4">
 				<h1 class="text-2xl font-bold text-indigo-400">◈ Salón IA</h1>
+				{#if $explanationStore.render.isRendering && renderProgress < 100}
+					<div class="progress-indicator">
+						<div class="progress-bar" style="width: {renderProgress}%"></div>
+						<span class="progress-text">{renderProgress}%</span>
+					</div>
+				{/if}
 			</div>
 		</div>
 
@@ -293,6 +349,19 @@
 			/>
 		{:else if $explanationStore.isLoading}
 			<LoadingState />
+		{:else if $explanationStore.buffer.isComplete && !hasStarted}
+			<!-- Botón de PLAY para iniciar -->
+			<div class="flex-1 flex items-center justify-center">
+				<button
+					onclick={handlePlay}
+					class="play-button"
+				>
+					<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+						<polygon points="5 3 19 12 5 21 5 3"></polygon>
+					</svg>
+					<span>Iniciar Explicación</span>
+				</button>
+			</div>
 		{:else}
 			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
 			{#if $explanationStore.steps.length > 0}
@@ -307,7 +376,7 @@
 					
 					<!-- Pizarrón -->
 					<div class="h-full">
-						<CanvasVisualization commands={$explanationStore.canvasCommands} />
+						<CanvasVisualization commands={currentCanvasCommands} />
 					</div>
 					
 					<!-- Card flotante de pasos con scroll interno -->
@@ -337,7 +406,7 @@
 	<FloatingControls 
 		onStop={handleStop} 
 		onToggleVoice={toggleVoice}
-		voiceEnabled={voiceEnabled}
+		voiceEnabled={!voiceMuted}
 	/>
 {/if}
 
@@ -618,5 +687,75 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+
+	/* Botón de PLAY */
+	.play-button {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		padding: 32px 48px;
+		background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(129, 140, 248, 0.2));
+		border: 2px solid rgba(99, 102, 241, 0.5);
+		border-radius: 24px;
+		color: #818cf8;
+		font-size: 1.25rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		animation: pulse 2s ease-in-out infinite;
+	}
+
+	.play-button:hover {
+		background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(129, 140, 248, 0.3));
+		border-color: rgba(99, 102, 241, 0.8);
+		transform: scale(1.05);
+		box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+	}
+
+	.play-button:active {
+		transform: scale(0.98);
+	}
+
+	@keyframes pulse {
+		0%, 100% {
+			box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+		}
+		50% {
+			box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+		}
+	}
+
+	/* Indicador de progreso */
+	.progress-indicator {
+		position: relative;
+		width: 200px;
+		height: 24px;
+		background: rgba(15, 23, 42, 0.6);
+		border-radius: 12px;
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		overflow: hidden;
+	}
+
+	.progress-bar {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		background: linear-gradient(90deg, rgba(99, 102, 241, 0.6), rgba(129, 140, 248, 0.8));
+		transition: width 0.3s ease;
+		border-radius: 12px;
+	}
+
+	.progress-text {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 0.7rem;
+		font-weight: 600;
+		color: #e2e8f0;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 	}
 </style>

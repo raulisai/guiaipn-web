@@ -1,47 +1,26 @@
 <script>
-	import { onMount } from 'svelte';
 	import Math from '../../examen/componentes/Math.svelte';
 
-	let { content = '', type = 'text' } = $props();
+	let { content = '', type = 'text', isComplete = false } = $props();
 	
-	let displayedContent = $state('');
-	let isTyping = $state(true);
-	let currentIndex = $state(0);
-
-	// Efecto typewriter
-	$effect(() => {
-		if (content && currentIndex < content.length) {
-			const timer = setTimeout(() => {
-				displayedContent = content.substring(0, currentIndex + 1);
-				currentIndex++;
-			}, 30); // 30ms por carácter
-
-			return () => clearTimeout(timer);
-		} else if (currentIndex >= content.length) {
-			isTyping = false;
-		}
-	});
-
-	// Reset cuando cambia el contenido
-	$effect(() => {
-		if (content) {
-			currentIndex = 0;
-			displayedContent = '';
-			isTyping = true;
-		}
-	});
+	// El contenido ya viene progresivamente desde el store
+	// Solo necesitamos mostrarlo
+	let isTyping = $derived(content.length > 0 && !isComplete);
 </script>
 
 <div class="content-renderer">
 	{#if type === 'math'}
 		<!-- Renderizar matemáticas con KaTeX -->
 		<div class="math-content">
-			<Math content={displayedContent} isBlock={false} />
+			<Math content={content} isBlock={false} />
+			{#if isTyping}
+				<span class="typing-cursor">▋</span>
+			{/if}
 		</div>
 	{:else if type === 'text'}
 		<!-- Renderizar texto plano -->
 		<div class="text-content text-gray-200 leading-relaxed">
-			<p class="whitespace-pre-wrap">{displayedContent}</p>
+			<p class="whitespace-pre-wrap">{content}</p>
 			{#if isTyping}
 				<span class="typing-cursor">▋</span>
 			{/if}
@@ -49,7 +28,7 @@
 	{:else if type === 'image'}
 		<!-- Descripción de imagen/diagrama -->
 		<div class="image-description text-gray-300 italic">
-			<p class="whitespace-pre-wrap">{displayedContent}</p>
+			<p class="whitespace-pre-wrap">{content}</p>
 			{#if isTyping}
 				<span class="typing-cursor">▋</span>
 			{/if}

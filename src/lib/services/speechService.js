@@ -229,10 +229,48 @@ class SpeechService {
 	 */
 	stop() {
 		if (!this.synth) return;
+		
 		this.synth.cancel();
 		this.currentUtterance = null;
-		this.isPaused = false;
 		this.queue = [];
+		this.isPaused = false;
+	}
+
+	/**
+	 * Crea un utterance sin reproducirlo (para control manual)
+	 */
+	createUtterance(text, options = {}) {
+		if (!this.synth) return null;
+
+		const cleanText = this.cleanText(text);
+		if (!cleanText.trim()) return null;
+
+		const utterance = new SpeechSynthesisUtterance(cleanText);
+		
+		// Configurar voz
+		if (this.spanishVoice) {
+			utterance.voice = this.spanishVoice;
+			utterance.lang = this.spanishVoice.lang;
+		} else {
+			utterance.lang = 'es-MX';
+		}
+		
+		// Configuración
+		utterance.rate = options.rate || 1.0;
+		utterance.pitch = options.pitch || 1.0;
+		utterance.volume = options.volume || 1.0;
+
+		return utterance;
+	}
+
+	/**
+	 * Reproduce un utterance creado manualmente
+	 */
+	speakUtterance(utterance) {
+		if (!this.synth || !this.isEnabled || !utterance) return;
+		
+		this.currentUtterance = utterance;
+		this.synth.speak(utterance);
 	}
 
 	/**
