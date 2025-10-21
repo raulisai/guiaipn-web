@@ -142,9 +142,9 @@
 - [x] Mensajes de error
 
 ### Componente de Pregunta
-- [ ] hacer que la pregunta venga de la api ('http://localhost:5000/api/v1/questions/?page=1&limit=20')
-- [ ] Guardar la pregunta en el store
-- [ ] Botón de enviar para que redirija a la explicación (salon de clases)
+- [x] hacer que la pregunta venga de la api ('http://localhost:5000/api/v1/questions/?page=1&limit=20')
+- [x] Guardar la pregunta en el store
+- [x] Botón de enviar para que redirija a la explicación (salon de clases)
 
 ### Componente de Explicación
 - [ ] `<ExplanationContainer>` - Contenedor principal

@@ -22,7 +22,6 @@
 	let animateProgressOut = false;
 	let animateChartOut = false;
 	let mainContentFading = false;
-	let showMobileChart = false;
 
 	onMount(async () => {
 		await loadQuestionsFromAPI();
