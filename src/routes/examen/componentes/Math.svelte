@@ -14,7 +14,9 @@
       try {
         katex.render(content, container, {
           throwOnError: false,
-          displayMode: isBlock
+          displayMode: isBlock,
+          strict: false,  // Permitir caracteres Unicode como acentos
+          trust: true
         });
       } catch (error) {
         console.error("KaTeX rendering error:", error);
