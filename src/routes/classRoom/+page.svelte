@@ -8,7 +8,7 @@
 	
 	// Componentes
 	import StepCard from './components/StepCard.svelte';
-	import PlaybackControls from './components/PlaybackControls.svelte';
+	import FloatingControls from './components/FloatingControls.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
 	import CanvasVisualization from './components/CanvasVisualization.svelte';
@@ -253,21 +253,14 @@
 		{:else if $explanationStore.isLoading}
 			<LoadingState />
 		{:else}
-			<!-- Controles de reproducción compactos -->
-			{#if $explanationStore.isExplaining || $explanationStore.isPaused}
-				<div class="flex-shrink-0 mb-4">
-					<PlaybackControls onStop={handleStop} />
-				</div>
-			{/if}
-
 			<!-- Grid de 2 columnas con altura fija -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_600px] gap-4 min-h-0">
 					<!-- Pizarrón -->
 					<div class="h-full">
 						<CanvasVisualization commands={$explanationStore.canvasCommands} />
 					</div>
-					<!-- Card flotante de pasos con scroll interno -->
+					<!-- Card flotante de pasos con scroll interno (ancho fijo 380px) -->
 					<div class="floating-card">
 						<div class="card-header">
 							<h3 class="card-title">◆ Explicación</h3>
@@ -290,6 +283,11 @@
 		{/if}
 	</div>
 </div>
+
+<!-- Controles flotantes en la parte inferior -->
+{#if $explanationStore.steps.length > 0}
+	<FloatingControls onStop={handleStop} />
+{/if}
 
 <!-- Modal de Feedback -->
 {#if showFeedbackModal}
@@ -361,19 +359,15 @@
 {/if}
 
 <style>
-	/* Card flotante para los pasos */
+	/* Card homologado con el pizarrón */
 	.floating-card {
 		display: flex;
 		flex-direction: column;
-		height: 90%;
-		background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
-		border-radius: 16px;
-		border: 1px solid rgba(99, 102, 241, 0.2);
-		backdrop-filter: blur(12px);
-		box-shadow: 
-			0 8px 32px rgba(0, 0, 0, 0.4),
-			0 0 0 1px rgba(99, 102, 241, 0.1),
-			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		height: 100%;
+		background: rgba(15, 23, 42, 0.15);
+		border-radius: 8px;
+		border: 1px solid rgba(99, 102, 241, 0.1);
+		backdrop-filter: blur(4px);
 		overflow: hidden;
 	}
 
@@ -382,56 +376,52 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 16px 20px;
-		border-bottom: 1px solid rgba(99, 102, 241, 0.15);
-		background: rgba(15, 23, 42, 0.6);
+		padding: 10px 16px;
+		border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+		background: rgba(15, 23, 42, 0.3);
 	}
 
 	.card-title {
 		color: #818cf8;
-		font-size: 0.875rem;
+		font-size: 0.75rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		text-shadow: 0 0 10px rgba(129, 140, 248, 0.3);
+		letter-spacing: 0.12em;
+		opacity: 0.8;
 	}
 
 	.step-counter {
-		color: rgba(129, 140, 248, 0.6);
-		font-size: 0.75rem;
+		color: rgba(129, 140, 248, 0.5);
+		font-size: 0.7rem;
 		font-weight: 500;
-		text-transform: uppercase;
 		letter-spacing: 0.05em;
 	}
 
 	.card-content {
 		flex: 1;
 		overflow-y: auto;
-		padding: 20px;
+		padding: 12px;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 10px;
 	}
 
-	/* Scrollbar futurista para el card */
+	/* Scrollbar ultra delgado */
 	.card-content::-webkit-scrollbar {
-		width: 6px;
+		width: 4px;
 	}
 
 	.card-content::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 3px;
+		background: transparent;
 	}
 
 	.card-content::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.3);
-		border-radius: 3px;
-		box-shadow: 0 0 6px rgba(99, 102, 241, 0.3);
+		background: rgba(99, 102, 241, 0.25);
+		border-radius: 2px;
 	}
 
 	.card-content::-webkit-scrollbar-thumb:hover {
-		background: rgba(99, 102, 241, 0.5);
-		box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+		background: rgba(99, 102, 241, 0.4);
 	}
 
 	/* Modal de feedback */

@@ -29,100 +29,97 @@
 
 <style>
 	.step-card {
-		background: rgba(15, 23, 42, 0.4);
-		border: 1px solid rgba(99, 102, 241, 0.15);
-		border-radius: 12px;
-		padding: 16px;
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		animation: slideIn 0.4s ease-out;
-		backdrop-filter: blur(8px);
+		background: rgba(15, 23, 42, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.1);
+		border-radius: 8px;
+		padding: 10px 12px;
+		transition: all 0.2s ease;
+		animation: slideIn 0.3s ease-out;
+		backdrop-filter: blur(4px);
 	}
 
 	.step-card:hover {
-		border-color: rgba(99, 102, 241, 0.3);
-		box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
-		transform: translateY(-2px);
+		border-color: rgba(99, 102, 241, 0.25);
+		background: rgba(15, 23, 42, 0.25);
 	}
 
 	.step-card.active {
-		border-color: rgba(99, 102, 241, 0.5);
-		box-shadow: 
-			0 0 0 1px rgba(99, 102, 241, 0.3),
-			0 8px 24px rgba(99, 102, 241, 0.2);
-		background: rgba(15, 23, 42, 0.6);
+		border-color: rgba(99, 102, 241, 0.4);
+		background: rgba(15, 23, 42, 0.3);
+		box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
 	}
 
 	.step-card.complete {
-		border-color: rgba(74, 222, 128, 0.3);
-		opacity: 0.85;
+		border-color: rgba(74, 222, 128, 0.2);
+		opacity: 0.7;
 	}
 
 	.step-header {
 		display: flex;
 		align-items: center;
-		gap: 12px;
-		margin-bottom: 12px;
+		gap: 8px;
+		margin-bottom: 8px;
 	}
 
 	.step-indicator {
 		flex-shrink: 0;
-		width: 28px;
-		height: 28px;
+		width: 22px;
+		height: 22px;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(99, 102, 241, 0.2);
-		border: 1px solid rgba(99, 102, 241, 0.3);
-		transition: all 0.3s ease;
+		background: rgba(99, 102, 241, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.25);
+		transition: all 0.2s ease;
 	}
 
 	.active .step-indicator {
-		background: rgba(99, 102, 241, 0.3);
-		border-color: rgba(99, 102, 241, 0.5);
-		box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+		background: rgba(99, 102, 241, 0.25);
+		border-color: rgba(99, 102, 241, 0.4);
+		box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
 	}
 
 	.complete .step-indicator {
-		background: rgba(74, 222, 128, 0.2);
-		border-color: rgba(74, 222, 128, 0.4);
+		background: rgba(74, 222, 128, 0.15);
+		border-color: rgba(74, 222, 128, 0.3);
 	}
 
 	.step-num {
 		color: #818cf8;
-		font-size: 0.875rem;
+		font-size: 0.75rem;
 		font-weight: 600;
 	}
 
 	.check-icon {
 		color: #4ade80;
-		font-size: 1rem;
+		font-size: 0.875rem;
 		font-weight: bold;
 	}
 
 	.step-title {
-		color: #e2e8f0;
-		font-size: 0.875rem;
+		color: #cbd5e1;
+		font-size: 0.8rem;
 		font-weight: 500;
 		flex: 1;
-		line-height: 1.4;
+		line-height: 1.3;
 	}
 
 	.active .step-title {
-		color: #ffffff;
+		color: #e2e8f0;
 		font-weight: 600;
 	}
 
 	.step-content {
-		color: #cbd5e1;
-		font-size: 0.875rem;
-		line-height: 1.6;
+		color: #94a3b8;
+		font-size: 0.8rem;
+		line-height: 1.5;
 	}
 
 	@keyframes slideIn {
 		from {
 			opacity: 0;
-			transform: translateY(10px);
+			transform: translateY(8px);
 		}
 		to {
 			opacity: 1;

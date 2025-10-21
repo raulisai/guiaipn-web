@@ -52,9 +52,9 @@
 		canvasElement.style.height = `${calculatedHeight}px`;
 		ctx.scale(dpr, dpr);
 		
-		// Fondo oscuro futurista
-		ctx.fillStyle = '#0a0e27';
-		ctx.fillRect(0, 0, rect.width, calculatedHeight);
+		// Fondo transparente homologado
+		ctx.fillStyle = 'transparent';
+		ctx.clearRect(0, 0, rect.width, calculatedHeight);
 		
 		// Ejecutar comandos del paso
 		let currentYOffset = 30;
@@ -433,13 +433,10 @@
 </script>
 
 <div class="blackboard-container">
-	<!-- Marco de madera del pizarrón -->
+	<!-- Marco del pizarrón -->
 	<div class="blackboard-frame">
 		<div class="blackboard-header">
-			<div class="chalk-tray"></div>
-			<h3 class="blackboard-title">
-				◈ VISUALIZACIÓN
-			</h3>
+			<h3 class="blackboard-title">◆ Pizarrón</h3>
 		</div>
 		
 		<!-- Superficie del pizarrón -->
@@ -472,66 +469,47 @@
 		animation: fadeIn 0.5s ease-in;
 	}
 
-	/* Marco futurista */
+	/* Marco con estilo homologado */
 	.blackboard-frame {
-		background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
-		border-radius: 12px;
-		padding: 20px;
-		box-shadow: 
-			0 8px 32px rgba(0, 0, 0, 0.6),
-			0 0 0 1px rgba(99, 102, 241, 0.2),
-			inset 0 1px 0 rgba(99, 102, 241, 0.1);
-		border: 1px solid rgba(99, 102, 241, 0.2);
+		background: rgba(15, 23, 42, 0.15);
+		border-radius: 8px;
+		padding: 0;
+		backdrop-filter: blur(4px);
+		border: 1px solid rgba(99, 102, 241, 0.1);
+		overflow: hidden;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.blackboard-header {
-		position: relative;
+		flex-shrink: 0;
 		display: flex;
 		align-items: center;
-		gap: 12px;
-		margin-bottom: 12px;
-	}
-
-	.chalk-tray {
-		width: 100%;
-		height: 2px;
-		background: linear-gradient(90deg, 
-			transparent 0%, 
-			rgba(99, 102, 241, 0.5) 50%, 
-			transparent 100%);
-		border-radius: 2px;
-		box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+		justify-content: space-between;
+		padding: 10px 16px;
+		border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+		background: rgba(15, 23, 42, 0.3);
 	}
 
 	.blackboard-title {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
 		color: #818cf8;
-		font-size: 0.875rem;
+		font-size: 0.75rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
-		pointer-events: none;
-		white-space: nowrap;
+		letter-spacing: 0.12em;
+		opacity: 0.8;
+		position: static;
+		transform: none;
 	}
 
-	/* Superficie oscura futurista */
+	/* Superficie homologada */
 	.blackboard-surface {
-		background: #0a0e27;
-		border-radius: 8px;
-		padding: 24px;
-		max-height: 700px;
+		background: transparent;
+		border-radius: 0;
+		padding: 12px;
+		flex: 1;
 		overflow-y: auto;
-		box-shadow: 
-			inset 0 2px 12px rgba(0, 0, 0, 0.8),
-			inset 0 0 80px rgba(0, 0, 0, 0.4);
-		/* Textura sutil de grid futurista */
-		background-image: 
-			repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(99, 102, 241, 0.03) 20px, rgba(99, 102, 241, 0.03) 21px),
-			repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(99, 102, 241, 0.03) 20px, rgba(99, 102, 241, 0.03) 21px);
 	}
 
 	/* Etiqueta de paso minimalista */
@@ -578,25 +556,22 @@
 		text-shadow: 0 0 8px rgba(129, 140, 248, 0.2);
 	}
 
-	/* Scrollbar futurista */
+	/* Scrollbar ultra sutil */
 	.blackboard-surface::-webkit-scrollbar {
-		width: 8px;
+		width: 4px;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
+		background: transparent;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.3);
-		border-radius: 4px;
-		box-shadow: 0 0 6px rgba(99, 102, 241, 0.3);
+		background: rgba(99, 102, 241, 0.2);
+		border-radius: 2px;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb:hover {
-		background: rgba(99, 102, 241, 0.5);
-		box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+		background: rgba(99, 102, 241, 0.35);
 	}
 
 	@keyframes fadeIn {
