@@ -37,33 +37,43 @@
 
 		ctx.save();
 
-		switch (cmd.type) {
+		// El backend puede enviar cmd.command o directamente cmd.type
+		const commandType = cmd.command || cmd.type;
+		const params = cmd.parameters || cmd;
+
+		switch (commandType) {
 			case 'draw_axis':
-				drawAxis(cmd);
+				drawAxis(params);
 				break;
 			case 'draw_line':
-				drawLine(cmd);
+				drawLine(params);
 				break;
 			case 'draw_circle':
-				drawCircle(cmd);
+				drawCircle(params);
 				break;
 			case 'draw_arrow':
-				drawArrow(cmd);
+				drawArrow(params);
 				break;
 			case 'draw_text':
-				drawText(cmd);
+				drawText(params);
 				break;
 			case 'draw_triangle':
-				drawTriangle(cmd);
+				drawTriangle(params);
 				break;
 			case 'draw_vector':
-				drawVector(cmd);
+				drawVector(params);
+				break;
+			case 'draw_diagram':
+				drawDiagram(params);
+				break;
+			case 'highlight':
+				drawHighlight(params);
 				break;
 			case 'clear':
 				clearCanvas();
 				break;
 			default:
-				console.warn('Comando de canvas desconocido:', cmd.type);
+				console.warn('Comando de canvas desconocido:', commandType, cmd);
 		}
 
 		ctx.restore();
@@ -169,6 +179,59 @@
 	function clearCanvas() {
 		ctx.fillStyle = '#1f2937';
 		ctx.fillRect(0, 0, canvasRef.width, canvasRef.height);
+	}
+
+	function drawDiagram(params) {
+		// Dibujar elementos de un diagrama (textos, flechas, etc.)
+		if (params.elements && Array.isArray(params.elements)) {
+			params.elements.forEach(element => {
+				if (element.type === 'text') {
+					drawText({
+						text: element.content,
+						x: element.position?.x || 100,
+						y: element.position?.y || 100,
+						color: element.color || '#f3f4f6',
+						font: element.font || '16px sans-serif'
+					});
+				} else if (element.type === 'arrow') {
+					drawArrow({
+						x1: element.from?.x || 0,
+						y1: element.from?.y || 0,
+						x2: element.to?.x || 0,
+						y2: element.to?.y || 0,
+						color: element.color || '#f59e0b'
+					});
+				}
+			});
+		}
+	}
+
+	function drawHighlight(params) {
+		// Resaltar elementos (similar a drawDiagram pero con énfasis visual)
+		if (params.elements && Array.isArray(params.elements)) {
+			params.elements.forEach(element => {
+				if (element.type === 'text') {
+					// Dibujar fondo resaltado
+					ctx.fillStyle = element.backgroundColor || 'rgba(16, 185, 129, 0.2)';
+					const textWidth = ctx.measureText(element.content).width;
+					ctx.fillRect(
+						(element.position?.x || 100) - 5,
+						(element.position?.y || 100) - 20,
+						textWidth + 10,
+						30
+					);
+					
+					// Dibujar texto
+					drawText({
+						text: element.content,
+						x: element.position?.x || 100,
+						y: element.position?.y || 100,
+						color: element.color || '#10b981',
+						font: element.font || 'bold 18px sans-serif'
+					});
+				}
+			});
+		}
 	}
 </script>
 

@@ -174,7 +174,7 @@ class SocketService {
 			},
 			'step_start': (cb) => {
 				const listener = (data) => {
-					console.log(`📝 Paso ${data.step} iniciado:`, data.title);
+					console.log(`📝 Paso ${data.step_number} iniciado:`, data.title);
 					cb(data);
 				};
 				this.socket.on('step_start', listener);
@@ -195,7 +195,7 @@ class SocketService {
 			},
 			'step_complete': (cb) => {
 				const listener = (data) => {
-					console.log(`✅ Paso ${data.step} completado`);
+					console.log(`✅ Paso ${data.step_number} completado`);
 					cb(data);
 				};
 				this.socket.on('step_complete', listener);
@@ -497,7 +497,7 @@ class SocketService {
 		
 		if (this.socket) {
 			const listener = (data) => {
-				console.log(`📝 Paso ${data.step} iniciado:`, data.title);
+				console.log(`📝 Paso ${data.step_number} iniciado:`, data.title);
 				callback(data);
 			};
 			this.socket.on('step_start', listener);
@@ -547,7 +547,7 @@ class SocketService {
 		
 		if (this.socket) {
 			const listener = (data) => {
-				console.log(`✅ Paso ${data.step} completado`);
+				console.log(`✅ Paso ${data.step_number} completado`);
 				callback(data);
 			};
 			this.socket.on('step_complete', listener);

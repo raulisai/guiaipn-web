@@ -124,17 +124,18 @@ function createExplanationStore() {
 		 */
 		startStep(data) {
 			update((state) => {
+				const stepNumber = data.step_number || data.step;
 				const newStep = {
-					step: data.step,
+					step: stepNumber,
 					title: data.title,
-					type: data.type,
+					type: data.content_type || data.type,
 					content: '',
 					isComplete: false
 				};
 
 				return {
 					...state,
-					currentStep: data.step,
+					currentStep: stepNumber,
 					steps: [...state.steps, newStep]
 				};
 			});
@@ -147,7 +148,8 @@ function createExplanationStore() {
 		addContentChunk(data) {
 			update((state) => {
 				const steps = [...state.steps];
-				const stepIndex = steps.findIndex((s) => s.step === data.step);
+				const stepNumber = data.step_number || data.step;
+				const stepIndex = steps.findIndex((s) => s.step === stepNumber);
 
 				if (stepIndex !== -1) {
 					steps[stepIndex] = {
@@ -162,13 +164,24 @@ function createExplanationStore() {
 
 		/**
 		 * Agrega un comando de canvas
-		 * @param {Object} command - Comando del canvas
+		 * @param {Object} data - Datos del comando (puede tener step_number y command anidado)
 		 */
-		addCanvasCommand(command) {
-			update((state) => ({
-				...state,
-				canvasCommands: [...state.canvasCommands, command]
-			}));
+		addCanvasCommand(data) {
+			update((state) => {
+				// Normalizar estructura del backend
+				const stepNumber = data.step_number || data.step;
+				const command = data.command || data;
+				
+				const normalizedCommand = {
+					step: stepNumber,
+					command: command
+				};
+				
+				return {
+					...state,
+					canvasCommands: [...state.canvasCommands, normalizedCommand]
+				};
+			});
 		},
 
 		/**
@@ -178,7 +191,8 @@ function createExplanationStore() {
 		completeStep(data) {
 			update((state) => {
 				const steps = [...state.steps];
-				const stepIndex = steps.findIndex((s) => s.step === data.step);
+				const stepNumber = data.step_number || data.step;
+				const stepIndex = steps.findIndex((s) => s.step === stepNumber);
 
 				if (stepIndex !== -1) {
 					steps[stepIndex] = {
