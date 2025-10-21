@@ -202,24 +202,22 @@
 	<div class="h-full flex flex-col px-6 py-6">
 		<!-- Header compacto -->
 		<div class="flex-shrink-0 mb-4">
-			<div class="flex items-center justify-between">
-				<div>
-					<h1 class="text-2xl font-bold text-indigo-400">◈ Salón IA</h1>
-				</div>
-				<button
-					onclick={handleGoBack}
-					class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
-				>
-					← Volver
-				</button>
+			<div class="flex items-center justify-center">
+				<h1 class="text-2xl font-bold text-indigo-400">◈ Salón IA</h1>
 			</div>
 		</div>
 
 		<!-- Pregunta original compacta -->
 		{#if questionData}
-			<div class="flex-shrink-0 mb-2">
-				<div class="bg-slate-900/50 backdrop-blur-sm rounded-xl p-4 border border-slate-800">
+			<div class="flex-shrink-0">
+				<div class="">
 					<div class="flex items-start gap-3 mb-3">
+						<button
+					onclick={handleGoBack}
+					class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
+				>
+					← Volver
+				</button>
 						<div class="flex-1">
 							{#if questionData.lengMathPregunta}
 								<Math content={questionData.pregunta} isBlock={false} />
@@ -234,8 +232,9 @@
 						</div>
 						<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
 							<span class="text-green-400 font-medium">Correcta:</span>
-							<span class="text-gray-300 ml-1">{questionData.respuestaCorrecta}</span>
+							<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate">{questionData.respuestaCorrecta}</span>
 						</div>
+						
 						</div>
 					</div>
 				</div>
@@ -264,6 +263,10 @@
 			<!-- Grid de 2 columnas con altura fija -->
 			{#if $explanationStore.steps.length > 0}
 				<div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
+					<!-- Pizarrón -->
+					<div class="h-full">
+						<CanvasVisualization commands={$explanationStore.canvasCommands} />
+					</div>
 					<!-- Card flotante de pasos con scroll interno -->
 					<div class="floating-card">
 						<div class="card-header">
@@ -280,10 +283,7 @@
 						</div>
 					</div>
 
-					<!-- Pizarrón -->
-					<div class="h-full">
-						<CanvasVisualization commands={$explanationStore.canvasCommands} />
-					</div>
+					
 				</div>
 			{/if}
 
@@ -365,7 +365,7 @@
 	.floating-card {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		height: 90%;
 		background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
 		border-radius: 16px;
 		border: 1px solid rgba(99, 102, 241, 0.2);
