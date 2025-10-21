@@ -69,75 +69,77 @@
 
 ---
 
-## 🔌 Fase 4: Cliente Socket.IO
+## 🔌 Fase 4: Cliente Socket.IO ✅
 
 ### Conexión
-- [ ] Clase/servicio `SocketService`
-- [ ] Método `connect()` con token en auth
-- [ ] Configurar transports: ['websocket']
-- [ ] Configurar reconnection
-- [ ] Guardar session_id al conectar
+- [x] Clase/servicio `SocketService`
+- [x] Método `connect()` con token en auth
+- [x] Configurar transports: ['websocket']
+- [x] Configurar reconnection
+- [x] Guardar session_id al conectar
 
 ### Event Listeners Básicos
-- [ ] `connect` - Log de conexión
-- [ ] `disconnect` - Manejo de desconexión
-- [ ] `connection_established` - Guardar session_id
-- [ ] `error` - Manejo de errores
+- [x] `connect` - Log de conexión
+- [x] `disconnect` - Manejo de desconexión
+- [x] `connection_established` - Guardar session_id
+- [x] `error` - Manejo de errores
 
 ### Event Listeners de Streaming
-- [ ] `waiting_phrase` - Mostrar loading
-- [ ] `explanation_start` - Inicializar UI
-- [ ] `step_start` - Crear contenedor de paso
-- [ ] `content_chunk` - Actualizar contenido
-- [ ] `canvas_command` - Ejecutar comando
-- [ ] `step_complete` - Marcar paso completo
-- [ ] `explanation_complete` - Finalizar
+- [x] `waiting_phrase` - Mostrar loading
+- [x] `explanation_start` - Inicializar UI
+- [x] `step_start` - Crear contenedor de paso
+- [x] `content_chunk` - Actualizar contenido
+- [x] `canvas_command` - Ejecutar comando
+- [x] `step_complete` - Marcar paso completo
+- [x] `explanation_complete` - Finalizar
 
 ### Emisión de Eventos
-- [ ] `ask_question` - Enviar pregunta
-- [ ] `pause_explanation` - Pausar
-- [ ] `resume_explanation` - Reanudar
-- [ ] `start_explanation` - Explicar examen
-- [ ] `ask_follow_up_question` - Follow-up
-- [ ] `interrupt_explanation` - Interrupción
+- [x] `ask_question` - Enviar pregunta
+- [x] `pause_explanation` - Pausar
+- [x] `resume_explanation` - Reanudar
+- [x] `start_explanation` - Explicar examen
+- [x] `ask_follow_up_question` - Follow-up
+- [x] `interrupt_explanation` - Interrupción
 
 ---
 
-## 🗄️ Fase 5: Gestión de Estado
+## 🗄️ Fase 5: Gestión de Estado ✅
 
 ### Store de Explicación
-- [ ] Estado de conexión (isConnected)
-- [ ] Estado de streaming (isStreaming, isPaused)
-- [ ] Session ID
-- [ ] Pasos de explicación (array)
-- [ ] Paso actual (currentStep)
-- [ ] Metadata (totalSteps, estimatedDuration)
-- [ ] Loading state
-- [ ] Error state
+- [x] Estado de conexión (isConnected)
+- [x] Estado de streaming (isExplaining, isPaused)
+- [x] Session ID
+- [x] Pasos de explicación (array)
+- [x] Paso actual (currentStep)
+- [x] Metadata (totalSteps, estimatedDuration)
+- [x] Loading state
+- [x] Error state
 
 ### Acciones del Store
-- [ ] `setConnected()`
-- [ ] `setSessionId()`
-- [ ] `setLoading()`
-- [ ] `setError()`
-- [ ] `initExplanation()`
-- [ ] `addStep()`
-- [ ] `updateStepContent()`
-- [ ] `setCurrentStep()`
-- [ ] `markStepComplete()`
-- [ ] `setPaused()`
-- [ ] `reset()`
+- [x] `setConnected()`
+- [x] `setDisconnected()`
+- [x] `setWaitingMessage()`
+- [x] `setError()`
+- [x] `startExplanation()`
+- [x] `startStep()`
+- [x] `addContentChunk()`
+- [x] `addCanvasCommand()`
+- [x] `completeStep()`
+- [x] `completeExplanation()`
+- [x] `pauseExplanation()`
+- [x] `resumeExplanation()`
+- [x] `reset()`
 
 ---
 
 ## 🎨 Fase 6: Componentes UI
 
 ### Componente de Autenticación
-- [ ] `<LoginPage>` - Página de login
-- [ ] `<AuthCallback>` - Callback de OAuth
-- [ ] Botón de Google OAuth con branding correcto
-- [ ] Loading state durante autenticación
-- [ ] Mensajes de error
+- [x] `<LoginPage>` - Página de login
+- [x] `<AuthCallback>` - Callback de OAuth
+- [x] Botón de Google OAuth con branding correcto
+- [x] Loading state durante autenticación
+- [x] Mensajes de error
 
 ### Componente de Pregunta
 - [ ] `<QuestionInput>` - Input de pregunta

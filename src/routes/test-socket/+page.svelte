@@ -34,28 +34,40 @@
 			addLog(`📋 Session ID: ${data.session_id}`, 'success');
 			sessionId = data.session_id;
 			connectionStatus = 'Conectado';
+			// Actualizar store
 			explanationStore.setConnected(data.session_id);
 		});
 
 		// Listener de errores
 		socketService.onError((error) => {
 			addLog(`🚫 Error: ${error.message || error.code}`, 'error');
+			// Actualizar store
+			explanationStore.setError(error);
 		});
 
 		// Listener de frases de espera
 		socketService.onWaitingPhrase((data) => {
 			addLog(`⏳ ${data.message}`, 'info');
+			addLog(`📊 Data recibida: ${JSON.stringify(data)}`, 'info');
+			// Actualizar store
+			explanationStore.setWaitingMessage(data.message);
 		});
 
 		// Listener de inicio de explicación
 		socketService.onExplanationStart((data) => {
 			addLog(`🎬 Explicación iniciada: ${data.total_steps} pasos`, 'success');
 			addLog(`📚 Materia: ${data.subject || 'N/A'}`, 'info');
+			addLog(`📊 Data completa: ${JSON.stringify(data)}`, 'info');
+			// Actualizar store
+			explanationStore.startExplanation(data);
 		});
 
 		// Listener de inicio de paso
 		socketService.onStepStart((data) => {
 			addLog(`📝 Paso ${data.step}: ${data.title} (${data.type})`, 'info');
+			addLog(`📊 Data completa: ${JSON.stringify(data)}`, 'info');
+			// Actualizar store
+			explanationStore.startStep(data);
 		});
 
 		// Listener de chunks de contenido
@@ -68,22 +80,30 @@
 			if (data.is_final) {
 				addLog(`✨ Contenido paso ${data.step} finalizado`, 'success');
 			}
+			// Actualizar store
+			explanationStore.addContentChunk(data);
 		});
 
 		// Listener de comandos de canvas
 		socketService.onCanvasCommand((data) => {
 			addLog(`🎨 Comando de canvas paso ${data.step}: ${data.command?.type || 'unknown'}`, 'info');
+			// Actualizar store
+			explanationStore.addCanvasCommand(data);
 		});
 
 		// Listener de paso completado
 		socketService.onStepComplete((data) => {
 			addLog(`✅ Paso ${data.step} completado`, 'success');
+			// Actualizar store
+			explanationStore.completeStep(data);
 		});
 
 		// Listener de explicación completada
 		socketService.onExplanationComplete((data) => {
 			addLog(`🎉 Explicación completada en ${data.total_duration}s`, 'success');
 			addLog(`📊 Total de pasos: ${data.steps_completed}`, 'info');
+			// Actualizar store
+			explanationStore.completeExplanation(data);
 		});
 	}
 
@@ -291,6 +311,14 @@
 					<div class="font-mono">{$explanationStore.isLoading ? '✅ true' : '❌ false'}</div>
 				</div>
 				<div>
+					<div class="text-sm text-gray-400">isPaused</div>
+					<div class="font-mono">{$explanationStore.isPaused ? '✅ true' : '❌ false'}</div>
+				</div>
+				<div>
+					<div class="text-sm text-gray-400">waitingMessage</div>
+					<div class="font-mono text-xs">{$explanationStore.waitingMessage || 'null'}</div>
+				</div>
+				<div>
 					<div class="text-sm text-gray-400">currentStep</div>
 					<div class="font-mono">{$explanationStore.currentStep}</div>
 				</div>
@@ -298,7 +326,21 @@
 					<div class="text-sm text-gray-400">totalSteps</div>
 					<div class="font-mono">{$explanationStore.totalSteps}</div>
 				</div>
+				<div>
+					<div class="text-sm text-gray-400">steps.length</div>
+					<div class="font-mono">{$explanationStore.steps.length}</div>
+				</div>
+				<div>
+					<div class="text-sm text-gray-400">error</div>
+					<div class="font-mono text-xs">{$explanationStore.error ? JSON.stringify($explanationStore.error).substring(0, 30) + '...' : 'null'}</div>
+				</div>
 			</div>
+			
+			<!-- Debug: Mostrar estado completo del store -->
+			<details class="mt-4">
+				<summary class="cursor-pointer text-sm text-gray-400 hover:text-gray-300">🔍 Ver estado completo (JSON)</summary>
+				<pre class="mt-2 p-3 bg-gray-900 rounded text-xs overflow-auto max-h-40">{JSON.stringify($explanationStore, null, 2)}</pre>
+			</details>
 		</div>
 
 		<!-- Logs -->
