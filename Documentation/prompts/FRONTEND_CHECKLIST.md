@@ -142,11 +142,9 @@
 - [x] Mensajes de error
 
 ### Componente de Pregunta
-- [ ] `<QuestionInput>` - Input de pregunta
-- [ ] Validación de longitud (5-1000 chars)
-- [ ] Botón de enviar
-- [ ] Contador de caracteres
-- [ ] Enter para enviar
+- [ ] hacer que la pregunta venga de la api ('http://localhost:5000/api/v1/questions/?page=1&limit=20')
+- [ ] Guardar la pregunta en el store
+- [ ] Botón de enviar para que redirija a la explicación (salon de clases)
 
 ### Componente de Explicación
 - [ ] `<ExplanationContainer>` - Contenedor principal
