@@ -5,46 +5,20 @@
 </script>
 
 <div 
-	class="step-card bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-lg p-6 border-2 transition-all duration-300"
-	class:border-green-500={isActive && step.isComplete}
-	class:border-blue-500={isActive && !step.isComplete}
-	class:border-gray-700={!isActive}
-	class:opacity-60={!isActive && !step.isComplete}
+	class="step-card"
+	class:active={isActive}
+	class:complete={step.isComplete}
 >
-	<!-- Header del Paso -->
-	<div class="step-header flex items-center justify-between mb-4">
-		<div class="flex items-center gap-3">
-			<div 
-				class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-				class:bg-green-500={step.isComplete}
-				class:bg-blue-500={isActive && !step.isComplete}
-				class:bg-gray-700={!isActive && !step.isComplete}
-			>
-				{#if step.isComplete}
-					✓
-				{:else}
-					{step.step + 1}
-				{/if}
-			</div>
-			<h3 class="text-lg font-semibold text-white">
-				{step.title}
-			</h3>
+	<!-- Header minimalista -->
+	<div class="step-header">
+		<div class="step-indicator">
+			{#if step.isComplete}
+				<span class="check-icon">✓</span>
+			{:else}
+				<span class="step-num">{step.step + 1}</span>
+			{/if}
 		</div>
-		
-		<!-- Badge de tipo -->
-		{#if step.type === 'text'}
-			<span class="px-3 py-1 rounded-full text-xs font-medium bg-purple-500 bg-opacity-20 text-purple-400">
-				📝 Texto
-			</span>
-		{:else if step.type === 'math'}
-			<span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-400">
-				🔢 Matemáticas
-			</span>
-		{:else}
-			<span class="px-3 py-1 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-400">
-				🖼️ Diagrama
-			</span>
-		{/if}
+		<h3 class="step-title">{step.title}</h3>
 	</div>
 
 	<!-- Contenido del Paso -->
@@ -55,17 +29,104 @@
 
 <style>
 	.step-card {
+		background: rgba(15, 23, 42, 0.4);
+		border: 1px solid rgba(99, 102, 241, 0.15);
+		border-radius: 12px;
+		padding: 16px;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		animation: slideIn 0.4s ease-out;
+		backdrop-filter: blur(8px);
+	}
+
+	.step-card:hover {
+		border-color: rgba(99, 102, 241, 0.3);
+		box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
+		transform: translateY(-2px);
+	}
+
+	.step-card.active {
+		border-color: rgba(99, 102, 241, 0.5);
+		box-shadow: 
+			0 0 0 1px rgba(99, 102, 241, 0.3),
+			0 8px 24px rgba(99, 102, 241, 0.2);
+		background: rgba(15, 23, 42, 0.6);
+	}
+
+	.step-card.complete {
+		border-color: rgba(74, 222, 128, 0.3);
+		opacity: 0.85;
+	}
+
+	.step-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.step-indicator {
+		flex-shrink: 0;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(99, 102, 241, 0.2);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		transition: all 0.3s ease;
+	}
+
+	.active .step-indicator {
+		background: rgba(99, 102, 241, 0.3);
+		border-color: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+	}
+
+	.complete .step-indicator {
+		background: rgba(74, 222, 128, 0.2);
+		border-color: rgba(74, 222, 128, 0.4);
+	}
+
+	.step-num {
+		color: #818cf8;
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+
+	.check-icon {
+		color: #4ade80;
+		font-size: 1rem;
+		font-weight: bold;
+	}
+
+	.step-title {
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		font-weight: 500;
+		flex: 1;
+		line-height: 1.4;
+	}
+
+	.active .step-title {
+		color: #ffffff;
+		font-weight: 600;
+	}
+
+	.step-content {
+		color: #cbd5e1;
+		font-size: 0.875rem;
+		line-height: 1.6;
 	}
 
 	@keyframes slideIn {
 		from {
 			opacity: 0;
-			transform: translateX(-20px);
+			transform: translateY(10px);
 		}
 		to {
 			opacity: 1;
-			transform: translateX(0);
+			transform: translateY(0);
 		}
 	}
 </style>

@@ -43,19 +43,24 @@
 		const dpr = window.devicePixelRatio || 1;
 		const rect = canvasElement.getBoundingClientRect();
 		
+		// Calcular altura dinámica basada en número de comandos
+		// Mínimo 120px, máximo 400px, ~60px por comando
+		const calculatedHeight = Math.min(400, Math.max(120, stepCommands.length * 60 + 40));
+		
 		canvasElement.width = rect.width * dpr;
-		canvasElement.height = 300 * dpr;
+		canvasElement.height = calculatedHeight * dpr;
+		canvasElement.style.height = `${calculatedHeight}px`;
 		ctx.scale(dpr, dpr);
 		
-		// Fondo
-		ctx.fillStyle = '#1f2937';
-		ctx.fillRect(0, 0, rect.width, 300);
+		// Fondo oscuro futurista
+		ctx.fillStyle = '#0a0e27';
+		ctx.fillRect(0, 0, rect.width, calculatedHeight);
 		
 		// Ejecutar comandos del paso
-		let currentYOffset = 40;
+		let currentYOffset = 30;
 		stepCommands.forEach(command => {
 			executeCommand(ctx, command.command, rect.width, currentYOffset);
-			currentYOffset += 30;
+			currentYOffset += 50;
 		});
 	}
 
@@ -109,8 +114,10 @@
 	function drawAxis(ctx, cmd) {
 		const width = cmd.canvasWidth || 800;
 		const height = 300;
-		ctx.strokeStyle = cmd.color || '#6b7280';
+		ctx.strokeStyle = cmd.color || 'rgba(255, 255, 255, 0.5)';
 		ctx.lineWidth = 2;
+		ctx.shadowColor = 'rgba(255, 255, 255, 0.2)';
+		ctx.shadowBlur = 1;
 		ctx.beginPath();
 		// Eje X
 		ctx.moveTo(0, cmd.y || height / 2);
@@ -119,36 +126,45 @@
 		ctx.moveTo(cmd.x || width / 2, 0);
 		ctx.lineTo(cmd.x || width / 2, height);
 		ctx.stroke();
+		ctx.shadowBlur = 0;
 	}
 
 	function drawLine(ctx, cmd) {
-		ctx.strokeStyle = cmd.color || '#10b981';
-		ctx.lineWidth = cmd.width || 2;
+		ctx.strokeStyle = cmd.color || '#ffffff';
+		ctx.lineWidth = cmd.width || 3;
+		ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+		ctx.shadowBlur = 2;
 		ctx.beginPath();
 		ctx.moveTo(cmd.x1, cmd.y1);
 		ctx.lineTo(cmd.x2, cmd.y2);
 		ctx.stroke();
+		ctx.shadowBlur = 0;
 	}
 
 	function drawCircle(ctx, cmd) {
-		ctx.strokeStyle = cmd.color || '#3b82f6';
-		ctx.lineWidth = cmd.width || 2;
+		ctx.strokeStyle = cmd.color || '#ffd700';
+		ctx.lineWidth = cmd.width || 3;
+		ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
+		ctx.shadowBlur = 2;
 		ctx.beginPath();
 		ctx.arc(cmd.x, cmd.y, cmd.radius, 0, 2 * Math.PI);
 		if (cmd.fill) {
-			ctx.fillStyle = cmd.fillColor || cmd.color || '#3b82f6';
+			ctx.fillStyle = cmd.fillColor || cmd.color || 'rgba(255, 215, 0, 0.3)';
 			ctx.fill();
 		}
 		ctx.stroke();
+		ctx.shadowBlur = 0;
 	}
 
 	function drawArrow(ctx, cmd) {
-		const headLength = cmd.headLength || 10;
+		const headLength = cmd.headLength || 12;
 		const angle = Math.atan2(cmd.y2 - cmd.y1, cmd.x2 - cmd.x1);
 		
-		ctx.strokeStyle = cmd.color || '#f59e0b';
-		ctx.fillStyle = cmd.color || '#f59e0b';
-		ctx.lineWidth = cmd.width || 2;
+		ctx.strokeStyle = cmd.color || '#ff6b6b';
+		ctx.fillStyle = cmd.color || '#ff6b6b';
+		ctx.lineWidth = cmd.width || 3;
+		ctx.shadowColor = 'rgba(255, 107, 107, 0.3)';
+		ctx.shadowBlur = 2;
 		
 		// Línea principal
 		ctx.beginPath();
@@ -169,28 +185,35 @@
 		);
 		ctx.closePath();
 		ctx.fill();
+		ctx.shadowBlur = 0;
 	}
 
 	function drawText(ctx, cmd) {
-		ctx.fillStyle = cmd.color || '#f3f4f6';
-		ctx.font = cmd.font || '16px sans-serif';
+		ctx.fillStyle = cmd.color || '#ffffff';
+		ctx.font = cmd.font || 'bold 18px sans-serif';
 		ctx.textAlign = cmd.align || 'left';
+		ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+		ctx.shadowBlur = 2;
 		ctx.fillText(cmd.text, cmd.x, cmd.y);
+		ctx.shadowBlur = 0;
 	}
 
 	function drawTriangle(ctx, cmd) {
-		ctx.strokeStyle = cmd.color || '#8b5cf6';
-		ctx.lineWidth = cmd.width || 2;
+		ctx.strokeStyle = cmd.color || '#4ecdc4';
+		ctx.lineWidth = cmd.width || 3;
+		ctx.shadowColor = 'rgba(78, 205, 196, 0.3)';
+		ctx.shadowBlur = 2;
 		ctx.beginPath();
 		ctx.moveTo(cmd.x1, cmd.y1);
 		ctx.lineTo(cmd.x2, cmd.y2);
 		ctx.lineTo(cmd.x3, cmd.y3);
 		ctx.closePath();
 		if (cmd.fill) {
-			ctx.fillStyle = cmd.fillColor || cmd.color || '#8b5cf6';
+			ctx.fillStyle = cmd.fillColor || cmd.color || 'rgba(78, 205, 196, 0.3)';
 			ctx.fill();
 		}
 		ctx.stroke();
+		ctx.shadowBlur = 0;
 	}
 
 	function drawVector(ctx, cmd) {
@@ -215,8 +238,8 @@
 						text: element.content,
 						x: element.position?.x || 100,
 						y: element.position?.y || 100,
-						color: element.color || '#f3f4f6',
-						font: element.font || '16px sans-serif'
+						color: element.color || '#ffffff',
+						font: element.font || 'bold 18px sans-serif'
 					});
 				} else if (element.type === 'arrow') {
 					drawArrow(ctx, {
@@ -224,7 +247,7 @@
 						y1: element.from?.y || 0,
 						x2: element.to?.x || 0,
 						y2: element.to?.y || 0,
-						color: element.color || '#f59e0b'
+						color: element.color || '#ff6b6b'
 					});
 				}
 			});
@@ -257,8 +280,8 @@
 						text: element.content,
 						x: element.position?.x || 100,
 						y: element.position?.y || 100,
-						color: element.color || '#10b981',
-						font: element.font || 'bold 18px sans-serif'
+						color: element.color || '#4ade80',
+						font: element.font || 'bold 20px sans-serif'
 					});
 				}
 			});
@@ -269,14 +292,16 @@
 		ctx.save();
 		
 		// Dibujar icono de check
-		ctx.fillStyle = '#10b981';
-		ctx.font = 'bold 24px sans-serif';
+		ctx.fillStyle = '#4ade80';
+		ctx.font = 'bold 28px sans-serif';
+		ctx.shadowColor = 'rgba(74, 222, 128, 0.5)';
+		ctx.shadowBlur = 4;
 		ctx.fillText('✓', x, y);
 		
 		// Dibujar contenido (puede ser LaTeX)
-		const contentX = x + 35;
-		ctx.font = 'bold 20px sans-serif';
-		ctx.fillStyle = '#10b981';
+		const contentX = x + 40;
+		ctx.font = 'bold 22px sans-serif';
+		ctx.fillStyle = '#4ade80';
 		
 		// Si el contenido tiene $, renderizar con KaTeX
 		if (content.includes('$')) {
@@ -310,18 +335,21 @@
 		// Dibujar razón debajo
 		if (reason) {
 			ctx.font = '16px sans-serif';
-			ctx.fillStyle = '#9ca3af';
-			ctx.fillText(`→ ${reason}`, contentX, y + 25);
+			ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+			ctx.fillText(`→ ${reason}`, contentX, y + 28);
 		}
 		
 		// Dibujar recuadro resaltado
 		const boxWidth = Math.min(700, (params.canvasWidth || 800) - 60);
-		const boxHeight = reason ? 60 : 35;
-		ctx.strokeStyle = '#10b981';
+		const boxHeight = reason ? 65 : 40;
+		ctx.strokeStyle = '#4ade80';
 		ctx.lineWidth = 3;
-		ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
-		ctx.fillRect(x - 10, y - 25, boxWidth, boxHeight);
-		ctx.strokeRect(x - 10, y - 25, boxWidth, boxHeight);
+		ctx.shadowColor = 'rgba(74, 222, 128, 0.3)';
+		ctx.shadowBlur = 4;
+		ctx.fillStyle = 'rgba(74, 222, 128, 0.1)';
+		ctx.fillRect(x - 10, y - 28, boxWidth, boxHeight);
+		ctx.strokeRect(x - 10, y - 28, boxWidth, boxHeight);
+		ctx.shadowBlur = 0;
 		
 		ctx.restore();
 	}
@@ -331,7 +359,7 @@
 		const equation = params.equation || params.latex || '';
 		const x = params.x || params.position?.x || 40;
 		const y = params.y || params.position?.y || params.yOffset || 40;
-		const color = params.color || '#f3f4f6';
+		const color = params.color || '#ffd700';
 		const displayMode = params.displayMode !== false;
 		
 		try {
@@ -357,8 +385,10 @@
 			// Por ahora, dibujar como texto formateado
 			const textContent = tempDiv.textContent || equation;
 			ctx.fillStyle = color;
-			ctx.font = '18px "Computer Modern", "Latin Modern Math", serif';
+			ctx.font = 'bold 20px "Computer Modern", "Latin Modern Math", serif';
 			ctx.textAlign = 'left';
+			ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
+			ctx.shadowBlur = 2;
 			
 			// Dibujar con word wrap si es necesario
 			const maxWidth = 700;
@@ -386,9 +416,12 @@
 			// Opcional: dibujar un recuadro alrededor
 			if (params.box || params.highlight) {
 				ctx.strokeStyle = color;
-				ctx.lineWidth = 2;
+				ctx.lineWidth = 3;
+				ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
+				ctx.shadowBlur = 2;
 				ctx.strokeRect(x - 10, y - 20, maxWidth + 20, lineY - y + 25);
 			}
+			ctx.shadowBlur = 0;
 		} catch (error) {
 			console.error('Error renderizando ecuación:', error);
 			// Fallback: dibujar como texto simple
@@ -399,51 +432,171 @@
 	}
 </script>
 
-<div class="blackboard-container bg-gray-900 rounded-lg p-6 border-2 border-gray-700">
-	<div class="blackboard-header mb-4 pb-3 border-b border-gray-600">
-		<h3 class="text-xl font-bold text-blue-400 flex items-center gap-2">
-			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-			</svg>
-			Pizarrón de Visualización
-		</h3>
-		<p class="text-sm text-gray-400 mt-1">{sortedSteps.length} {sortedSteps.length === 1 ? 'paso' : 'pasos'} con diagramas</p>
-	</div>
-	
-	<div class="mini-canvas-stack space-y-4 max-h-[600px] overflow-y-auto pr-2">
-		{#each sortedSteps as step (step)}
-			<div class="mini-canvas-wrapper bg-gray-800 rounded-lg p-4 border border-gray-600 shadow-lg">
-				<div class="step-label flex items-center gap-2 mb-3">
-					<div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
-						{step}
-					</div>
-					<span class="text-blue-300 font-semibold">Paso {step}</span>
-					<div class="flex-1 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
-					<span class="text-xs text-gray-400">{canvasByStep[step].length} {canvasByStep[step].length === 1 ? 'comando' : 'comandos'}</span>
-				</div>
-				<canvas
-					bind:this={canvasRefs[step]}
-					class="w-full rounded border border-gray-700"
-					style="height: 300px;"
-				></canvas>
+<div class="blackboard-container">
+	<!-- Marco de madera del pizarrón -->
+	<div class="blackboard-frame">
+		<div class="blackboard-header">
+			<div class="chalk-tray"></div>
+			<h3 class="blackboard-title">
+				◈ VISUALIZACIÓN
+			</h3>
+		</div>
+		
+		<!-- Superficie del pizarrón -->
+		<div class="blackboard-surface">
+			{#each sortedSteps as step (step)}
+			<!-- Etiqueta de paso minimalista -->
+			<div class="step-label">
+				<span class="step-text">Paso {step}</span>
 			</div>
+			
+			<!-- Canvas del paso -->
+			<canvas
+				bind:this={canvasRefs[step]}
+				class="blackboard-canvas"
+			></canvas>
 		{/each}
 		
-		{#if sortedSteps.length === 0}
-			<div class="empty-state text-center py-12 text-gray-500">
-				<svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
-				</svg>
-				<p class="text-lg font-medium">No hay visualizaciones disponibles</p>
-				<p class="text-sm mt-2">Los diagramas aparecerán aquí cuando el profesor los dibuje</p>
-			</div>
-		{/if}
+			{#if sortedSteps.length === 0}
+				<div class="empty-state">
+					<p class="chalk-text">El pizarrón está limpio</p>
+					<p class="chalk-text-small">Las visualizaciones aparecerán aquí</p>
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>
 
 <style>
 	.blackboard-container {
 		animation: fadeIn 0.5s ease-in;
+	}
+
+	/* Marco futurista */
+	.blackboard-frame {
+		background: linear-gradient(135deg, #1a1f3a 0%, #0f1419 100%);
+		border-radius: 12px;
+		padding: 20px;
+		box-shadow: 
+			0 8px 32px rgba(0, 0, 0, 0.6),
+			0 0 0 1px rgba(99, 102, 241, 0.2),
+			inset 0 1px 0 rgba(99, 102, 241, 0.1);
+		border: 1px solid rgba(99, 102, 241, 0.2);
+	}
+
+	.blackboard-header {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.chalk-tray {
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(90deg, 
+			transparent 0%, 
+			rgba(99, 102, 241, 0.5) 50%, 
+			transparent 100%);
+		border-radius: 2px;
+		box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+	}
+
+	.blackboard-title {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		color: #818cf8;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+		pointer-events: none;
+		white-space: nowrap;
+	}
+
+	/* Superficie oscura futurista */
+	.blackboard-surface {
+		background: #0a0e27;
+		border-radius: 8px;
+		padding: 24px;
+		max-height: 700px;
+		overflow-y: auto;
+		box-shadow: 
+			inset 0 2px 12px rgba(0, 0, 0, 0.8),
+			inset 0 0 80px rgba(0, 0, 0, 0.4);
+		/* Textura sutil de grid futurista */
+		background-image: 
+			repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(99, 102, 241, 0.03) 20px, rgba(99, 102, 241, 0.03) 21px),
+			repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(99, 102, 241, 0.03) 20px, rgba(99, 102, 241, 0.03) 21px);
+	}
+
+	/* Etiqueta de paso minimalista */
+	.step-label {
+		margin: 20px 0 16px 0;
+	}
+
+	.step-text {
+		color: #818cf8;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.15em;
+		text-shadow: 0 0 8px rgba(129, 140, 248, 0.4);
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+		opacity: 0.8;
+	}
+
+	/* Canvas sin bordes */
+	.blackboard-canvas {
+		width: 100%;
+		display: block;
+		margin-bottom: 8px;
+		/* Sin bordes ni fondos, se integra con el pizarrón */
+	}
+
+	/* Estado vacío */
+	.empty-state {
+		text-align: center;
+		padding: 60px 20px;
+	}
+
+	.chalk-text {
+		color: rgba(129, 140, 248, 0.6);
+		font-size: 1.125rem;
+		font-weight: 500;
+		margin-bottom: 8px;
+		text-shadow: 0 0 10px rgba(129, 140, 248, 0.3);
+	}
+
+	.chalk-text-small {
+		color: rgba(129, 140, 248, 0.4);
+		font-size: 0.875rem;
+		text-shadow: 0 0 8px rgba(129, 140, 248, 0.2);
+	}
+
+	/* Scrollbar futurista */
+	.blackboard-surface::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.blackboard-surface::-webkit-scrollbar-track {
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+	}
+
+	.blackboard-surface::-webkit-scrollbar-thumb {
+		background: rgba(99, 102, 241, 0.3);
+		border-radius: 4px;
+		box-shadow: 0 0 6px rgba(99, 102, 241, 0.3);
+	}
+
+	.blackboard-surface::-webkit-scrollbar-thumb:hover {
+		background: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
 	}
 
 	@keyframes fadeIn {
@@ -455,50 +608,5 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
-	}
-
-	.mini-canvas-wrapper {
-		animation: slideIn 0.3s ease-out;
-		transition: all 0.2s ease;
-	}
-
-	.mini-canvas-wrapper:hover {
-		border-color: #3b82f6;
-		box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-	}
-
-	@keyframes slideIn {
-		from {
-			opacity: 0;
-			transform: translateX(-20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateX(0);
-		}
-	}
-
-	canvas {
-		max-width: 100%;
-		display: block;
-		background: #1f2937;
-	}
-
-	.mini-canvas-stack::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.mini-canvas-stack::-webkit-scrollbar-track {
-		background: #1f2937;
-		border-radius: 4px;
-	}
-
-	.mini-canvas-stack::-webkit-scrollbar-thumb {
-		background: #4b5563;
-		border-radius: 4px;
-	}
-
-	.mini-canvas-stack::-webkit-scrollbar-thumb:hover {
-		background: #6b7280;
 	}
 </style>

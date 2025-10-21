@@ -7,10 +7,8 @@
 	import { supabase } from '$lib/services';
 	
 	// Componentes
-	import ExplanationContainer from './components/ExplanationContainer.svelte';
 	import StepCard from './components/StepCard.svelte';
 	import PlaybackControls from './components/PlaybackControls.svelte';
-	import FeedbackPanel from './components/FeedbackPanel.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
 	import CanvasVisualization from './components/CanvasVisualization.svelte';
@@ -20,6 +18,9 @@
 	let isConnecting = $state(true);
 	let connectionError = $state(null);
 	let questionData = $state(null);
+	let showFeedbackModal = $state(false);
+	let feedbackRating = $state(null);
+	let feedbackComment = $state('');
 
 	// Obtener parámetros de la URL
 	const searchParams = $derived($page.url.searchParams);
@@ -162,7 +163,22 @@
 	}
 
 	function handleGoBack() {
-		// Desconectar y volver
+		// Mostrar modal de feedback antes de volver
+		showFeedbackModal = true;
+	}
+
+	function submitFeedback() {
+		// Aquí podrías enviar el feedback al backend si lo deseas
+		console.log('Feedback:', { rating: feedbackRating, comment: feedbackComment });
+		
+		// Desconectar y volver al examen
+		socketService.disconnect();
+		explanationStore.reset();
+		goto('/examen');
+	}
+
+	function skipFeedback() {
+		// Volver sin dar feedback
 		socketService.disconnect();
 		explanationStore.reset();
 		goto('/examen');
@@ -181,44 +197,46 @@
 	});
 </script>
 
-<!-- Fondo consistente con el examen -->
-<div class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
-	<div class="container mx-auto px-4 py-8">
-		<!-- Header -->
-		<div class="mb-8">
+<!-- Fondo dark futurista - Single page sin scroll -->
+<div class="h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white">
+	<div class="h-full flex flex-col px-6 py-6">
+		<!-- Header compacto -->
+		<div class="flex-shrink-0 mb-4">
 			<div class="flex items-center justify-between">
 				<div>
-					<h1 class="text-3xl font-bold mb-2">🎓 Salón de Clase IA</h1>
-					<p class="text-gray-400">Explicación detallada paso a paso</p>
+					<h1 class="text-2xl font-bold text-indigo-400">◈ Salón IA</h1>
 				</div>
 				<button
 					onclick={handleGoBack}
-					class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+					class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
 				>
-					← Volver al examen
+					← Volver
 				</button>
 			</div>
 		</div>
 
-		<!-- Mostrar pregunta original -->
+		<!-- Pregunta original compacta -->
 		{#if questionData}
-			<div class="bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-lg p-6 mb-6 border border-gray-700">
-				<h2 class="text-xl font-semibold mb-3 text-blue-400">📝 Pregunta Original</h2>
-				<div class="mb-4">
-					{#if questionData.lengMathPregunta}
-						<Math content={questionData.pregunta} isBlock={false} />
-					{:else}
-						<p class="text-gray-200">{questionData.pregunta}</p>
-					{/if}
-				</div>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-					<div class="p-3 bg-red-900 bg-opacity-20 border border-red-500 border-opacity-30 rounded-lg">
-						<span class="text-red-400 font-medium">Tu respuesta:</span>
-						<p class="text-gray-200 mt-1">{questionData.respuestaUsuario}</p>
+			<div class="flex-shrink-0 mb-4">
+				<div class="bg-slate-900/50 backdrop-blur-sm rounded-xl p-4 border border-slate-800">
+					<div class="flex items-start gap-3 mb-3">
+						<div class="flex-1">
+							{#if questionData.lengMathPregunta}
+								<Math content={questionData.pregunta} isBlock={false} />
+							{:else}
+								<p class="text-gray-300 text-sm">{questionData.pregunta}</p>
+							{/if}
+						</div>
 					</div>
-					<div class="p-3 bg-green-900 bg-opacity-20 border border-green-500 border-opacity-30 rounded-lg">
-						<span class="text-green-400 font-medium">Respuesta correcta:</span>
-						<p class="text-gray-200 mt-1">{questionData.respuestaCorrecta}</p>
+					<div class="flex gap-3 text-xs">
+						<div class="flex-1 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+							<span class="text-red-400 font-medium">Tu:</span>
+							<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
+						</div>
+						<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+							<span class="text-green-400 font-medium">Correcta:</span>
+							<span class="text-gray-300 ml-1">{questionData.respuestaCorrecta}</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -236,41 +254,327 @@
 		{:else if $explanationStore.isLoading}
 			<LoadingState />
 		{:else}
-			<!-- Controles de reproducción -->
+			<!-- Controles de reproducción compactos -->
 			{#if $explanationStore.isExplaining || $explanationStore.isPaused}
-				<div class="mb-6">
+				<div class="flex-shrink-0 mb-4">
 					<PlaybackControls onStop={handleStop} />
 				</div>
 			{/if}
 
-			<!-- Contenedor de explicación -->
+			<!-- Grid de 2 columnas con altura fija -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-					<!-- Columna izquierda: Pasos de explicación -->
-					<div class="space-y-4">
-						<ExplanationContainer>
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
+					<!-- Card flotante de pasos con scroll interno -->
+					<div class="floating-card">
+						<div class="card-header">
+							<h3 class="card-title">◆ Explicación</h3>
+							<span class="step-counter">{$explanationStore.steps.length} pasos</span>
+						</div>
+						<div class="card-content">
 							{#each $explanationStore.steps as step (step.step)}
 								<StepCard 
 									step={step}
 									isActive={step.step === $explanationStore.currentStep}
 								/>
 							{/each}
-						</ExplanationContainer>
+						</div>
 					</div>
 
-					<!-- Columna derecha: Pizarrón único -->
-					<div class="sticky top-4 h-fit">
+					<!-- Pizarrón -->
+					<div class="h-full">
 						<CanvasVisualization commands={$explanationStore.canvasCommands} />
 					</div>
 				</div>
 			{/if}
 
-			<!-- Panel de feedback (solo cuando la explicación está completa) -->
-			{#if !$explanationStore.isExplaining && !$explanationStore.isPaused && $explanationStore.steps.length > 0}
-				<div class="mt-8">
-					<FeedbackPanel />
-				</div>
-			{/if}
 		{/if}
 	</div>
 </div>
+
+<!-- Modal de Feedback -->
+{#if showFeedbackModal}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div 
+		class="modal-overlay" 
+		onclick={() => showFeedbackModal = false}
+	>
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div 
+			class="modal-content" 
+			onclick={(e) => e.stopPropagation()}
+		>
+			<h2 class="modal-title">¿Te fue útil la explicación?</h2>
+			<p class="modal-subtitle">Tu opinión nos ayuda a mejorar</p>
+			
+			<!-- Botones de rating -->
+			<div class="rating-buttons">
+				<button 
+					class="rating-btn"
+					class:selected={feedbackRating === 'bad'}
+					onclick={() => feedbackRating = 'bad'}
+				>
+					😞
+				</button>
+				<button 
+					class="rating-btn"
+					class:selected={feedbackRating === 'neutral'}
+					onclick={() => feedbackRating = 'neutral'}
+				>
+					😐
+				</button>
+				<button 
+					class="rating-btn"
+					class:selected={feedbackRating === 'good'}
+					onclick={() => feedbackRating = 'good'}
+				>
+					😊
+				</button>
+				<button 
+					class="rating-btn"
+					class:selected={feedbackRating === 'excellent'}
+					onclick={() => feedbackRating = 'excellent'}
+				>
+					🤩
+				</button>
+			</div>
+
+			<!-- Comentario opcional -->
+			<textarea 
+				class="comment-input"
+				bind:value={feedbackComment}
+				placeholder="Cuéntanos más (opcional)..."
+			></textarea>
+
+			<!-- Acciones -->
+			<div class="modal-actions">
+				<button class="modal-btn secondary" onclick={skipFeedback}>
+					Omitir
+				</button>
+				<button class="modal-btn primary" onclick={submitFeedback}>
+					Enviar y continuar
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<style>
+	/* Card flotante para los pasos */
+	.floating-card {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+		border-radius: 16px;
+		border: 1px solid rgba(99, 102, 241, 0.2);
+		backdrop-filter: blur(12px);
+		box-shadow: 
+			0 8px 32px rgba(0, 0, 0, 0.4),
+			0 0 0 1px rgba(99, 102, 241, 0.1),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		overflow: hidden;
+	}
+
+	.card-header {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 20px;
+		border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+		background: rgba(15, 23, 42, 0.6);
+	}
+
+	.card-title {
+		color: #818cf8;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-shadow: 0 0 10px rgba(129, 140, 248, 0.3);
+	}
+
+	.step-counter {
+		color: rgba(129, 140, 248, 0.6);
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.card-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	/* Scrollbar futurista para el card */
+	.card-content::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.card-content::-webkit-scrollbar-track {
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 3px;
+	}
+
+	.card-content::-webkit-scrollbar-thumb {
+		background: rgba(99, 102, 241, 0.3);
+		border-radius: 3px;
+		box-shadow: 0 0 6px rgba(99, 102, 241, 0.3);
+	}
+
+	.card-content::-webkit-scrollbar-thumb:hover {
+		background: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+	}
+
+	/* Modal de feedback */
+	.modal-overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.7);
+		backdrop-filter: blur(4px);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 50;
+		animation: fadeIn 0.2s ease-out;
+	}
+
+	.modal-content {
+		background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		border-radius: 16px;
+		padding: 32px;
+		max-width: 480px;
+		width: 90%;
+		box-shadow: 
+			0 20px 60px rgba(0, 0, 0, 0.6),
+			0 0 0 1px rgba(99, 102, 241, 0.2);
+		animation: slideUp 0.3s ease-out;
+	}
+
+	.modal-title {
+		color: #818cf8;
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 8px;
+		text-align: center;
+	}
+
+	.modal-subtitle {
+		color: rgba(226, 232, 240, 0.7);
+		font-size: 0.875rem;
+		text-align: center;
+		margin-bottom: 24px;
+	}
+
+	.rating-buttons {
+		display: flex;
+		gap: 12px;
+		justify-content: center;
+		margin-bottom: 20px;
+	}
+
+	.rating-btn {
+		width: 56px;
+		height: 56px;
+		border-radius: 12px;
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		background: rgba(15, 23, 42, 0.6);
+		font-size: 1.5rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.rating-btn:hover {
+		border-color: rgba(99, 102, 241, 0.5);
+		background: rgba(99, 102, 241, 0.2);
+		transform: scale(1.05);
+	}
+
+	.rating-btn.selected {
+		border-color: rgba(99, 102, 241, 0.8);
+		background: rgba(99, 102, 241, 0.3);
+		box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+	}
+
+	.comment-input {
+		width: 100%;
+		min-height: 80px;
+		padding: 12px;
+		border-radius: 8px;
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		background: rgba(15, 23, 42, 0.6);
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		resize: vertical;
+		margin-bottom: 20px;
+		transition: all 0.2s ease;
+	}
+
+	.comment-input:focus {
+		outline: none;
+		border-color: rgba(99, 102, 241, 0.6);
+		box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+	}
+
+	.comment-input::placeholder {
+		color: rgba(226, 232, 240, 0.4);
+	}
+
+	.modal-actions {
+		display: flex;
+		gap: 12px;
+	}
+
+	.modal-btn {
+		flex: 1;
+		padding: 12px 24px;
+		border-radius: 8px;
+		font-size: 0.875rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		border: none;
+	}
+
+	.modal-btn.primary {
+		background: rgba(99, 102, 241, 0.8);
+		color: white;
+	}
+
+	.modal-btn.primary:hover {
+		background: rgba(99, 102, 241, 1);
+		box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+	}
+
+	.modal-btn.secondary {
+		background: rgba(71, 85, 105, 0.6);
+		color: #e2e8f0;
+	}
+
+	.modal-btn.secondary:hover {
+		background: rgba(71, 85, 105, 0.8);
+	}
+
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>
