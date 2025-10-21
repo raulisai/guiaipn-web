@@ -27,6 +27,7 @@ class SocketService {
 		this.sessionId = null;
 		this.isConnected = false;
 		this.listeners = new Map(); // Guardar referencias de listeners
+		this.token = null; // Guardar token JWT para incluirlo en eventos
 	}
 
 	/**
@@ -52,6 +53,16 @@ class SocketService {
 				resolve();
 				return;
 			}
+
+			// Guardar token para usarlo en eventos
+			this.token = token;
+
+			// Logging del token
+			console.log('🔐 Conectando con token:', {
+				tokenLength: token.length,
+				tokenPreview: token.substring(0, 50) + '...',
+				socketUrl: SOCKET_URL
+			});
 
 			// Crear nueva conexión
 			this.socket = io(SOCKET_URL, {
@@ -115,6 +126,7 @@ class SocketService {
 			this.socket = null;
 			this.sessionId = null;
 			this.isConnected = false;
+			this.token = null; // Limpiar token
 			this.listeners.clear();
 
 			// Limpiar localStorage
@@ -148,14 +160,11 @@ class SocketService {
 		const errorHandlers = {
 			AUTH_REQUIRED: () => {
 				console.error('❌ Token no proporcionado');
-				// Redirigir a login
-				if (browser) {
-					window.location.href = '/cuenta/login';
-				}
+				// NO redirigir automáticamente - dejar que el componente maneje
 			},
 			AUTH_FAILED: () => {
-				console.error('❌ Autenticación fallida');
-				// Refrescar token y reconectar
+				console.error('❌ Autenticación fallida - Token inválido o expirado');
+				// NO redirigir automáticamente - dejar que el componente maneje
 			},
 			VALIDATION_ERROR: () => {
 				console.error('❌ Error de validación:', error.message);
@@ -183,18 +192,33 @@ class SocketService {
 	 * Envía una pregunta libre al profesor IA
 	 * @param {string} question - Pregunta del usuario
 	 * @param {Object} context - Contexto adicional (materia, dificultad, etc.)
+	 * @param {string} userId - ID del usuario (opcional, se extrae del token si no se proporciona)
 	 */
-	emitAskQuestion(question, context = {}) {
+	emitAskQuestion(question, context = {}, userId = null) {
 		if (!this.isSocketConnected()) {
 			console.error('❌ Socket no conectado');
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('📤 Enviando pregunta:', question);
-		this.socket.emit('ask_question', {
+		
+		const payload = {
+			token: this.token,
 			question,
 			context
-		});
+		};
+
+		// Incluir user_id si se proporciona explícitamente
+		if (userId) {
+			payload.user_id = userId;
+		}
+
+		this.socket.emit('ask_question', payload);
 	}
 
 	/**
@@ -207,8 +231,14 @@ class SocketService {
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('📤 Solicitando explicación:', questionData);
 		this.socket.emit('start_explanation', {
+			token: this.token,
 			question_id: questionData.id,
 			question_text: questionData.pregunta,
 			correct_answer: questionData.resuesta,
@@ -228,8 +258,14 @@ class SocketService {
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('⏸️ Pausando explicación');
 		this.socket.emit('pause_explanation', {
+			token: this.token,
 			current_step: currentStep,
 			position_in_step: positionInStep
 		});
@@ -244,8 +280,15 @@ class SocketService {
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('▶️ Reanudando explicación');
-		this.socket.emit('resume_explanation', {});
+		this.socket.emit('resume_explanation', {
+			token: this.token
+		});
 	}
 
 	/**
@@ -259,8 +302,14 @@ class SocketService {
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('📤 Pregunta de seguimiento:', question);
 		this.socket.emit('ask_follow_up_question', {
+			token: this.token,
 			question,
 			context: previousContext
 		});
@@ -276,8 +325,14 @@ class SocketService {
 			return;
 		}
 
+		if (!this.token) {
+			console.error('❌ Token no disponible');
+			return;
+		}
+
 		console.log('✋ Interrumpiendo explicación:', question);
 		this.socket.emit('interrupt_explanation', {
+			token: this.token,
 			question
 		});
 	}

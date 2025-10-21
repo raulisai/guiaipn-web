@@ -94,9 +94,10 @@ export function useSocket(token) {
 	 * Hace una pregunta libre
 	 * @param {string} question - Pregunta del usuario
 	 * @param {Object} context - Contexto adicional
+	 * @param {string} userId - ID del usuario
 	 */
-	function askQuestion(question, context = {}) {
-		socketService.emitAskQuestion(question, context);
+	function askQuestion(question, context = {}, userId = null) {
+		socketService.emitAskQuestion(question, context, userId);
 	}
 
 	/**

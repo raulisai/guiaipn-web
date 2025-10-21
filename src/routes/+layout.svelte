@@ -19,8 +19,14 @@
     // Rutas protegidas que requieren autenticación
     const protectedRoutes = ['/progreso', '/materias'];
     
+    // Rutas públicas que no deben redirigir (testing, auth, etc.)
+    const publicRoutes = ['/test-socket', '/cuenta', '/auth', '/examen'];
+    
     // Verificar si la ruta actual requiere autenticación
-    let isProtectedRoute = $derived(protectedRoutes.some(route => $page.url.pathname.startsWith(route)));
+    let isProtectedRoute = $derived(
+        protectedRoutes.some(route => $page.url.pathname.startsWith(route)) &&
+        !publicRoutes.some(route => $page.url.pathname.startsWith(route))
+    );
     
     $effect(() => {
         if (isProtectedRoute && !$user && !isCheckingAuth) {

@@ -3,12 +3,25 @@
 	import { socketService } from '$lib/api/socket';
 	import { explanationStore } from '$lib/stores';
 	import { user } from '$lib/stores';
+	import { supabase } from '$lib/services';
 
 	// Estado local para el testing
 	let connectionStatus = $state('Desconectado');
 	let sessionId = $state(null);
 	let logs = $state([]);
 	let isConnecting = $state(false);
+	let userToken = $state(null);
+
+	// Obtener token al montar
+	onMount(async () => {
+		const { data: { session } } = await supabase.auth.getSession();
+		if (session) {
+			userToken = session.access_token;
+			addLog(`🔑 Token obtenido (${session.access_token.substring(0, 20)}...)`, 'success');
+		} else {
+			addLog('⚠️ No hay sesión activa. Por favor inicia sesión.', 'error');
+		}
+	});
 
 	// Función para agregar logs
 	function addLog(message, type = 'info') {
@@ -19,10 +32,21 @@
 
 	// Conectar al socket
 	async function connect() {
-		if (!$user?.access_token) {
+		// Obtener token actualizado
+		const { data: { session } } = await supabase.auth.getSession();
+		
+		if (!session?.access_token) {
 			addLog('❌ Error: No hay token de usuario. Por favor inicia sesión.', 'error');
+			addLog('💡 Redirigiendo a login...', 'info');
+			setTimeout(() => {
+				window.location.href = '/cuenta/login';
+			}, 2000);
 			return;
 		}
+		
+		userToken = session.access_token;
+		addLog(`🔑 Token a enviar: ${userToken.substring(0, 30)}...`, 'info');
+		addLog(`📊 Longitud del token: ${userToken.length} caracteres`, 'info');
 
 		isConnecting = true;
 		addLog('🔄 Intentando conectar...', 'info');
@@ -42,7 +66,8 @@
 			});
 
 			// Conectar
-			await socketService.connect($user.access_token);
+			addLog('📡 Enviando conexión con token...', 'info');
+			await socketService.connect(userToken);
 			addLog('✅ Socket conectado exitosamente', 'success');
 			connectionStatus = 'Conectado';
 		} catch (error) {
@@ -64,17 +89,32 @@
 	}
 
 	// Probar envío de pregunta
-	function testAskQuestion() {
+	async function testAskQuestion() {
 		if (!socketService.isSocketConnected()) {
 			addLog('❌ No conectado. Conecta primero.', 'error');
 			return;
 		}
 
+		// Obtener user_id del usuario autenticado
+		const { data: { session } } = await supabase.auth.getSession();
+		if (!session?.user?.id) {
+			addLog('❌ No se pudo obtener el user_id', 'error');
+			return;
+		}
+
+		const userId = session.user.id;
+		addLog(`👤 User ID: ${userId}`, 'info');
 		addLog('📤 Enviando pregunta de prueba...', 'info');
-		socketService.emitAskQuestion('¿Qué es la energía cinética?', {
-			subject: 'fisica',
-			difficulty: 'medium'
-		});
+		
+		socketService.emitAskQuestion(
+			'¿Qué es la energía cinética?', 
+			{
+				subject: 'fisica',
+				difficulty: 'medium'
+			},
+			userId
+		);
+		
 		addLog('✅ Pregunta enviada', 'success');
 	}
 
@@ -152,6 +192,32 @@
 					📤 Probar Pregunta
 				</button>
 			</div>
+		</div>
+
+		<!-- User Info -->
+		<div class="bg-gray-800 rounded-lg p-6 mb-6">
+			<h2 class="text-2xl font-bold mb-4">👤 Información del Usuario</h2>
+			<div class="grid grid-cols-2 gap-4">
+				<div>
+					<div class="text-sm text-gray-400">Usuario</div>
+					<div class="font-mono text-sm">{$user?.email || 'No autenticado'}</div>
+				</div>
+				<div>
+					<div class="text-sm text-gray-400">Token JWT</div>
+					<div class="font-mono text-xs">
+						{#if userToken}
+							✅ {userToken.substring(0, 30)}...
+						{:else}
+							❌ No disponible
+						{/if}
+					</div>
+				</div>
+			</div>
+			{#if !$user}
+				<div class="mt-4 p-4 bg-red-900/30 border border-red-500 rounded-lg">
+					<p class="text-red-300">⚠️ No hay sesión activa. <a href="/cuenta/login" class="underline hover:text-red-200">Inicia sesión aquí</a></p>
+				</div>
+			{/if}
 		</div>
 
 		<!-- Store State -->
