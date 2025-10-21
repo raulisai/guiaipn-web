@@ -28,6 +28,7 @@ class SocketService {
 		this.isConnected = false;
 		this.listeners = new Map(); // Guardar referencias de listeners
 		this.token = null; // Guardar token JWT para incluirlo en eventos
+		this.externalListeners = new Map(); // Listeners externos registrados antes de conectar
 	}
 
 	/**
@@ -71,6 +72,9 @@ class SocketService {
 				...RECONNECTION_CONFIG
 			});
 
+			// Registrar listeners externos que fueron configurados antes de conectar
+			this.registerExternalListeners();
+
 			// Event listeners básicos
 			this.socket.on('connect', () => {
 				console.log('✅ Conectado al servidor Socket.IO');
@@ -95,6 +99,12 @@ class SocketService {
 				// Guardar en localStorage para persistencia
 				if (browser) {
 					localStorage.setItem('socket_session_id', data.session_id);
+				}
+
+				// Llamar a listeners externos registrados
+				const externalCallback = this.externalListeners.get('connection_established');
+				if (externalCallback) {
+					externalCallback(data);
 				}
 
 				resolve(data);
@@ -128,10 +138,91 @@ class SocketService {
 			this.isConnected = false;
 			this.token = null; // Limpiar token
 			this.listeners.clear();
+			this.externalListeners.clear(); // Limpiar listeners externos
 
 			// Limpiar localStorage
 			if (browser) {
 				localStorage.removeItem('socket_session_id');
+			}
+		}
+	}
+
+	/**
+	 * Registra todos los listeners externos guardados en el socket
+	 * Se llama después de crear el socket
+	 */
+	registerExternalListeners() {
+		if (!this.socket) return;
+
+		// Mapeo de eventos a métodos de registro
+		const eventMap = {
+			'waiting_phrase': (cb) => {
+				const listener = (data) => {
+					console.log('⏳ Frase de espera:', data.message);
+					cb(data);
+				};
+				this.socket.on('waiting_phrase', listener);
+				this.listeners.set('waiting_phrase', listener);
+			},
+			'explanation_start': (cb) => {
+				const listener = (data) => {
+					console.log('🎬 Explicación iniciada:', data);
+					cb(data);
+				};
+				this.socket.on('explanation_start', listener);
+				this.listeners.set('explanation_start', listener);
+			},
+			'step_start': (cb) => {
+				const listener = (data) => {
+					console.log(`📝 Paso ${data.step} iniciado:`, data.title);
+					cb(data);
+				};
+				this.socket.on('step_start', listener);
+				this.listeners.set('step_start', listener);
+			},
+			'content_chunk': (cb) => {
+				const listener = (data) => cb(data);
+				this.socket.on('content_chunk', listener);
+				this.listeners.set('content_chunk', listener);
+			},
+			'canvas_command': (cb) => {
+				const listener = (data) => {
+					console.log('🎨 Comando de canvas:', data.command);
+					cb(data);
+				};
+				this.socket.on('canvas_command', listener);
+				this.listeners.set('canvas_command', listener);
+			},
+			'step_complete': (cb) => {
+				const listener = (data) => {
+					console.log(`✅ Paso ${data.step} completado`);
+					cb(data);
+				};
+				this.socket.on('step_complete', listener);
+				this.listeners.set('step_complete', listener);
+			},
+			'explanation_complete': (cb) => {
+				const listener = (data) => {
+					console.log('🎉 Explicación completada:', data);
+					cb(data);
+				};
+				this.socket.on('explanation_complete', listener);
+				this.listeners.set('explanation_complete', listener);
+			},
+			'error': (cb) => {
+				const listener = (error) => {
+					console.error('🚫 Error del servidor:', error);
+					cb(error);
+				};
+				this.socket.on('error', listener);
+				this.listeners.set('error', listener);
+			}
+		};
+
+		// Registrar todos los listeners externos guardados
+		for (const [eventName, callback] of this.externalListeners.entries()) {
+			if (eventName !== 'connection_established' && eventMap[eventName]) {
+				eventMap[eventName](callback);
 			}
 		}
 	}
@@ -150,6 +241,14 @@ class SocketService {
 	 */
 	isSocketConnected() {
 		return this.socket?.connected || false;
+	}
+
+	/**
+	 * Obtiene el session ID actual
+	 * @returns {string|null}
+	 */
+	getSessionId() {
+		return this.sessionId;
 	}
 
 	/**
@@ -346,15 +445,13 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onConnectionEstablished(callback) {
-		if (!this.socket) return;
+		// Guardar callback para que se llame cuando se reciba el evento
+		this.externalListeners.set('connection_established', callback);
 
-		const listener = (data) => {
-			console.log('📥 Conexión establecida:', data);
-			callback(data);
-		};
-
-		this.socket.on('connection_established', listener);
-		this.listeners.set('connection_established', listener);
+		// Si ya está conectado y tiene sessionId, llamar inmediatamente
+		if (this.isConnected && this.sessionId) {
+			callback({ session_id: this.sessionId });
+		}
 	}
 
 	/**
@@ -362,15 +459,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onWaitingPhrase(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log('⏳ Frase de espera:', data.message);
-			callback(data);
-		};
-
-		this.socket.on('waiting_phrase', listener);
-		this.listeners.set('waiting_phrase', listener);
+		this.externalListeners.set('waiting_phrase', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('⏳ Frase de espera:', data.message);
+				callback(data);
+			};
+			this.socket.on('waiting_phrase', listener);
+			this.listeners.set('waiting_phrase', listener);
+		}
 	}
 
 	/**
@@ -378,15 +476,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onExplanationStart(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log('🎬 Explicación iniciada:', data);
-			callback(data);
-		};
-
-		this.socket.on('explanation_start', listener);
-		this.listeners.set('explanation_start', listener);
+		this.externalListeners.set('explanation_start', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('🎬 Explicación iniciada:', data);
+				callback(data);
+			};
+			this.socket.on('explanation_start', listener);
+			this.listeners.set('explanation_start', listener);
+		}
 	}
 
 	/**
@@ -394,15 +493,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onStepStart(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log(`📝 Paso ${data.step} iniciado:`, data.title);
-			callback(data);
-		};
-
-		this.socket.on('step_start', listener);
-		this.listeners.set('step_start', listener);
+		this.externalListeners.set('step_start', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log(`📝 Paso ${data.step} iniciado:`, data.title);
+				callback(data);
+			};
+			this.socket.on('step_start', listener);
+			this.listeners.set('step_start', listener);
+		}
 	}
 
 	/**
@@ -410,14 +510,15 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onContentChunk(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			callback(data);
-		};
-
-		this.socket.on('content_chunk', listener);
-		this.listeners.set('content_chunk', listener);
+		this.externalListeners.set('content_chunk', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				callback(data);
+			};
+			this.socket.on('content_chunk', listener);
+			this.listeners.set('content_chunk', listener);
+		}
 	}
 
 	/**
@@ -425,15 +526,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onCanvasCommand(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log('🎨 Comando de canvas:', data.command);
-			callback(data);
-		};
-
-		this.socket.on('canvas_command', listener);
-		this.listeners.set('canvas_command', listener);
+		this.externalListeners.set('canvas_command', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('🎨 Comando de canvas:', data.command);
+				callback(data);
+			};
+			this.socket.on('canvas_command', listener);
+			this.listeners.set('canvas_command', listener);
+		}
 	}
 
 	/**
@@ -441,15 +543,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onStepComplete(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log(`✅ Paso ${data.step} completado`);
-			callback(data);
-		};
-
-		this.socket.on('step_complete', listener);
-		this.listeners.set('step_complete', listener);
+		this.externalListeners.set('step_complete', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log(`✅ Paso ${data.step} completado`);
+				callback(data);
+			};
+			this.socket.on('step_complete', listener);
+			this.listeners.set('step_complete', listener);
+		}
 	}
 
 	/**
@@ -457,15 +560,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onExplanationComplete(callback) {
-		if (!this.socket) return;
-
-		const listener = (data) => {
-			console.log('🎉 Explicación completada:', data);
-			callback(data);
-		};
-
-		this.socket.on('explanation_complete', listener);
-		this.listeners.set('explanation_complete', listener);
+		this.externalListeners.set('explanation_complete', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('🎉 Explicación completada:', data);
+				callback(data);
+			};
+			this.socket.on('explanation_complete', listener);
+			this.listeners.set('explanation_complete', listener);
+		}
 	}
 
 	/**
@@ -473,15 +577,16 @@ class SocketService {
 	 * @param {Function} callback - Función a ejecutar
 	 */
 	onError(callback) {
-		if (!this.socket) return;
-
-		const listener = (error) => {
-			console.error('🚫 Error del servidor:', error);
-			callback(error);
-		};
-
-		this.socket.on('error', listener);
-		this.listeners.set('error', listener);
+		this.externalListeners.set('error', callback);
+		
+		if (this.socket) {
+			const listener = (error) => {
+				console.error('🚫 Error del servidor:', error);
+				callback(error);
+			};
+			this.socket.on('error', listener);
+			this.listeners.set('error', listener);
+		}
 	}
 
 	/**

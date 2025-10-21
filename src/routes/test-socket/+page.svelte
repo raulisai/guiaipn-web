@@ -12,7 +12,7 @@
 	let isConnecting = $state(false);
 	let userToken = $state(null);
 
-	// Obtener token al montar
+	// Obtener token y configurar listeners al montar
 	onMount(async () => {
 		const { data: { session } } = await supabase.auth.getSession();
 		if (session) {
@@ -21,7 +21,71 @@
 		} else {
 			addLog('⚠️ No hay sesión activa. Por favor inicia sesión.', 'error');
 		}
+
+		// Configurar todos los listeners una sola vez
+		setupListeners();
 	});
+
+	// Configurar listeners de Socket.IO
+	function setupListeners() {
+		// Listener de conexión establecida
+		socketService.onConnectionEstablished((data) => {
+			addLog(`✅ Conexión establecida`, 'success');
+			addLog(`📋 Session ID: ${data.session_id}`, 'success');
+			sessionId = data.session_id;
+			connectionStatus = 'Conectado';
+			explanationStore.setConnected(data.session_id);
+		});
+
+		// Listener de errores
+		socketService.onError((error) => {
+			addLog(`🚫 Error: ${error.message || error.code}`, 'error');
+		});
+
+		// Listener de frases de espera
+		socketService.onWaitingPhrase((data) => {
+			addLog(`⏳ ${data.message}`, 'info');
+		});
+
+		// Listener de inicio de explicación
+		socketService.onExplanationStart((data) => {
+			addLog(`🎬 Explicación iniciada: ${data.total_steps} pasos`, 'success');
+			addLog(`📚 Materia: ${data.subject || 'N/A'}`, 'info');
+		});
+
+		// Listener de inicio de paso
+		socketService.onStepStart((data) => {
+			addLog(`📝 Paso ${data.step}: ${data.title} (${data.type})`, 'info');
+		});
+
+		// Listener de chunks de contenido
+		socketService.onContentChunk((data) => {
+			// Solo mostrar cada 100 caracteres para no saturar los logs
+			if (data.position % 100 === 0) {
+				addLog(`💬 Recibiendo contenido paso ${data.step}... (pos: ${data.position})`, 'info');
+				addLog(`📚 ${data.chunk}`, 'info');
+			}
+			if (data.is_final) {
+				addLog(`✨ Contenido paso ${data.step} finalizado`, 'success');
+			}
+		});
+
+		// Listener de comandos de canvas
+		socketService.onCanvasCommand((data) => {
+			addLog(`🎨 Comando de canvas paso ${data.step}: ${data.command?.type || 'unknown'}`, 'info');
+		});
+
+		// Listener de paso completado
+		socketService.onStepComplete((data) => {
+			addLog(`✅ Paso ${data.step} completado`, 'success');
+		});
+
+		// Listener de explicación completada
+		socketService.onExplanationComplete((data) => {
+			addLog(`🎉 Explicación completada en ${data.total_duration}s`, 'success');
+			addLog(`📊 Total de pasos: ${data.steps_completed}`, 'info');
+		});
+	}
 
 	// Función para agregar logs
 	function addLog(message, type = 'info') {
@@ -52,24 +116,10 @@
 		addLog('🔄 Intentando conectar...', 'info');
 
 		try {
-			// Configurar listeners antes de conectar
-			socketService.onConnectionEstablished((data) => {
-				addLog(`✅ Conexión establecida`, 'success');
-				addLog(`📋 Session ID: ${data.session_id}`, 'success');
-				sessionId = data.session_id;
-				connectionStatus = 'Conectado';
-				explanationStore.setConnected(data.session_id);
-			});
-
-			socketService.onError((error) => {
-				addLog(`🚫 Error: ${error.message || error.code}`, 'error');
-			});
-
-			// Conectar
+			// Conectar (los listeners ya están configurados en onMount)
 			addLog('📡 Enviando conexión con token...', 'info');
 			await socketService.connect(userToken);
 			addLog('✅ Socket conectado exitosamente', 'success');
-			connectionStatus = 'Conectado';
 		} catch (error) {
 			addLog(`❌ Error al conectar: ${error.message}`, 'error');
 			connectionStatus = 'Error';
@@ -157,7 +207,7 @@
 				<div class="text-right">
 					<div class="text-sm text-gray-400">Session ID:</div>
 					<div class="font-mono text-sm">
-						{sessionId || 'N/A'}
+						{sessionId || socketService.getSessionId() || 'N/A'}
 					</div>
 				</div>
 			</div>
