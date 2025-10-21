@@ -66,6 +66,9 @@
 			case 'draw_diagram':
 				drawDiagram(params);
 				break;
+			case 'draw_equation':
+				drawEquation(params);
+				break;
 			case 'highlight':
 				drawHighlight(params);
 				break;
@@ -231,6 +234,31 @@
 					});
 				}
 			});
+		}
+	}
+
+	function drawEquation(params) {
+		// Renderizar ecuación matemática en el canvas
+		// El backend envía la ecuación en formato LaTeX
+		const equation = params.equation || params.latex || '';
+		const x = params.x || params.position?.x || 100;
+		const y = params.y || params.position?.y || 100;
+		const color = params.color || '#3b82f6';
+		const fontSize = params.fontSize || params.font_size || 18;
+		
+		// Renderizar la ecuación como texto (simplificado)
+		// En una implementación completa, usarías KaTeX para renderizar LaTeX
+		ctx.fillStyle = color;
+		ctx.font = `${fontSize}px "Computer Modern", serif`;
+		ctx.textAlign = 'left';
+		ctx.fillText(equation, x, y);
+		
+		// Opcional: dibujar un recuadro alrededor
+		if (params.box || params.highlight) {
+			const textWidth = ctx.measureText(equation).width;
+			ctx.strokeStyle = color;
+			ctx.lineWidth = 2;
+			ctx.strokeRect(x - 5, y - fontSize - 5, textWidth + 10, fontSize + 10);
 		}
 	}
 </script>
