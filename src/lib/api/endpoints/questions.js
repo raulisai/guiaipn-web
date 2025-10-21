@@ -49,5 +49,20 @@ export const questionsAPI = {
 				'Authorization': `Bearer ${token}`
 			}
 		});
+	},
+
+	/**
+	 * Obtiene múltiples preguntas con paginación
+	 * @param {string} token - JWT token
+	 * @param {number} page - Número de página (default: 1)
+	 * @param {number} limit - Límite de preguntas (default: 20)
+	 */
+	getQuestions: async (token, page = 1, limit = 20) => {
+		return request(`/questions/?page=${page}&limit=${limit}`, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
 	}
 };

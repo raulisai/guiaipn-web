@@ -21,6 +21,22 @@ type AnswerData = {
   reactivoId: string;
 };
 
+// Definición del tipo para pregunta de la API
+type APIQuestion = {
+  id: string;
+  code: string;
+  question: string;
+  options: { a: string; b: string; c: string; d: string };
+  correct_answer: string;
+  subject: string;
+  topic: string;
+  difficulty: string;
+  img_active: boolean;
+  leng_math_pregunta: boolean;
+  leng_math_opciones: boolean;
+  use_latex: boolean;
+};
+
 // Definición del tipo para el estado del examen
 type ExamState = {
   totalQuestions: number;
@@ -33,7 +49,8 @@ type ExamState = {
   showOptionalImage: boolean;
   showSolution: boolean;
   apiImg: string;
-  
+  apiQuestions: APIQuestion[]; // preguntas cargadas desde la API
+  questionsLoaded: boolean; // indica si las preguntas ya fueron cargadas
 };
 
 // Estado inicial
@@ -59,7 +76,9 @@ const initialState: ExamState = {
   finish: false,
   showOptionalImage: false,
   showSolution: true,
-  apiImg: 'https://img-reactivos.s3.us-east-2.amazonaws.com/'
+  apiImg: 'https://img-reactivos.s3.us-east-2.amazonaws.com/',
+  apiQuestions: [],
+  questionsLoaded: false
 };
 
 // Crear el store
@@ -133,6 +152,26 @@ const createExamStore = () => {
       ...state,
       showSolution: !state.showSolution
     })),
+    
+    // Cargar preguntas desde la API
+    loadAPIQuestions: (questions: APIQuestion[]) => update(state => ({
+      ...state,
+      apiQuestions: questions,
+      questionsLoaded: true,
+      totalQuestions: questions.length
+    })),
+    
+    // Obtener pregunta por índice
+    getQuestionByIndex: (index: number) => {
+      let question: APIQuestion | null = null;
+      update(state => {
+        if (index >= 0 && index < state.apiQuestions.length) {
+          question = state.apiQuestions[index];
+        }
+        return state;
+      });
+      return question;
+    },
     
     // Resetear el estado
     reset: () => set(initialState)
