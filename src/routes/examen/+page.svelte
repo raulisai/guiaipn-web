@@ -51,6 +51,7 @@
 			
 			if (response && response.questions && response.questions.length > 0) {
 				console.log('✅ Preguntas cargadas desde la API:', response.questions.length);
+				console.log(response.questions);
 				examStore.loadAPIQuestions(response.questions);
 				errorLoadingQuestions = false;
 			} else {
@@ -74,6 +75,7 @@
 		if (isNavigating) return;
 		isNavigating = true;
 		
+		console.log($examStore.reactivo);
 		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
 		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
 		
@@ -96,6 +98,7 @@
 			lengMathPregunta: ($examStore.reactivo.lengMathPregunta || false).toString(),
 			lengMathOpciones: ($examStore.reactivo.lengMathOpciones || false).toString()
 		});
+		console.log(queryParams.toString());
 		
 		// Trigger animations using Svelte reactivity
 		animateQuestionLeft = true;
@@ -173,7 +176,8 @@
 			
 			// Update the reactivo in the store with API data
 			const updatedReactivo = {
-				id: apiQuestion.code,
+				id: apiQuestion.id,
+				code: apiQuestion.code,
 				respuestaCorrecta: apiQuestion.correct_answer,
 				pregunta: apiQuestion.question,
 				imgAct: apiQuestion.img_active === true,
