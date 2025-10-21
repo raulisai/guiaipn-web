@@ -1,8 +1,9 @@
 <script>
 	import { explanationStore } from '$lib/stores';
 	import { socketService } from '$lib/api/socket';
+	import { speechService } from '$lib/services/speechService';
 
-	let { onStop = null } = $props();
+	let { onStop = null, onToggleVoice = null, voiceEnabled = false } = $props();
 	let showChatInput = $state(false);
 	let chatMessage = $state('');
 
@@ -10,9 +11,15 @@
 		if ($explanationStore.isPaused) {
 			socketService.emitResumeExplanation();
 			explanationStore.resumeExplanation();
+			if (voiceEnabled) {
+				speechService.resume();
+			}
 		} else {
 			socketService.emitPauseExplanation($explanationStore.currentStep, 0);
 			explanationStore.pauseExplanation();
+			if (voiceEnabled) {
+				speechService.pause();
+			}
 		}
 	}
 
@@ -70,15 +77,26 @@
 			</svg>
 		</button>
 
-		<!-- Botón Volumen -->
+		<!-- Botón Voz -->
 		<button
 			class="control-icon"
-			aria-label="Volumen"
+			class:voice-active={voiceEnabled}
+			onclick={onToggleVoice}
+			aria-label={voiceEnabled ? 'Desactivar voz' : 'Activar voz'}
 		>
-			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-				<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-			</svg>
+			{#if voiceEnabled}
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+					<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+					<path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+				</svg>
+			{:else}
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+					<line x1="23" y1="9" x2="17" y2="15"></line>
+					<line x1="17" y1="9" x2="23" y2="15"></line>
+				</svg>
+			{/if}
 		</button>
 	</div>
 
@@ -176,6 +194,18 @@
 	.control-icon:disabled {
 		opacity: 0.4;
 		cursor: not-allowed;
+	}
+
+	.control-icon.voice-active {
+		background: rgba(34, 197, 94, 0.2);
+		border-color: rgba(34, 197, 94, 0.5);
+		color: rgb(34, 197, 94);
+		box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+	}
+
+	.control-icon.voice-active::before {
+		background: linear-gradient(45deg, rgba(34, 197, 94, 0.4), rgba(74, 222, 128, 0.4));
+		opacity: 1;
 	}
 
 	.chat-input-container {

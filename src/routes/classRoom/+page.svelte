@@ -12,7 +12,9 @@
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
 	import CanvasVisualization from './components/CanvasVisualization.svelte';
+	import VerticalTimeline from './components/VerticalTimeline.svelte';
 	import Math from '../examen/componentes/Math.svelte';
+	import { speechService } from '$lib/services/speechService';
 
 	// Estados
 	let isConnecting = $state(true);
@@ -21,6 +23,7 @@
 	let showFeedbackModal = $state(false);
 	let feedbackRating = $state(null);
 	let feedbackComment = $state('');
+	let voiceEnabled = $state(false);
 
 	// Obtener parámetros de la URL
 	const searchParams = $derived($page.url.searchParams);
@@ -92,6 +95,9 @@
 		// Listener de frases de espera
 		socketService.onWaitingPhrase((data) => {
 			explanationStore.setWaitingMessage(data.message);
+			if (voiceEnabled) {
+				speechService.speak(data.message);
+			}
 		});
 
 		// Listener de inicio de explicación
@@ -102,6 +108,9 @@
 		// Listener de inicio de paso
 		socketService.onStepStart((data) => {
 			explanationStore.startStep(data);
+			if (voiceEnabled && data.title) {
+				speechService.speak(`Paso ${data.step}: ${data.title}`);
+			}
 		});
 
 		// Listener de chunks de contenido
@@ -117,11 +126,27 @@
 		// Listener de paso completado
 		socketService.onStepComplete((data) => {
 			explanationStore.completeStep(data);
+			
+			// Hablar el contenido completo del paso cuando termine
+			if (voiceEnabled) {
+				// Obtener el contenido acumulado del paso desde el store
+				const stepNumber = data.step_number || data.step;
+				const currentState = $explanationStore;
+				const step = currentState.steps.find(s => s.step === stepNumber);
+				
+				if (step && step.content) {
+					console.log('Hablando paso:', stepNumber, step.content.substring(0, 50));
+					speechService.speak(step.content);
+				}
+			}
 		});
 
 		// Listener de explicación completada
 		socketService.onExplanationComplete((data) => {
 			explanationStore.completeExplanation(data);
+			if (voiceEnabled) {
+				speechService.speak('Explicación completada');
+			}
 		});
 
 		// Listener de errores
@@ -189,11 +214,27 @@
 		return $explanationStore.canvasCommands.filter(cmd => cmd.step === stepNumber);
 	}
 
+	// Función para alternar voz
+	function toggleVoice() {
+		voiceEnabled = !voiceEnabled;
+		speechService.setEnabled(voiceEnabled);
+		
+		if (voiceEnabled) {
+			console.log('Voz activada');
+			// Mensaje de confirmación
+			speechService.speak('Voz activada. Te explicaré paso a paso.');
+		} else {
+			console.log('Voz desactivada');
+			speechService.stop();
+		}
+	}
+
 	// Limpiar al desmontar
 	onDestroy(() => {
 		if (socketService.isSocketConnected()) {
 			socketService.disconnect();
 		}
+		speechService.stop();
 	});
 </script>
 
@@ -253,14 +294,23 @@
 		{:else if $explanationStore.isLoading}
 			<LoadingState />
 		{:else}
-			<!-- Grid de 2 columnas con altura fija -->
+			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_600px] gap-4 min-h-0">
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0">
+					<!-- Línea de tiempo vertical -->
+					<div class="h-full">
+						<VerticalTimeline 
+							steps={$explanationStore.steps}
+							currentStep={$explanationStore.currentStep}
+						/>
+					</div>
+					
 					<!-- Pizarrón -->
 					<div class="h-full">
 						<CanvasVisualization commands={$explanationStore.canvasCommands} />
 					</div>
-					<!-- Card flotante de pasos con scroll interno (ancho fijo 380px) -->
+					
+					<!-- Card flotante de pasos con scroll interno -->
 					<div class="floating-card">
 						<div class="card-header">
 							<h3 class="card-title">◆ Explicación</h3>
@@ -275,8 +325,6 @@
 							{/each}
 						</div>
 					</div>
-
-					
 				</div>
 			{/if}
 
@@ -286,7 +334,11 @@
 
 <!-- Controles flotantes en la parte inferior -->
 {#if $explanationStore.steps.length > 0}
-	<FloatingControls onStop={handleStop} />
+	<FloatingControls 
+		onStop={handleStop} 
+		onToggleVoice={toggleVoice}
+		voiceEnabled={voiceEnabled}
+	/>
 {/if}
 
 <!-- Modal de Feedback -->
