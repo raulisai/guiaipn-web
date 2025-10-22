@@ -21,6 +21,7 @@ class SyncService {
 		this.onStepStartCallback = null;
 		this.onStepCompleteCallback = null;
 		this.onCharRenderCallback = null;
+		this.onProgressCallback = null;
 	}
 
 	/**
@@ -241,6 +242,16 @@ class SyncService {
 			if (this.onCharRenderCallback) {
 				this.onCharRenderCallback(checkpoint, i);
 			}
+			
+			// Callback de progreso (porcentaje del paso actual)
+			const progress = Math.round((i / content.length) * 100);
+			
+			// Actualizar progreso en el store
+			explanationStore.updateStepProgress(checkpoint.step, progress, i, content.length);
+			
+			if (this.onProgressCallback) {
+				this.onProgressCallback(checkpoint, progress, i, content.length);
+			}
 
 			// Esperar según velocidad
 			await this.wait(speed);
@@ -359,6 +370,13 @@ class SyncService {
 	 */
 	onCharRender(callback) {
 		this.onCharRenderCallback = callback;
+	}
+
+	/**
+	 * Registra callback de progreso de renderizado
+	 */
+	onProgress(callback) {
+		this.onProgressCallback = callback;
 	}
 }
 

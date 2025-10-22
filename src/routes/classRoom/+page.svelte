@@ -14,7 +14,8 @@
 	import ErrorState from './components/ErrorState.svelte';
 	import CanvasVisualization from './components/CanvasVisualization.svelte';
 	import VerticalTimeline from './components/VerticalTimeline.svelte';
-	import Math from '../examen/componentes/Math.svelte';
+	import ProgressIndicator from './components/ProgressIndicator.svelte';
+	import MathComponent from '../examen/componentes/Math.svelte';
 	import { speechService } from '$lib/services/speechService';
 
 	// Estados
@@ -31,10 +32,40 @@
 	let completedSteps = $state([]); // Pasos que ya terminaron de renderizar
 	let isExplanationCollapsed = $state(false); // Control de colapso de la columna de explicación
 
-	// Comandos de canvas filtrados por pasos COMPLETADOS
-	// Solo muestra comandos de pasos que ya terminaron de renderizar su texto
+	// Comandos de canvas filtrados por progreso del paso
+	// Divide el tiempo según cantidad de comandos: 4 comandos = 25%, 50%, 75%, 100%
 	const currentCanvasCommands = $derived(
-		$explanationStore.buffer.canvasCommands.filter((cmd) => completedSteps.includes(cmd.step))
+		$explanationStore.buffer.canvasCommands.filter((cmd, index) => {
+			// Pasos anteriores: mostrar todos
+			if (cmd.step < $explanationStore.currentStep) {
+				return true;
+			}
+			
+			// Paso actual: calcular cuántos comandos mostrar según progreso
+			if (cmd.step === $explanationStore.currentStep) {
+				// Obtener todos los comandos de este paso
+				const stepCommands = $explanationStore.buffer.canvasCommands.filter(
+					c => c.step === $explanationStore.currentStep
+				);
+				const totalCommandsInStep = stepCommands.length;
+				
+				if (totalCommandsInStep === 0) return false;
+				
+				// Calcular el índice de este comando dentro del paso
+				const commandIndexInStep = stepCommands.findIndex(c => c === cmd);
+				
+				// Calcular el porcentaje necesario para mostrar este comando
+				// Si hay 1 comando: 50%
+				// Si hay 4 comandos: 25%, 50%, 75%, 100%
+				const percentagePerCommand = 100 / totalCommandsInStep;
+				const requiredPercentage = (commandIndexInStep + 1) * percentagePerCommand;
+				
+				return $explanationStore.stepProgress.percentage >= requiredPercentage;
+			}
+			
+			// Pasos futuros: no mostrar
+			return false;
+		})
 	);
 
 	// Obtener parámetros de la URL
@@ -231,15 +262,44 @@
 
 	syncService.onStepComplete((checkpoint, stepIndex) => {
 		console.log('✅ Paso completado:', checkpoint.title);
-		// Agregar este paso a los completados para mostrar sus comandos de canvas
+		// Agregar este paso a los completados
 		completedSteps = [...completedSteps, checkpoint.step];
 		
 		// Marcar el paso como completado en el store
 		explanationStore.markStepComplete(checkpoint.step);
+		
+		// Forzar renderizado completo del canvas para este paso
+		console.log('🎨 Forzando renderizado completo del canvas para paso:', checkpoint.step);
 	});
 
 	syncService.onCharRender((checkpoint, charIndex) => {
 		// Tracking opcional
+	});
+	
+	syncService.onProgress((checkpoint, progress, charIndex, totalChars) => {
+		// Monitorear progreso del renderizado
+		console.log(`📊 Progreso paso ${checkpoint.step}: ${progress}% (${charIndex}/${totalChars} chars)`);
+		
+		// Calcular triggers dinámicos según cantidad de comandos
+		const stepCommands = $explanationStore.buffer.canvasCommands.filter(
+			c => c.step === checkpoint.step
+		);
+		const totalCommands = stepCommands.length;
+		
+		if (totalCommands > 0) {
+			const percentagePerCommand = 100 / totalCommands;
+			
+			// Verificar si alcanzamos un trigger
+			for (let i = 0; i < totalCommands; i++) {
+				const triggerPercentage = Math.round((i + 1) * percentagePerCommand);
+				
+				if (progress === triggerPercentage) {
+					console.log(`🎯 TRIGGER ${triggerPercentage}% - Activando comando ${i + 1}/${totalCommands}`);
+					console.log(`🎨 Comandos canvas disponibles: ${$explanationStore.buffer.canvasCommands.length}`);
+					console.log(`🖌️ Comandos visibles: ${currentCanvasCommands.length}`);
+				}
+			}
+		}
 	});
 
 	// Filtrar comandos de canvas por paso
@@ -324,7 +384,7 @@
 							← Volver
 						</button>
 						{#if questionData.lengMathPregunta}
-							<Math content={questionData.pregunta} isBlock={false} />
+							<MathComponent content={questionData.pregunta} isBlock={false} />
 						{:else}
 							<p class="text-yellow-300 text-2xl italic">{questionData.pregunta}</p>
 						{/if}
@@ -380,12 +440,21 @@
 		{:else}
 			<!-- Pizarrón y Explicación con colapso dinámico -->
 			{#if $explanationStore.steps.length > 0}
+				<!-- Indicador de progreso -->
+				{#if hasStarted && $explanationStore.render.isRendering}
+					<ProgressIndicator stepProgress={$explanationStore.stepProgress} />
+				{/if}
+				
 				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
 					<!-- Pizarrón (expande cuando explicación está colapsada) -->
 					<div class="flex flex-col min-h-0 transition-all duration-300" class:flex-1={isExplanationCollapsed} class:lg:flex-[3]={!isExplanationCollapsed}>
 						
 						<div class="flex-1 overflow-auto">
-							<CanvasVisualization commands={currentCanvasCommands} />
+							<CanvasVisualization 
+								commands={currentCanvasCommands} 
+								currentStep={$explanationStore.currentStep}
+								isRendering={$explanationStore.render.isRendering}
+							/>
 						</div>
 					</div>
 

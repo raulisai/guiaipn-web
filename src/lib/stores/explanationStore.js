@@ -24,6 +24,15 @@ function createExplanationStore() {
 		currentStep: 0,
 		estimatedDuration: 0,
 		questionHash: null,
+		
+		// Progreso detallado del paso actual
+		stepProgress: {
+			stepNumber: 0,
+			percentage: 0, // 0-100
+			charIndex: 0,
+			totalChars: 0,
+			canvasTriggered: false // Si ya se activó el canvas al 50%
+		},
 
 		// Contenido de los pasos
 		steps: [], // Array de { step, title, type, content, isComplete }
@@ -512,7 +521,30 @@ function createExplanationStore() {
 		setCurrentStep(stepNumber) {
 			update(state => ({
 				...state,
-				currentStep: stepNumber
+				currentStep: stepNumber,
+				stepProgress: {
+					stepNumber: stepNumber,
+					percentage: 0,
+					charIndex: 0,
+					totalChars: 0,
+					canvasTriggered: false
+				}
+			}));
+		},
+		
+		/**
+		 * Actualiza el progreso del paso actual
+		 */
+		updateStepProgress(stepNumber, percentage, charIndex, totalChars) {
+			update(state => ({
+				...state,
+				stepProgress: {
+					stepNumber,
+					percentage,
+					charIndex,
+					totalChars,
+					canvasTriggered: state.stepProgress.canvasTriggered || percentage >= 50
+				}
 			}));
 		},
 
@@ -565,6 +597,13 @@ function createExplanationStore() {
 				currentStep: 0,
 				estimatedDuration: 0,
 				questionHash: null,
+				stepProgress: {
+					stepNumber: 0,
+					percentage: 0,
+					charIndex: 0,
+					totalChars: 0,
+					canvasTriggered: false
+				},
 				steps: [],
 				canvasCommands: [],
 				buffer: {

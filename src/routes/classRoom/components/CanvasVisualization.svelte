@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import katex from 'katex';
 
-	let { commands = [], stepNumber = 0 } = $props();
+	let { commands = [], stepNumber = 0, currentStep = 1, isRendering = false } = $props();
 	
 	// Agrupar comandos por paso
 	let canvasByStep = $derived.by(() => {
@@ -28,30 +28,144 @@
 	
 	// Contador de comandos previos para detectar nuevos elementos
 	let previousCommandCount = $state(0);
+	
+	// Sistema de renderizado progresivo
+	let renderQueue = $state([]);
+	let isAnimating = $state(false);
+	let renderedCommands = $state(new Map()); // Map<step, Set<commandIndex>>
+	let commandTimestamps = $state(new Map()); // Map<commandIndex, timestamp> para efectos de fade
 
-	// Redibujar canvas cuando cambien los comandos
+	// Detectar nuevos comandos y agregarlos a la cola de renderizado
 	$effect(() => {
 		if (commands.length > 0) {
 			const currentCommandCount = commands.length;
 			const hasNewContent = currentCommandCount > previousCommandCount;
 			
-			sortedSteps.forEach(step => {
-				const canvasElement = canvasRefs[step];
-				if (canvasElement) {
-					drawCanvas(canvasElement, canvasByStep[step]);
+			if (hasNewContent) {
+				// Agregar nuevos comandos a la cola
+				const newCommands = commands.slice(previousCommandCount);
+				newCommands.forEach((cmd, idx) => {
+					renderQueue.push({
+						command: cmd,
+						originalIndex: previousCommandCount + idx,
+						step: cmd.step || 1
+					});
+				});
+				
+				// Iniciar animación si no está corriendo
+				if (!isAnimating) {
+					processRenderQueue();
 				}
-			});
-			
-			// Auto-scroll al nuevo contenido si se agregaron comandos
-			if (hasNewContent && surfaceRef && previousCommandCount > 0) {
-				setTimeout(() => {
-					scrollToLatestStep();
-				}, 150); // Delay para que el DOM se actualice y el canvas se dibuje
 			}
 			
 			previousCommandCount = currentCommandCount;
 		}
 	});
+	
+	// Procesar cola de renderizado con animación
+	async function processRenderQueue() {
+		if (renderQueue.length === 0 || isAnimating) return;
+		
+		isAnimating = true;
+		
+		while (renderQueue.length > 0) {
+			const item = renderQueue.shift();
+			const { command, originalIndex, step } = item;
+			
+			// Verificar si el canvas existe
+			const canvasElement = canvasRefs[step];
+			if (!canvasElement) {
+				await new Promise(resolve => setTimeout(resolve, 50));
+				continue;
+			}
+			
+			// Marcar comando como renderizado con timestamp
+			if (!renderedCommands.has(step)) {
+				renderedCommands.set(step, new Set());
+			}
+			renderedCommands.get(step).add(originalIndex);
+			commandTimestamps.set(originalIndex, Date.now());
+			
+			// Redibujar canvas con efecto progresivo y fade-in
+			await drawCanvasProgressive(canvasElement, step);
+			
+			// Delay mucho más largo para renderizado muy lento
+			const delay = renderQueue.length > 5 ? 1200 : 1800;
+			await new Promise(resolve => setTimeout(resolve, delay));
+			
+			// Auto-scroll al nuevo contenido
+			if (surfaceRef) {
+				scrollToLatestStep();
+			}
+		}
+		
+		isAnimating = false;
+	}
+	
+	// Dibujar canvas con animación progresiva
+	async function drawCanvasProgressive(canvasElement, step) {
+		if (!canvasElement || !canvasByStep[step]) return;
+		
+		const ctx = canvasElement.getContext('2d');
+		const dpr = window.devicePixelRatio || 1;
+		const rect = canvasElement.getBoundingClientRect();
+		
+		// Calcular altura dinámica
+		const stepCommands = canvasByStep[step];
+		const calculatedHeight = Math.min(400, Math.max(120, stepCommands.length * 60 + 40));
+		
+		canvasElement.width = rect.width * dpr;
+		canvasElement.height = calculatedHeight * dpr;
+		canvasElement.style.height = `${calculatedHeight}px`;
+		ctx.scale(dpr, dpr);
+		
+		// Limpiar canvas
+		ctx.clearRect(0, 0, rect.width, calculatedHeight);
+		
+		// Obtener comandos renderizados para este paso
+		const rendered = renderedCommands.get(step) || new Set();
+		
+		// Dibujar comandos con efecto de fade-in progresivo
+		let currentYOffset = 30;
+		stepCommands.forEach((command, idx) => {
+			const commandIndex = commands.findIndex(c => c === command);
+			
+			if (rendered.has(commandIndex)) {
+				// Calcular opacidad basada en cuánto tiempo ha pasado desde que se agregó
+				const timestamp = commandTimestamps.get(commandIndex);
+				let opacity = 1.0;
+				
+				if (timestamp) {
+					const elapsed = Date.now() - timestamp;
+					const fadeDuration = 1000; // 1 segundo para fade-in muy lento
+					opacity = Math.min(1.0, elapsed / fadeDuration);
+				}
+				
+				ctx.globalAlpha = opacity;
+				executeCommand(ctx, command.command, rect.width, currentYOffset);
+				ctx.globalAlpha = 1.0;
+			}
+			
+			currentYOffset += 50;
+		});
+		
+		// Si hay comandos con fade activo, repintar
+		const hasActiveFades = stepCommands.some((command, idx) => {
+			const commandIndex = commands.findIndex(c => c === command);
+			if (!rendered.has(commandIndex)) return false;
+			
+			const timestamp = commandTimestamps.get(commandIndex);
+			if (!timestamp) return false;
+			
+			const elapsed = Date.now() - timestamp;
+			return elapsed < 1000;
+		});
+		
+		if (hasActiveFades) {
+			// Repintar en el siguiente frame para animar el fade
+			requestAnimationFrame(() => drawCanvasProgressive(canvasElement, step));
+		}
+	}
 	
 	// Función para hacer scroll al último paso agregado (centrado)
 	function scrollToLatestStep() {
@@ -95,16 +209,16 @@
 		}
 	}
 
-	// Dibujar en un canvas individual
-	function drawCanvas(canvasElement, stepCommands) {
-		if (!canvasElement || !stepCommands) return;
+	// Forzar renderizado completo de un paso (cuando termina)
+	function forceCompleteRender(step) {
+		const canvasElement = canvasRefs[step];
+		if (!canvasElement || !canvasByStep[step]) return;
 		
 		const ctx = canvasElement.getContext('2d');
 		const dpr = window.devicePixelRatio || 1;
 		const rect = canvasElement.getBoundingClientRect();
 		
-		// Calcular altura dinámica basada en número de comandos
-		// Mínimo 120px, máximo 400px, ~60px por comando
+		const stepCommands = canvasByStep[step];
 		const calculatedHeight = Math.min(400, Math.max(120, stepCommands.length * 60 + 40));
 		
 		canvasElement.width = rect.width * dpr;
@@ -112,17 +226,35 @@
 		canvasElement.style.height = `${calculatedHeight}px`;
 		ctx.scale(dpr, dpr);
 		
-		// Fondo transparente homologado
-		ctx.fillStyle = 'transparent';
 		ctx.clearRect(0, 0, rect.width, calculatedHeight);
 		
-		// Ejecutar comandos del paso
+		// Marcar todos los comandos como renderizados
+		if (!renderedCommands.has(step)) {
+			renderedCommands.set(step, new Set());
+		}
+		
 		let currentYOffset = 30;
-		stepCommands.forEach(command => {
+		stepCommands.forEach((command, idx) => {
+			const commandIndex = commands.findIndex(c => c === command);
+			renderedCommands.get(step).add(commandIndex);
+			
+			ctx.globalAlpha = 1.0;
 			executeCommand(ctx, command.command, rect.width, currentYOffset);
 			currentYOffset += 50;
 		});
 	}
+	
+	// Exponer función para forzar renderizado completo
+	$effect(() => {
+		if (commands.length > 0 && !isRendering) {
+			// Cuando termina el renderizado, asegurar que todo esté visible
+			sortedSteps.forEach(step => {
+				if (Number(step) <= currentStep) {
+					forceCompleteRender(Number(step));
+				}
+			});
+		}
+	});
 
 	function executeCommand(ctx, cmd, canvasWidth, yOffset = 40) {
 		if (!ctx || !cmd) return;
