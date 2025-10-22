@@ -393,8 +393,13 @@
 							<span class="step-counter">{$explanationStore.steps.length} pasos</span>
 						</div>
 						<div class="card-content">
-							{#each $explanationStore.steps as step (step.step)}
-								<StepCard {step} isActive={step.step === $explanationStore.currentStep} />
+							{#each $explanationStore.steps as step, index (step.step)}
+								<StepCard 
+									{step} 
+									isActive={step.step === $explanationStore.currentStep} 
+									isFirst={index === 0}
+									isLast={index === $explanationStore.steps.length - 1}
+								/>
 							{/each}
 						</div>
 					</div>
