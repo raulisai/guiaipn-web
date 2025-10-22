@@ -532,6 +532,24 @@ function createExplanationStore() {
 		},
 
 		/**
+		 * Marca un paso como completado
+		 */
+		markStepComplete(stepNumber) {
+			update(state => {
+				const newSteps = state.steps.map(step => {
+					if (step.step === stepNumber) {
+						return { ...step, isComplete: true };
+					}
+					return step;
+				});
+				return {
+					...state,
+					steps: newSteps
+				};
+			});
+		},
+
+		/**
 		 * Resetea el store a su estado inicial
 		 */
 		reset() {

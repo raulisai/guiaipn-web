@@ -232,6 +232,9 @@
 		console.log('✅ Paso completado:', checkpoint.title);
 		// Agregar este paso a los completados para mostrar sus comandos de canvas
 		completedSteps = [...completedSteps, checkpoint.step];
+		
+		// Marcar el paso como completado en el store
+		explanationStore.markStepComplete(checkpoint.step);
 	});
 
 	syncService.onCharRender((checkpoint, charIndex) => {
@@ -372,19 +375,19 @@
 		{:else}
 			<!-- Pizarrón 3/4 | Explicación 1/4 -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-0 mt-4">
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-0 mt-4 overflow-hidden">
 					<!-- Pizarrón (3/4) -->
-					<div class="space-y-3 lg:col-span-3">
-						<div class="text-sm text-gray-400 font-semibold tracking-wide">Pizarrón</div>
-						<div class="h-full overflow-hidden">
+					<div class="flex flex-col lg:col-span-3 min-h-0">
+						<div class="text-sm text-gray-400 font-semibold tracking-wide mb-3 flex-shrink-0">Pizarrón</div>
+						<div class="flex-1 overflow-auto">
 							<CanvasVisualization commands={currentCanvasCommands} />
 						</div>
 					</div>
 
 					<!-- Explicación (1/4) -->
-					<div class="space-y-3 lg:col-span-1">
-						<div class="text-sm text-gray-400 font-semibold tracking-wide">Explicación</div>
-						<div class="floating-card">
+					<div class="flex flex-col lg:col-span-1 min-h-0">
+						<div class="text-sm text-gray-400 font-semibold tracking-wide mb-3 flex-shrink-0">Explicación</div>
+						<div class="floating-card flex-1 min-h-0">
 							<div class="card-header">
 								<h3 class="card-title">◆ Explicación</h3>
 								<span class="step-counter">{$explanationStore.steps.length} pasos</span>
@@ -517,6 +520,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		min-height: 0; /* Importante para que funcione el scroll en flex */
 	}
 
 	/* Scrollbar ultra delgado */

@@ -5,9 +5,33 @@
 	
 	// Determinar el estado del paso
 	let status = $derived(step.isComplete ? 'completed' : (isActive ? 'active' : 'pending'));
+	
+	// Referencia al elemento
+	let cardElement;
+	
+	// Debug: Log cuando cambia el estado de completado
+	$effect(() => {
+		if (step.isComplete) {
+			console.log(`✅ Paso ${step.step} marcado como completado:`, step.title);
+		}
+	});
+	
+	// Scroll automático cuando el paso se vuelve activo
+	$effect(() => {
+		if (isActive && cardElement) {
+			setTimeout(() => {
+				cardElement.scrollIntoView({ 
+					behavior: 'smooth', 
+					block: 'nearest',
+					inline: 'nearest'
+				});
+			}, 100);
+		}
+	});
 </script>
 
 <div 
+	bind:this={cardElement}
 	class="step-card"
 	class:active={isActive}
 	class:complete={step.isComplete}
@@ -41,7 +65,12 @@
 			{/if}
 		</div>
 		
-		<h3 class="step-title">{step.title}</h3>
+		<div class="title-wrapper">
+			{#if step.isComplete}
+				<span class="completion-dot"></span>
+			{/if}
+			<h3 class="step-title">{step.title}</h3>
+		</div>
 	</div>
 
 	<!-- Contenido del Paso -->
@@ -189,13 +218,41 @@
 		}
 	}
 
+	.title-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex: 1;
+		padding-top: 4px;
+	}
+
+	.completion-dot {
+		width: 8px;
+		height: 8px;
+		background: rgb(34, 197, 94);
+		border-radius: 50%;
+		flex-shrink: 0;
+		box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+		animation: dotPulse 2s ease-in-out infinite;
+	}
+
+	@keyframes dotPulse {
+		0%, 100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+		50% {
+			opacity: 0.7;
+			transform: scale(1.1);
+		}
+	}
+
 	.step-title {
 		color: #cbd5e1;
 		font-size: 0.8rem;
 		font-weight: 500;
 		flex: 1;
 		line-height: 1.3;
-		padding-top: 4px;
 	}
 
 	.active .step-title {
