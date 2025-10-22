@@ -200,13 +200,16 @@ function createExplanationStore() {
 			update((state) => {
 				// Normalizar estructura del backend
 				const stepNumber = data.step_number || data.step;
-				const command = data.command || data;
 				
+				// El backend envía: { step_number: 2, command: { command: "draw_equation", parameters: {...} } }
+				// Guardamos la estructura completa
 				const normalizedCommand = {
 					step: stepNumber,
-					command: command,
+					command: data.command, // Guardar el objeto command completo
 					renderedAt: null // Timestamp de cuándo se renderizó
 				};
+				
+				console.log('📊 Canvas command guardado:', normalizedCommand);
 				
 				return {
 					...state,

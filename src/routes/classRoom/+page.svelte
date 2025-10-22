@@ -91,9 +91,6 @@
 			// Conectar al socket
 			await socketService.connect(token);
 
-			// Esperar un momento para asegurar que la conexión está establecida
-			await new Promise(resolve => setTimeout(resolve, 500));
-
 			// Iniciar explicación automáticamente
 			startExplanation();
 
@@ -126,7 +123,16 @@
 		// Listener de inicio de paso
 		socketService.onStepStart((data) => {
 			explanationStore.startStep(data);
-			// No hablar aquí, se hará cuando empiece a renderizar
+			
+			// Procesar comandos de canvas si vienen en el paso
+			if (data.canvas_commands && Array.isArray(data.canvas_commands)) {
+				data.canvas_commands.forEach(cmd => {
+					explanationStore.addCanvasCommand({
+						step_number: data.step_number,
+						command: cmd
+					});
+				});
+			}
 		});
 
 		// Listener de chunks de contenido
@@ -349,7 +355,7 @@
 			/>
 		{:else if $explanationStore.isLoading}
 			<LoadingState />
-		{:else if $explanationStore.buffer.isComplete && !hasStarted}
+		{:else if !hasStarted}
 			<!-- Botón de PLAY para iniciar -->
 			<div class="flex-1 flex items-center justify-center">
 				<button

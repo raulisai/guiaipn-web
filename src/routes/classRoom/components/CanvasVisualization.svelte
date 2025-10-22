@@ -339,8 +339,8 @@
 			ctx.fillText(`→ ${reason}`, contentX, y + 28);
 		}
 		
-		// Dibujar recuadro resaltado
-		const boxWidth = Math.min(700, (params.canvasWidth || 800) - 60);
+		// Dibujar recuadro resaltado - usar todo el ancho disponible
+		const boxWidth = (params.canvasWidth || 800) - 60;
 		const boxHeight = reason ? 65 : 40;
 		ctx.strokeStyle = '#4ade80';
 		ctx.lineWidth = 3;
@@ -390,8 +390,8 @@
 			ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
 			ctx.shadowBlur = 2;
 			
-			// Dibujar con word wrap si es necesario
-			const maxWidth = 700;
+			// Dibujar con word wrap si es necesario - usar todo el ancho disponible
+			const maxWidth = (params.canvasWidth || 800) - 80; // Restar padding
 			const words = textContent.split(' ');
 			let line = '';
 			let lineY = y;
@@ -503,13 +503,16 @@
 		transform: none;
 	}
 
-	/* Superficie homologada */
+	/* Superficie homologada con scroll interno */
 	.blackboard-surface {
 		background: transparent;
 		border-radius: 0;
 		padding: 12px;
 		flex: 1;
 		overflow-y: auto;
+		overflow-x: hidden;
+		min-height: 0; /* Importante para que funcione el scroll en flex */
+		max-height: 100%; /* Asegurar que no crezca más allá del contenedor */
 	}
 
 	/* Etiqueta de paso minimalista */
@@ -528,9 +531,10 @@
 		opacity: 0.8;
 	}
 
-	/* Canvas sin bordes */
+	/* Canvas sin bordes - ocupa todo el ancho */
 	.blackboard-canvas {
 		width: 100%;
+		max-width: 100%;
 		display: block;
 		margin-bottom: 8px;
 		/* Sin bordes ni fondos, se integra con el pizarrón */
@@ -556,22 +560,30 @@
 		text-shadow: 0 0 8px rgba(129, 140, 248, 0.2);
 	}
 
-	/* Scrollbar ultra sutil */
+	/* Scrollbar más visible pero elegante */
 	.blackboard-surface::-webkit-scrollbar {
-		width: 4px;
+		width: 8px;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-track {
-		background: transparent;
+		background: rgba(15, 23, 42, 0.3);
+		border-radius: 4px;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.2);
-		border-radius: 2px;
+		background: rgba(99, 102, 241, 0.4);
+		border-radius: 4px;
+		border: 2px solid rgba(15, 23, 42, 0.3);
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb:hover {
-		background: rgba(99, 102, 241, 0.35);
+		background: rgba(99, 102, 241, 0.6);
+	}
+
+	/* Scrollbar para Firefox */
+	.blackboard-surface {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(99, 102, 241, 0.4) rgba(15, 23, 42, 0.3);
 	}
 
 	@keyframes fadeIn {

@@ -4,7 +4,7 @@
 	import { elasticOut, backOut } from 'svelte/easing';
 	import { user } from '$lib/stores/authStore';
 	import { goto } from '$app/navigation';
-	import Footer from './components/footer.svelte';
+	import Footer from '$lib/components/footer.svelte';
 
 // Solo importa aquí, NO en archivos .js del lado del servidor
 let stagewiseToolbar;
