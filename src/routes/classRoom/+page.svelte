@@ -1,11 +1,8 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { socketService } from '$lib/api/socket';
 	import { explanationStore } from '$lib/stores';
-	import { supabase } from '$lib/services';
-	import { syncService } from '$lib/services/syncService';
+	import { createClassRoomController } from '$lib/classRoom';
 
 	// Componentes
 	import CollapsibleSteps from './components/CollapsibleSteps.svelte';
@@ -13,220 +10,67 @@
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
 	import CanvasVisualization from './components/CanvasVisualization.svelte';
-	import VerticalTimeline from './components/VerticalTimeline.svelte';
 	import ProgressIndicator from './components/ProgressIndicator.svelte';
 	import MathComponent from '../examen/componentes/Math.svelte';
-	import { speechService } from '$lib/services/speechService';
 
-	// Estados
+	// Estados de UI
 	let isConnecting = $state(true);
 	let connectionError = $state(null);
-	let questionData = $state(null);
 	let showFeedbackModal = $state(false);
 	let feedbackRating = $state(null);
 	let feedbackComment = $state('');
-	let voiceEnabled = $state(true); // Activar voz por defecto
-	let voiceMuted = $state(false); // Control de muteo
+	let voiceMuted = $state(false);
 	let renderProgress = $state(0);
-	let hasStarted = $state(false); // Si ya inició la explicación
-	let completedSteps = $state([]); // Pasos que ya terminaron de renderizar
-	let isExplanationCollapsed = $state(false); // Control de colapso de la columna de explicación
+	let hasStarted = $state(false);
+	let isExplanationCollapsed = $state(false);
 
-	// Comandos de canvas filtrados por progreso del paso
-	// Divide el tiempo según cantidad de comandos: 4 comandos = 25%, 50%, 75%, 100%
+	// Crear controlador
+	const controller = createClassRoomController($page.url.searchParams);
+
+	// Comandos de canvas filtrados por progreso
 	const currentCanvasCommands = $derived(
-		$explanationStore.buffer.canvasCommands.filter((cmd, index) => {
-			// Pasos anteriores: mostrar todos
-			if (cmd.step < $explanationStore.currentStep) {
-				return true;
-			}
-			
-			// Paso actual: calcular cuántos comandos mostrar según progreso
-			if (cmd.step === $explanationStore.currentStep) {
-				// Obtener todos los comandos de este paso
-				const stepCommands = $explanationStore.buffer.canvasCommands.filter(
-					c => c.step === $explanationStore.currentStep
-				);
-				const totalCommandsInStep = stepCommands.length;
-				
-				if (totalCommandsInStep === 0) return false;
-				
-				// Calcular el índice de este comando dentro del paso
-				const commandIndexInStep = stepCommands.findIndex(c => c === cmd);
-				
-				// Calcular el porcentaje necesario para mostrar este comando
-				// Si hay 1 comando: 50%
-				// Si hay 4 comandos: 25%, 50%, 75%, 100%
-				const percentagePerCommand = 100 / totalCommandsInStep;
-				const requiredPercentage = (commandIndexInStep + 1) * percentagePerCommand;
-				
-				return $explanationStore.stepProgress.percentage >= requiredPercentage;
-			}
-			
-			// Pasos futuros: no mostrar
-			return false;
-		})
+		controller.getVisibleCanvasCommands(
+			$explanationStore.currentStep,
+			$explanationStore.stepProgress.percentage
+		)
 	);
 
-	// Obtener parámetros de la URL
-	const searchParams = $derived($page.url.searchParams);
+	// Datos de la pregunta desde el controlador
+	const questionData = $derived(controller.getQuestionData());
 
 	onMount(async () => {
-		// Habilitar voz cuando el usuario interactúe (click en play)
-		speechService.setEnabled(true);
-		console.log('📍 Sistema listo');
-
-		// Extraer datos de la pregunta desde URL
-		questionData = {
-			id: searchParams.get('id'),
-			pregunta: searchParams.get('pregunta'),
-			respuestaUsuario: searchParams.get('respuestaUsuario'),
-			respuestaCorrecta: searchParams.get('respuestaCorrecta'),
-			iscorrect: searchParams.get('iscorrect') === 'true',
-			lengMathPregunta: searchParams.get('lengMathPregunta') === 'true',
-			lengMathOpciones: searchParams.get('lengMathOpciones') === 'true'
-		};
-
-		// Validar que tenemos los datos necesarios
-		if (!questionData.id || !questionData.pregunta) {
-			connectionError = {
-				code: 'VALIDATION_ERROR',
-				message: 'No se encontraron datos de la pregunta. Por favor, regresa al examen.'
-			};
-			isConnecting = false;
-			return;
-		}
-
-		// Guardar pregunta en el store
-		explanationStore.setCurrentQuestion(questionData);
-
-		// Conectar al socket
-		await connectToSocket();
+		await controller.initialize({
+			onConnecting: () => {
+				isConnecting = true;
+			},
+			onConnected: () => {
+				isConnecting = false;
+			},
+			onError: (error) => {
+				connectionError = error;
+				isConnecting = false;
+			}
+		});
 	});
 
-	async function connectToSocket() {
-		try {
-			// Obtener token de Supabase
-			const {
-				data: { session },
-				error: sessionError
-			} = await supabase.auth.getSession();
-
-			if (sessionError || !session) {
-				throw new Error('No hay sesión activa');
-			}
-
-			const token = session.access_token;
-
-			// Configurar listeners antes de conectar
-			setupSocketListeners();
-
-			// Conectar al socket
-			await socketService.connect(token);
-
-			// Iniciar explicación automáticamente
-			startExplanation();
-
-			isConnecting = false;
-		} catch (error) {
-			console.error('Error al conectar:', error);
-			connectionError = {
-				code: 'CONNECTION_ERROR',
-				message: error.message
-			};
-			isConnecting = false;
-		}
-	}
-
-	function setupSocketListeners() {
-		// Listener de frases de espera
-		socketService.onWaitingPhrase((data) => {
-			explanationStore.setWaitingMessage(data.message);
-			if (voiceEnabled) {
-				speechService.speak(data.message);
-			}
-		});
-
-		// Listener de inicio de explicación
-		socketService.onExplanationStart((data) => {
-			explanationStore.startExplanation(data);
-			console.log('✅ Explicación iniciada, esperando buffer completo...');
-		});
-
-		// Listener de inicio de paso
-		socketService.onStepStart((data) => {
-			explanationStore.startStep(data);
-
-			// Procesar comandos de canvas si vienen en el paso
-			if (data.canvas_commands && Array.isArray(data.canvas_commands)) {
-				data.canvas_commands.forEach((cmd) => {
-					explanationStore.addCanvasCommand({
-						step_number: data.step_number,
-						command: cmd
-					});
-				});
-			}
-		});
-
-		// Listener de chunks de contenido
-		socketService.onContentChunk((data) => {
-			explanationStore.addContentChunk(data);
-		});
-
-		// Listener de comandos de canvas
-		socketService.onCanvasCommand((data) => {
-			explanationStore.addCanvasCommand(data);
-		});
-
-		// Listener de paso completado
-		socketService.onStepComplete((data) => {
-			explanationStore.completeStep(data);
-		});
-
-		// Listener de explicación completada
-		socketService.onExplanationComplete((data) => {
-			explanationStore.completeExplanation(data);
-			console.log('✅ Buffer completo, listo para iniciar');
-		});
-
-		// Listener de errores
-		socketService.onError((error) => {
-			explanationStore.setError(error);
-			connectionError = error;
-		});
-	}
-
-	function startExplanation() {
-		if (!questionData) return;
-
-		// Emitir evento para iniciar explicación
-		socketService.emitStartExplanation({
-			id: questionData.id,
-			pregunta: questionData.pregunta,
-			resuesta: questionData.respuestaCorrecta,
-			userAnswer: questionData.respuestaUsuario,
-			opciones: {}
-		});
-	}
+	// Handlers de UI
 
 	function handleStop() {
-		// Detener sincronización
-		syncService.stop();
-		// Desconectar socket
-		socketService.disconnect();
-		// Resetear store
-		explanationStore.reset();
-		// Volver al examen
-		goto('/examen');
+		controller.stop();
 	}
 
 	function handleRetry() {
-		// Limpiar error
 		connectionError = null;
-		explanationStore.clearError();
 		isConnecting = true;
-		// Reintentar conexión
-		connectToSocket();
+		controller.retry(async () => {
+			await controller.initialize({
+				onConnected: () => isConnecting = false,
+				onError: (err) => {
+					connectionError = err;
+					isConnecting = false;
+				}
+			});
+		});
 	}
 
 	function handleGoBack() {
@@ -235,131 +79,36 @@
 	}
 
 	function submitFeedback() {
-		// Aquí podrías enviar el feedback al backend si lo deseas
-		console.log('Feedback:', { rating: feedbackRating, comment: feedbackComment });
-
-		// Desconectar y volver al examen
-		socketService.disconnect();
-		explanationStore.reset();
-		goto('/examen');
+		controller.submitFeedback(feedbackRating, feedbackComment);
 	}
 
 	function skipFeedback() {
-		// Detener sincronización
-		syncService.stop();
-		// Volver sin dar feedback
-		socketService.disconnect();
-		explanationStore.reset();
-		goto('/examen');
+		controller.skipFeedback();
 	}
 
-	// Configurar callbacks del syncService
-	syncService.onStepStart((checkpoint, stepIndex) => {
-		console.log('🎬 Paso iniciado:', checkpoint.title);
-		// Actualizar currentStep en el store
-		explanationStore.setCurrentStep(checkpoint.step);
-	});
+	// Callbacks ya están configurados en el controlador
 
-	syncService.onStepComplete((checkpoint, stepIndex) => {
-		console.log('✅ Paso completado:', checkpoint.title);
-		// Agregar este paso a los completados
-		completedSteps = [...completedSteps, checkpoint.step];
-		
-		// Marcar el paso como completado en el store
-		explanationStore.markStepComplete(checkpoint.step);
-		
-		// Forzar renderizado completo del canvas para este paso
-		console.log('🎨 Forzando renderizado completo del canvas para paso:', checkpoint.step);
-	});
-
-	syncService.onCharRender((checkpoint, charIndex) => {
-		// Tracking opcional
-	});
-	
-	syncService.onProgress((checkpoint, progress, charIndex, totalChars) => {
-		// Monitorear progreso del renderizado
-		console.log(`📊 Progreso paso ${checkpoint.step}: ${progress}% (${charIndex}/${totalChars} chars)`);
-		
-		// Calcular triggers dinámicos según cantidad de comandos
-		const stepCommands = $explanationStore.buffer.canvasCommands.filter(
-			c => c.step === checkpoint.step
-		);
-		const totalCommands = stepCommands.length;
-		
-		if (totalCommands > 0) {
-			const percentagePerCommand = 100 / totalCommands;
-			
-			// Verificar si alcanzamos un trigger
-			for (let i = 0; i < totalCommands; i++) {
-				const triggerPercentage = Math.round((i + 1) * percentagePerCommand);
-				
-				if (progress === triggerPercentage) {
-					console.log(`🎯 TRIGGER ${triggerPercentage}% - Activando comando ${i + 1}/${totalCommands}`);
-					console.log(`🎨 Comandos canvas disponibles: ${$explanationStore.buffer.canvasCommands.length}`);
-					console.log(`🖌️ Comandos visibles: ${currentCanvasCommands.length}`);
-				}
-			}
-		}
-	});
-
-	// Filtrar comandos de canvas por paso
-	function getCanvasCommandsForStep(stepNumber) {
-		return $explanationStore.canvasCommands.filter((cmd) => cmd.step === stepNumber);
-	}
-
-	// Función para iniciar la explicación
 	function handlePlay() {
 		if (hasStarted) return;
-
 		hasStarted = true;
-		console.log('▶️ Iniciando explicación...');
-
-		// Iniciar syncService INMEDIATAMENTE
-		syncService.start();
-		startProgressTracking();
+		controller.startRendering((progress) => {
+			renderProgress = progress;
+		});
 	}
 
-	// Función para mutear/desmutear voz (NO detiene nada)
 	function toggleVoice() {
 		voiceMuted = !voiceMuted;
-		syncService.toggleVoice(!voiceMuted);
-
-		if (voiceMuted) {
-			console.log('🔇 Voz muteada');
-		} else {
-			console.log('🔊 Voz activada');
-		}
+		controller.toggleVoice(!voiceMuted);
 	}
 
 	function toggleExplanationCollapse() {
 		isExplanationCollapsed = !isExplanationCollapsed;
 	}
 
-	// Tracking de progreso
-	let progressInterval = null;
-	function startProgressTracking() {
-		if (progressInterval) clearInterval(progressInterval);
+	// Tracking de progreso manejado por el controlador
 
-		progressInterval = setInterval(() => {
-			renderProgress = syncService.getProgress();
-
-			if (renderProgress >= 100) {
-				clearInterval(progressInterval);
-				progressInterval = null;
-			}
-		}, 100);
-	}
-
-	// Limpiar al desmontar
 	onDestroy(() => {
-		if (progressInterval) {
-			clearInterval(progressInterval);
-		}
-		syncService.stop();
-		if (socketService.isSocketConnected()) {
-			socketService.disconnect();
-		}
-		speechService.stop();
+		controller.cleanup();
 	});
 </script>
 
