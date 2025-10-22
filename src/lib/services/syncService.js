@@ -129,12 +129,12 @@ class SyncService {
 		await this.wait(1000);
 
 		// 2. Iniciar voz del contenido Y renderizado al mismo tiempo
-		if (this.voiceEnabled && checkpoint.content) {
-			this.speakContent(checkpoint);
-		}
+		// Ejecutar ambos en paralelo y esperar a que ambos terminen
+		const voicePromise = checkpoint.content ? this.speakContent(checkpoint) : Promise.resolve();
+		const renderPromise = this.renderContent(checkpoint);
 		
-		// 3. Renderizar texto carácter por carácter
-		await this.renderContent(checkpoint);
+		// 3. Esperar a que AMBOS terminen (voz y renderizado)
+		await Promise.all([voicePromise, renderPromise]);
 
 		// 4. Marcar como completo
 		checkpoint.renderCompleted = true;
@@ -145,7 +145,7 @@ class SyncService {
 		}
 
 		// 5. Esperar un momento antes del siguiente paso
-		await this.wait(1500);
+		await this.wait(500); // Reducido a 500ms ya que esperamos la voz completa
 
 		// 6. Siguiente paso
 		if (this.isPlaying && !this.isPaused) {
@@ -181,25 +181,40 @@ class SyncService {
 	}
 
 	/**
-	 * Habla el contenido del paso (no espera a que termine)
+	 * Habla el contenido del paso (retorna promesa que se resuelve cuando termina)
 	 */
-	speakContent(checkpoint) {
-		console.log('🔊 Hablando contenido:', checkpoint.content.substring(0, 50) + '...');
+	async speakContent(checkpoint) {
+		if (!this.voiceEnabled) {
+			console.log('🔇 Voz desactivada, saltando audio');
+			return Promise.resolve();
+		}
 		
-		const utterance = speechService.createUtterance(checkpoint.content);
-		
-		utterance.onend = () => {
-			checkpoint.voiceCompleted = true;
-			console.log('✅ Voz completada para paso:', checkpoint.stepIndex);
-		};
-		
-		utterance.onerror = (error) => {
-			console.error('❌ Error en voz:', error);
-			checkpoint.voiceCompleted = true;
-		};
-		
-		this.currentUtterance = utterance;
-		speechService.speakUtterance(utterance);
+		return new Promise((resolve) => {
+			console.log('🔊 Hablando contenido:', checkpoint.content.substring(0, 50) + '...');
+			
+			const utterance = speechService.createUtterance(checkpoint.content);
+			
+			if (!utterance) {
+				console.warn('⚠️ No se pudo crear utterance');
+				resolve();
+				return;
+			}
+			
+			utterance.onend = () => {
+				checkpoint.voiceCompleted = true;
+				console.log('✅ Voz completada para paso:', checkpoint.stepIndex);
+				resolve();
+			};
+			
+			utterance.onerror = (error) => {
+				console.error('❌ Error en voz:', error);
+				checkpoint.voiceCompleted = true;
+				resolve(); // Resolver aunque falle para continuar
+			};
+			
+			this.currentUtterance = utterance;
+			speechService.speakUtterance(utterance);
+		});
 	}
 
 	/**
@@ -294,6 +309,10 @@ class SyncService {
 		if (!enabled && speechService.synth) {
 			// Cancelar voz actual pero continuar renderizado
 			speechService.synth.cancel();
+			// Marcar el checkpoint actual como completado en voz para no quedarse esperando
+			if (this.currentStepIndex >= 0 && this.currentStepIndex < this.checkpoints.length) {
+				this.checkpoints[this.currentStepIndex].voiceCompleted = true;
+			}
 		}
 	}
 
