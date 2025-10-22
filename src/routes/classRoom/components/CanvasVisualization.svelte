@@ -22,18 +22,78 @@
 
 	// Referencias a los canvas (reactivo)
 	let canvasRefs = $state({});
+	
+	// Referencia al contenedor scrolleable
+	let surfaceRef = $state(null);
+	
+	// Contador de comandos previos para detectar nuevos elementos
+	let previousCommandCount = $state(0);
 
 	// Redibujar canvas cuando cambien los comandos
 	$effect(() => {
 		if (commands.length > 0) {
+			const currentCommandCount = commands.length;
+			const hasNewContent = currentCommandCount > previousCommandCount;
+			
 			sortedSteps.forEach(step => {
 				const canvasElement = canvasRefs[step];
 				if (canvasElement) {
 					drawCanvas(canvasElement, canvasByStep[step]);
 				}
 			});
+			
+			// Auto-scroll al nuevo contenido si se agregaron comandos
+			if (hasNewContent && surfaceRef && previousCommandCount > 0) {
+				setTimeout(() => {
+					scrollToLatestStep();
+				}, 150); // Delay para que el DOM se actualice y el canvas se dibuje
+			}
+			
+			previousCommandCount = currentCommandCount;
 		}
 	});
+	
+	// Función para hacer scroll al último paso agregado (centrado)
+	function scrollToLatestStep() {
+		if (!surfaceRef) return;
+		
+		const lastStep = sortedSteps[sortedSteps.length - 1];
+		const lastCanvas = canvasRefs[lastStep];
+		
+		if (lastCanvas) {
+			// Obtener la posición del último canvas (incluye la etiqueta del paso)
+			const canvasTop = lastCanvas.offsetTop;
+			const canvasHeight = lastCanvas.offsetHeight;
+			const surfaceHeight = surfaceRef.clientHeight;
+			const surfaceScrollHeight = surfaceRef.scrollHeight;
+			
+			// Incluir la etiqueta del paso (aproximadamente 50px arriba del canvas)
+			const labelOffset = 50;
+			const totalContentHeight = canvasHeight + labelOffset;
+			
+			// Calcular posición para centrar el nuevo contenido
+			// Si el contenido es más pequeño que el viewport, centrarlo
+			// Si es más grande, mostrar desde el inicio con padding
+			let scrollPosition;
+			
+			if (totalContentHeight < surfaceHeight) {
+				// Centrar el contenido si cabe en la vista
+				scrollPosition = (canvasTop - labelOffset) - (surfaceHeight - totalContentHeight) / 2;
+			} else {
+				// Si es más grande, mostrar desde arriba con padding
+				scrollPosition = canvasTop - labelOffset - 20;
+			}
+			
+			// Asegurar que no exceda los límites
+			const maxScroll = surfaceScrollHeight - surfaceHeight;
+			scrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
+			
+			surfaceRef.scrollTo({
+				top: scrollPosition,
+				behavior: 'smooth'
+			});
+		}
+	}
 
 	// Dibujar en un canvas individual
 	function drawCanvas(canvasElement, stepCommands) {
@@ -440,7 +500,7 @@
 		</div>
 		
 		<!-- Superficie del pizarrón -->
-		<div class="blackboard-surface">
+		<div class="blackboard-surface" bind:this={surfaceRef}>
 			{#each sortedSteps as step (step)}
 			<!-- Etiqueta de paso minimalista -->
 			<div class="step-label">
