@@ -370,37 +370,35 @@
 				</button>
 			</div>
 		{:else}
-			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
+			<!-- Pizarrón 3/4 | Explicación 1/4 -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0 mt-4">
-					<!-- Línea de tiempo vertical -->
-					<div class="h-full overflow-hidden">
-						<VerticalTimeline
-							steps={$explanationStore.steps}
-							currentStep={$explanationStore.currentStep}
-						/>
-					</div>
-
-					<!-- Pizarrón -->
-					<div class="h-full overflow-hidden">
-						<CanvasVisualization commands={currentCanvasCommands} />
-					</div>
-
-					<!-- Card flotante de pasos con scroll interno -->
-					<div class="floating-card">
-						<div class="card-header">
-							<h3 class="card-title">◆ Explicación</h3>
-							<span class="step-counter">{$explanationStore.steps.length} pasos</span>
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-0 mt-4">
+					<!-- Pizarrón (3/4) -->
+					<div class="space-y-3 lg:col-span-3">
+						<div class="text-sm text-gray-400 font-semibold tracking-wide">Pizarrón</div>
+						<div class="h-full overflow-hidden">
+							<CanvasVisualization commands={currentCanvasCommands} />
 						</div>
-						<div class="card-content">
-							{#each $explanationStore.steps as step, index (step.step)}
-								<StepCard 
-									{step} 
-									isActive={step.step === $explanationStore.currentStep} 
-									isFirst={index === 0}
-									isLast={index === $explanationStore.steps.length - 1}
-								/>
-							{/each}
+					</div>
+
+					<!-- Explicación (1/4) -->
+					<div class="space-y-3 lg:col-span-1">
+						<div class="text-sm text-gray-400 font-semibold tracking-wide">Explicación</div>
+						<div class="floating-card">
+							<div class="card-header">
+								<h3 class="card-title">◆ Explicación</h3>
+								<span class="step-counter">{$explanationStore.steps.length} pasos</span>
+							</div>
+							<div class="card-content">
+								{#each $explanationStore.steps as step, index (step.step)}
+									<StepCard 
+										{step} 
+										isActive={step.step === $explanationStore.currentStep} 
+										isFirst={index === 0}
+										isLast={index === $explanationStore.steps.length - 1}
+									/>
+								{/each}
+							</div>
 						</div>
 					</div>
 				</div>
