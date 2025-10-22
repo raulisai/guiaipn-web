@@ -6,7 +6,7 @@
 	import { explanationStore } from '$lib/stores';
 	import { supabase } from '$lib/services';
 	import { syncService } from '$lib/services/syncService';
-	
+
 	// Componentes
 	import StepCard from './components/StepCard.svelte';
 	import FloatingControls from './components/FloatingControls.svelte';
@@ -33,9 +33,7 @@
 	// Comandos de canvas filtrados por pasos COMPLETADOS
 	// Solo muestra comandos de pasos que ya terminaron de renderizar su texto
 	const currentCanvasCommands = $derived(
-		$explanationStore.buffer.canvasCommands.filter(
-			cmd => completedSteps.includes(cmd.step)
-		)
+		$explanationStore.buffer.canvasCommands.filter((cmd) => completedSteps.includes(cmd.step))
 	);
 
 	// Obtener parámetros de la URL
@@ -45,7 +43,7 @@
 		// Habilitar voz cuando el usuario interactúe (click en play)
 		speechService.setEnabled(true);
 		console.log('📍 Sistema listo');
-		
+
 		// Extraer datos de la pregunta desde URL
 		questionData = {
 			id: searchParams.get('id'),
@@ -77,8 +75,11 @@
 	async function connectToSocket() {
 		try {
 			// Obtener token de Supabase
-			const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-			
+			const {
+				data: { session },
+				error: sessionError
+			} = await supabase.auth.getSession();
+
 			if (sessionError || !session) {
 				throw new Error('No hay sesión activa');
 			}
@@ -123,10 +124,10 @@
 		// Listener de inicio de paso
 		socketService.onStepStart((data) => {
 			explanationStore.startStep(data);
-			
+
 			// Procesar comandos de canvas si vienen en el paso
 			if (data.canvas_commands && Array.isArray(data.canvas_commands)) {
-				data.canvas_commands.forEach(cmd => {
+				data.canvas_commands.forEach((cmd) => {
 					explanationStore.addCanvasCommand({
 						step_number: data.step_number,
 						command: cmd
@@ -204,7 +205,7 @@
 	function submitFeedback() {
 		// Aquí podrías enviar el feedback al backend si lo deseas
 		console.log('Feedback:', { rating: feedbackRating, comment: feedbackComment });
-		
+
 		// Desconectar y volver al examen
 		socketService.disconnect();
 		explanationStore.reset();
@@ -235,20 +236,20 @@
 
 	syncService.onCharRender((checkpoint, charIndex) => {
 		// Tracking opcional
-		});
+	});
 
 	// Filtrar comandos de canvas por paso
 	function getCanvasCommandsForStep(stepNumber) {
-		return $explanationStore.canvasCommands.filter(cmd => cmd.step === stepNumber);
+		return $explanationStore.canvasCommands.filter((cmd) => cmd.step === stepNumber);
 	}
 
 	// Función para iniciar la explicación
 	function handlePlay() {
 		if (hasStarted) return;
-		
+
 		hasStarted = true;
 		console.log('▶️ Iniciando explicación...');
-		
+
 		// Iniciar syncService INMEDIATAMENTE
 		syncService.start();
 		startProgressTracking();
@@ -258,7 +259,7 @@
 	function toggleVoice() {
 		voiceMuted = !voiceMuted;
 		syncService.toggleVoice(!voiceMuted);
-		
+
 		if (voiceMuted) {
 			console.log('🔇 Voz muteada');
 		} else {
@@ -270,10 +271,10 @@
 	let progressInterval = null;
 	function startProgressTracking() {
 		if (progressInterval) clearInterval(progressInterval);
-		
+
 		progressInterval = setInterval(() => {
 			renderProgress = syncService.getProgress();
-			
+
 			if (renderProgress >= 100) {
 				clearInterval(progressInterval);
 				progressInterval = null;
@@ -295,49 +296,54 @@
 </script>
 
 <!-- Fondo dark futurista - Single page sin scroll -->
-<div class="h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white">
+<div
+	class="h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white"
+>
 	<div class="h-full flex flex-col px-6 py-6">
-		<!-- Header compacto con indicador de progreso -->
-		<div class="flex-shrink-0 mb-4">
-			<div class="flex items-center justify-center gap-4">
-				<h1 class="text-2xl font-bold text-indigo-400">◈ Salón IA</h1>
-				{#if $explanationStore.render.isRendering && renderProgress < 100}
-					<div class="progress-indicator">
-						<div class="progress-bar" style="width: {renderProgress}%"></div>
-						<span class="progress-text">{renderProgress}%</span>
-					</div>
-				{/if}
-			</div>
-		</div>
-
 		<!-- Pregunta original compacta -->
 		{#if questionData}
+			<!-- Header compacto con indicador de progreso -->
 			<div class="flex-shrink-0">
+				<div class="flex flex-col items-center justify-center">
+					<div class="">
+						<h1 class="text-2xl font-bold text-indigo-400">Question</h1>
+					</div>
+					<div class="-mt-6">
+						{#if questionData.lengMathPregunta}
+							<Math content={questionData.pregunta} isBlock={false} />
+						{:else}
+							<p class="text-yellow-300 text-2xl italic ">{questionData.pregunta}</p>
+						{/if}
+					</div>
+					{#if $explanationStore.render.isRendering && renderProgress < 100}
+						<div class="progress-indicator">
+							<div class="progress-bar" style="width: {renderProgress}%"></div>
+							<span class="progress-text">{renderProgress}%</span>
+						</div>
+					{/if}
+				</div>
+			</div>
+			<div class="flex-shrink-0 mt-4">
 				<div class="">
 					<div class="flex items-start gap-3 mb-3">
 						<button
-					onclick={handleGoBack}
-					class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
-				>
-					← Volver
-				</button>
-						<div class="flex-1">
-							{#if questionData.lengMathPregunta}
-								<Math content={questionData.pregunta} isBlock={false} />
-							{:else}
-								<p class="text-gray-300 text-sm">{questionData.pregunta}</p>
-							{/if}
-						</div>
+							onclick={handleGoBack}
+							class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
+						>
+							← Volver
+						</button>
+						<div class="flex-1"></div>
 						<div class="flex gap-3 text-xs">
 							<div class="flex-1 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
-							<span class="text-red-400 font-medium">Tu:</span>
-							<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
-						</div>
-						<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-							<span class="text-green-400 font-medium">Correcta:</span>
-							<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate">{questionData.respuestaCorrecta}</span>
-						</div>
-						
+								<span class="text-red-400 font-medium">Tu:</span>
+								<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
+							</div>
+							<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+								<span class="text-green-400 font-medium">Correcta:</span>
+								<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate"
+									>{questionData.respuestaCorrecta}</span
+								>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -345,51 +351,48 @@
 		{/if}
 
 		<!-- Estados principales -->
-	{#if isConnecting}
-		<LoadingState />
-	{:else if connectionError || $explanationStore.error}
-		<ErrorState 
-			error={connectionError || $explanationStore.error} 
-			onRetry={handleRetry}
-			onGoBack={handleGoBack}
-		/>
-	{:else if $explanationStore.isLoading || (!$explanationStore.buffer.isComplete && !hasStarted)}
-		<!-- Mostrar loading mientras se carga el buffer completo -->
-		<LoadingState 
-			bufferSteps={$explanationStore.buffer.steps.length}
-			totalSteps={$explanationStore.totalSteps}
-			isBuffering={$explanationStore.buffer.steps.length > 0}
-		/>
-	{:else if $explanationStore.buffer.isComplete && !hasStarted}
-		<!-- Botón de PLAY para iniciar (solo cuando el buffer está completo) -->
-		<div class="flex-1 flex items-center justify-center">
-			<button
-				onclick={handlePlay}
-				class="play-button"
-			>
-				<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-					<polygon points="5 3 19 12 5 21 5 3"></polygon>
-				</svg>
-				<span>Iniciar Explicación</span>
-			</button>
-		</div>
-	{:else}
+		{#if isConnecting}
+			<LoadingState />
+		{:else if connectionError || $explanationStore.error}
+			<ErrorState
+				error={connectionError || $explanationStore.error}
+				onRetry={handleRetry}
+				onGoBack={handleGoBack}
+			/>
+		{:else if $explanationStore.isLoading || (!$explanationStore.buffer.isComplete && !hasStarted)}
+			<!-- Mostrar loading mientras se carga el buffer completo -->
+			<LoadingState
+				bufferSteps={$explanationStore.buffer.steps.length}
+				totalSteps={$explanationStore.totalSteps}
+				isBuffering={$explanationStore.buffer.steps.length > 0}
+			/>
+		{:else if $explanationStore.buffer.isComplete && !hasStarted}
+			<!-- Botón de PLAY para iniciar (solo cuando el buffer está completo) -->
+			<div class="flex-1 flex items-center justify-center">
+				<button onclick={handlePlay} class="play-button">
+					<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+						<polygon points="5 3 19 12 5 21 5 3"></polygon>
+					</svg>
+					<span>Iniciar Explicación</span>
+				</button>
+			</div>
+		{:else}
 			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
 			{#if $explanationStore.steps.length > 0}
 				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0">
 					<!-- Línea de tiempo vertical -->
 					<div class="h-full">
-						<VerticalTimeline 
+						<VerticalTimeline
 							steps={$explanationStore.steps}
 							currentStep={$explanationStore.currentStep}
 						/>
 					</div>
-					
+
 					<!-- Pizarrón -->
 					<div class="h-full">
 						<CanvasVisualization commands={currentCanvasCommands} />
 					</div>
-					
+
 					<!-- Card flotante de pasos con scroll interno -->
 					<div class="floating-card">
 						<div class="card-header">
@@ -398,80 +401,66 @@
 						</div>
 						<div class="card-content">
 							{#each $explanationStore.steps as step (step.step)}
-								<StepCard 
-									step={step}
-									isActive={step.step === $explanationStore.currentStep}
-								/>
+								<StepCard {step} isActive={step.step === $explanationStore.currentStep} />
 							{/each}
 						</div>
 					</div>
 				</div>
 			{/if}
-
 		{/if}
 	</div>
 </div>
 
 <!-- Controles flotantes en la parte inferior -->
 {#if $explanationStore.steps.length > 0}
-	<FloatingControls 
-		onStop={handleStop} 
-		onToggleVoice={toggleVoice}
-		voiceEnabled={!voiceMuted}
-	/>
+	<FloatingControls onStop={handleStop} onToggleVoice={toggleVoice} voiceEnabled={!voiceMuted} />
 {/if}
 
 <!-- Modal de Feedback -->
 {#if showFeedbackModal}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div 
-		class="modal-overlay" 
-		onclick={() => showFeedbackModal = false}
-	>
+	<div class="modal-overlay" onclick={() => (showFeedbackModal = false)}>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div 
-			class="modal-content" 
-			onclick={(e) => e.stopPropagation()}
-		>
+		<div class="modal-content" onclick={(e) => e.stopPropagation()}>
 			<h2 class="modal-title">¿Te fue útil la explicación?</h2>
 			<p class="modal-subtitle">Tu opinión nos ayuda a mejorar</p>
-			
+
 			<!-- Botones de rating -->
 			<div class="rating-buttons">
-				<button 
+				<button
 					class="rating-btn"
 					class:selected={feedbackRating === 'bad'}
-					onclick={() => feedbackRating = 'bad'}
+					onclick={() => (feedbackRating = 'bad')}
 				>
 					😞
 				</button>
-				<button 
+				<button
 					class="rating-btn"
 					class:selected={feedbackRating === 'neutral'}
-					onclick={() => feedbackRating = 'neutral'}
+					onclick={() => (feedbackRating = 'neutral')}
 				>
 					😐
 				</button>
-				<button 
+				<button
 					class="rating-btn"
 					class:selected={feedbackRating === 'good'}
-					onclick={() => feedbackRating = 'good'}
+					onclick={() => (feedbackRating = 'good')}
 				>
 					😊
 				</button>
-				<button 
+				<button
 					class="rating-btn"
 					class:selected={feedbackRating === 'excellent'}
-					onclick={() => feedbackRating = 'excellent'}
+					onclick={() => (feedbackRating = 'excellent')}
 				>
 					🤩
 				</button>
 			</div>
 
 			<!-- Comentario opcional -->
-			<textarea 
+			<textarea
 				class="comment-input"
 				bind:value={feedbackComment}
 				placeholder="Cuéntanos más (opcional)..."
@@ -479,12 +468,8 @@
 
 			<!-- Acciones -->
 			<div class="modal-actions">
-				<button class="modal-btn secondary" onclick={skipFeedback}>
-					Omitir
-				</button>
-				<button class="modal-btn primary" onclick={submitFeedback}>
-					Enviar y continuar
-				</button>
+				<button class="modal-btn secondary" onclick={skipFeedback}> Omitir </button>
+				<button class="modal-btn primary" onclick={submitFeedback}> Enviar y continuar </button>
 			</div>
 		</div>
 	</div>
@@ -576,7 +561,7 @@
 		padding: 32px;
 		max-width: 480px;
 		width: 90%;
-		box-shadow: 
+		box-shadow:
 			0 20px 60px rgba(0, 0, 0, 0.6),
 			0 0 0 1px rgba(99, 102, 241, 0.2);
 		animation: slideUp 0.3s ease-out;
@@ -730,7 +715,8 @@
 	}
 
 	@keyframes pulse {
-		0%, 100% {
+		0%,
+		100% {
 			box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
 		}
 		50% {
