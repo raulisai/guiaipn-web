@@ -345,30 +345,35 @@
 		{/if}
 
 		<!-- Estados principales -->
-		{#if isConnecting}
-			<LoadingState />
-		{:else if connectionError || $explanationStore.error}
-			<ErrorState 
-				error={connectionError || $explanationStore.error} 
-				onRetry={handleRetry}
-				onGoBack={handleGoBack}
-			/>
-		{:else if $explanationStore.isLoading}
-			<LoadingState />
-		{:else if !hasStarted}
-			<!-- Botón de PLAY para iniciar -->
-			<div class="flex-1 flex items-center justify-center">
-				<button
-					onclick={handlePlay}
-					class="play-button"
-				>
-					<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-						<polygon points="5 3 19 12 5 21 5 3"></polygon>
-					</svg>
-					<span>Iniciar Explicación</span>
-				</button>
-			</div>
-		{:else}
+	{#if isConnecting}
+		<LoadingState />
+	{:else if connectionError || $explanationStore.error}
+		<ErrorState 
+			error={connectionError || $explanationStore.error} 
+			onRetry={handleRetry}
+			onGoBack={handleGoBack}
+		/>
+	{:else if $explanationStore.isLoading || (!$explanationStore.buffer.isComplete && !hasStarted)}
+		<!-- Mostrar loading mientras se carga el buffer completo -->
+		<LoadingState 
+			bufferSteps={$explanationStore.buffer.steps.length}
+			totalSteps={$explanationStore.totalSteps}
+			isBuffering={$explanationStore.buffer.steps.length > 0}
+		/>
+	{:else if $explanationStore.buffer.isComplete && !hasStarted}
+		<!-- Botón de PLAY para iniciar (solo cuando el buffer está completo) -->
+		<div class="flex-1 flex items-center justify-center">
+			<button
+				onclick={handlePlay}
+				class="play-button"
+			>
+				<svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+					<polygon points="5 3 19 12 5 21 5 3"></polygon>
+				</svg>
+				<span>Iniciar Explicación</span>
+			</button>
+		</div>
+	{:else}
 			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
 			{#if $explanationStore.steps.length > 0}
 				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0">

@@ -1,6 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 
+	// Props opcionales para mostrar progreso del buffer
+	let { bufferSteps = 0, totalSteps = 0, isBuffering = false } = $props();
+
 	let currentPhraseIndex = $state(0);
 	
 	const loadingPhrases = [
@@ -19,6 +22,11 @@
 
 		return () => clearInterval(interval);
 	});
+
+	// Calcular progreso del buffer
+	const bufferProgress = $derived(
+		totalSteps > 0 ? Math.round((bufferSteps / totalSteps) * 100) : 0
+	);
 </script>
 
 <div class="loading-state flex flex-col items-center justify-center min-h-[400px] p-8">
@@ -33,10 +41,21 @@
 		{loadingPhrases[currentPhraseIndex]}
 	</p>
 
-	<!-- Barra de progreso indeterminada -->
-	<div class="progress-bar-container w-full max-w-md">
-		<div class="progress-bar-indeterminate"></div>
-	</div>
+	<!-- Barra de progreso -->
+	{#if isBuffering && totalSteps > 0}
+		<!-- Barra de progreso determinada con pasos -->
+		<div class="progress-bar-container w-full max-w-md">
+			<div class="progress-bar-determined" style="width: {bufferProgress}%"></div>
+		</div>
+		<p class="text-sm text-indigo-400 mt-3 text-center font-medium">
+			Cargando pasos: {bufferSteps} / {totalSteps} ({bufferProgress}%)
+		</p>
+	{:else}
+		<!-- Barra de progreso indeterminada -->
+		<div class="progress-bar-container w-full max-w-md">
+			<div class="progress-bar-indeterminate"></div>
+		</div>
+	{/if}
 
 	<!-- Mensaje adicional -->
 	<p class="text-sm text-gray-500 mt-6 text-center">
@@ -110,6 +129,13 @@
 			transparent
 		);
 		animation: indeterminate 1.5s ease-in-out infinite;
+	}
+
+	.progress-bar-determined {
+		height: 100%;
+		background: linear-gradient(90deg, #6366f1, #818cf8);
+		border-radius: 2px;
+		transition: width 0.3s ease;
 	}
 
 	@keyframes indeterminate {
