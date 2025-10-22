@@ -374,7 +374,7 @@
 			{#if $explanationStore.steps.length > 0}
 				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0 mt-4">
 					<!-- Línea de tiempo vertical -->
-					<div class="h-full">
+					<div class="h-full overflow-hidden">
 						<VerticalTimeline
 							steps={$explanationStore.steps}
 							currentStep={$explanationStore.currentStep}
@@ -382,7 +382,7 @@
 					</div>
 
 					<!-- Pizarrón -->
-					<div class="h-full">
+					<div class="h-full overflow-hidden">
 						<CanvasVisualization commands={currentCanvasCommands} />
 					</div>
 

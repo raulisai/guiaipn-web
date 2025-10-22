@@ -467,9 +467,12 @@
 <style>
 	.blackboard-container {
 		animation: fadeIn 0.5s ease-in;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 
-	/* Marco con estilo homologado */
+	/* Marco con estilo homologado - altura fija para tomar todo el espacio disponible */
 	.blackboard-frame {
 		background: rgba(15, 23, 42, 0.15);
 		border-radius: 8px;
@@ -477,7 +480,9 @@
 		backdrop-filter: blur(4px);
 		border: 1px solid rgba(99, 102, 241, 0.1);
 		overflow: hidden;
+		/* Tomar todo el alto disponible del contenedor padre */
 		height: 100%;
+		min-height: 400px;
 		display: flex;
 		flex-direction: column;
 	}
@@ -503,16 +508,18 @@
 		transform: none;
 	}
 
-	/* Superficie homologada con scroll interno */
+	/* Superficie homologada con scroll interno - contenedor scrolleable */
 	.blackboard-surface {
 		background: transparent;
 		border-radius: 0;
-		padding: 12px;
+		padding: 16px;
 		flex: 1;
 		overflow-y: auto;
 		overflow-x: hidden;
 		min-height: 0; /* Importante para que funcione el scroll en flex */
 		max-height: 100%; /* Asegurar que no crezca más allá del contenedor */
+		/* Smooth scrolling */
+		scroll-behavior: smooth;
 	}
 
 	/* Etiqueta de paso minimalista */
@@ -560,30 +567,32 @@
 		text-shadow: 0 0 8px rgba(129, 140, 248, 0.2);
 	}
 
-	/* Scrollbar más visible pero elegante */
+	/* Scrollbar más visible y elegante */
 	.blackboard-surface::-webkit-scrollbar {
-		width: 8px;
+		width: 10px;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-track {
-		background: rgba(15, 23, 42, 0.3);
-		border-radius: 4px;
+		background: rgba(15, 23, 42, 0.4);
+		border-radius: 5px;
+		margin: 4px 0;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.4);
-		border-radius: 4px;
-		border: 2px solid rgba(15, 23, 42, 0.3);
+		background: rgba(99, 102, 241, 0.5);
+		border-radius: 5px;
+		border: 2px solid rgba(15, 23, 42, 0.4);
+		transition: background 0.2s ease;
 	}
 
 	.blackboard-surface::-webkit-scrollbar-thumb:hover {
-		background: rgba(99, 102, 241, 0.6);
+		background: rgba(99, 102, 241, 0.7);
 	}
 
 	/* Scrollbar para Firefox */
 	.blackboard-surface {
 		scrollbar-width: thin;
-		scrollbar-color: rgba(99, 102, 241, 0.4) rgba(15, 23, 42, 0.3);
+		scrollbar-color: rgba(99, 102, 241, 0.5) rgba(15, 23, 42, 0.4);
 	}
 
 	@keyframes fadeIn {
