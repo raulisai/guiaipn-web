@@ -158,7 +158,7 @@ class SyncService {
 	 */
 	async speakTitle(checkpoint) {
 		return new Promise((resolve) => {
-			const text = `Paso ${checkpoint.step + 1}: ${checkpoint.title}`;
+			const text = `Paso ${checkpoint.step}: ${checkpoint.title}`;
 			console.log('🔊 Anunciando:', text);
 			
 			checkpoint.voiceStarted = true;

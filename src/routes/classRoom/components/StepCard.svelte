@@ -15,7 +15,7 @@
 			{#if step.isComplete}
 				<span class="check-icon">✓</span>
 			{:else}
-				<span class="step-num">{step.step + 1}</span>
+				<span class="step-num">{step.step}</span>
 			{/if}
 		</div>
 		<h3 class="step-title">{step.title}</h3>
