@@ -8,7 +8,7 @@
 	import { syncService } from '$lib/services/syncService';
 
 	// Componentes
-	import StepCard from './components/StepCard.svelte';
+	import CollapsibleSteps from './components/CollapsibleSteps.svelte';
 	import FloatingControls from './components/FloatingControls.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
@@ -29,6 +29,7 @@
 	let renderProgress = $state(0);
 	let hasStarted = $state(false); // Si ya inició la explicación
 	let completedSteps = $state([]); // Pasos que ya terminaron de renderizar
+	let isExplanationCollapsed = $state(false); // Control de colapso de la columna de explicación
 
 	// Comandos de canvas filtrados por pasos COMPLETADOS
 	// Solo muestra comandos de pasos que ya terminaron de renderizar su texto
@@ -270,6 +271,10 @@
 		}
 	}
 
+	function toggleExplanationCollapse() {
+		isExplanationCollapsed = !isExplanationCollapsed;
+	}
+
 	// Tracking de progreso
 	let progressInterval = null;
 	function startProgressTracking() {
@@ -373,37 +378,46 @@
 				</button>
 			</div>
 		{:else}
-			<!-- Pizarrón 3/4 | Explicación 1/4 -->
+			<!-- Pizarrón y Explicación con colapso dinámico -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-0 mt-4 overflow-hidden">
-					<!-- Pizarrón (3/4) -->
-					<div class="flex flex-col lg:col-span-3 min-h-0">
-						<div class="text-sm text-gray-400 font-semibold tracking-wide mb-3 flex-shrink-0">Pizarrón</div>
+				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
+					<!-- Pizarrón (expande cuando explicación está colapsada) -->
+					<div class="flex flex-col min-h-0 transition-all duration-300" class:flex-1={isExplanationCollapsed} class:lg:flex-[3]={!isExplanationCollapsed}>
+						
 						<div class="flex-1 overflow-auto">
 							<CanvasVisualization commands={currentCanvasCommands} />
 						</div>
 					</div>
 
-					<!-- Explicación (1/4) -->
-					<div class="flex flex-col lg:col-span-1 min-h-0">
-						<div class="text-sm text-gray-400 font-semibold tracking-wide mb-3 flex-shrink-0">Explicación</div>
-						<div class="floating-card flex-1 min-h-0">
-							<div class="card-header">
-								<h3 class="card-title">◆ Explicación</h3>
-								<span class="step-counter">{$explanationStore.steps.length} pasos</span>
-							</div>
-							<div class="card-content">
-								{#each $explanationStore.steps as step, index (step.step)}
-									<StepCard 
-										{step} 
-										isActive={step.step === $explanationStore.currentStep} 
-										isFirst={index === 0}
-										isLast={index === $explanationStore.steps.length - 1}
-									/>
-								{/each}
-							</div>
+					<!-- Explicación (1/4) - Se oculta cuando está colapsada -->
+					{#if !isExplanationCollapsed}
+						<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
+							<CollapsibleSteps 
+								steps={$explanationStore.steps}
+								currentStep={$explanationStore.currentStep}
+							/>
 						</div>
-					</div>
+					{/if}
+					
+					<!-- Botón de colapso tipo "cachito" -->
+					<button
+						type="button"
+						onclick={toggleExplanationCollapse}
+						class="collapse-tab-main"
+						class:expanded={!isExplanationCollapsed}
+						aria-label={isExplanationCollapsed ? 'Mostrar explicación' : 'Ocultar explicación'}
+					>
+						<svg 
+							class="collapse-icon-main" 
+							class:rotated={isExplanationCollapsed}
+							viewBox="0 0 24 24" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2.5"
+						>
+							<path d="M15 18l-6-6 6-6"/>
+						</svg>
+					</button>
 				</div>
 			{/if}
 		{/if}
@@ -475,72 +489,6 @@
 {/if}
 
 <style>
-	/* Card homologado con el pizarrón */
-	.floating-card {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		background: rgba(15, 23, 42, 0.15);
-		border-radius: 8px;
-		border: 1px solid rgba(99, 102, 241, 0.1);
-		backdrop-filter: blur(4px);
-		overflow: hidden;
-	}
-
-	.card-header {
-		flex-shrink: 0;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 10px 16px;
-		border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-		background: rgba(15, 23, 42, 0.3);
-	}
-
-	.card-title {
-		color: #818cf8;
-		font-size: 0.75rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		opacity: 0.8;
-	}
-
-	.step-counter {
-		color: rgba(129, 140, 248, 0.5);
-		font-size: 0.7rem;
-		font-weight: 500;
-		letter-spacing: 0.05em;
-	}
-
-	.card-content {
-		flex: 1;
-		overflow-y: auto;
-		padding: 12px;
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		min-height: 0; /* Importante para que funcione el scroll en flex */
-	}
-
-	/* Scrollbar ultra delgado */
-	.card-content::-webkit-scrollbar {
-		width: 4px;
-	}
-
-	.card-content::-webkit-scrollbar-track {
-		background: transparent;
-	}
-
-	.card-content::-webkit-scrollbar-thumb {
-		background: rgba(99, 102, 241, 0.25);
-		border-radius: 2px;
-	}
-
-	.card-content::-webkit-scrollbar-thumb:hover {
-		background: rgba(99, 102, 241, 0.4);
-	}
-
 	/* Modal de feedback */
 	.modal-overlay {
 		position: fixed;
@@ -754,5 +702,87 @@
 		font-weight: 600;
 		color: #e2e8f0;
 		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+	}
+
+	/* Botón de colapso principal tipo "cachito" */
+	.collapse-tab-main {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+		width: 1rem;
+		height: 4rem;
+		background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.7), rgba(79, 70, 229, 0.8));
+		border: none;
+		border-top-left-radius: 0.75rem;
+		border-bottom-left-radius: 0.75rem;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0.6;
+		transition: all 0.3s ease;
+		box-shadow: -3px 0 10px rgba(99, 102, 241, 0.3);
+		backdrop-filter: blur(4px);
+		z-index: 20;
+	}
+	
+	.collapse-tab-main:hover {
+		width: 2rem;
+		opacity: 1;
+		box-shadow: -5px 0 15px rgba(99, 102, 241, 0.5);
+	}
+	
+	.collapse-tab-main.expanded {
+		background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.8), rgba(79, 70, 229, 0.9));
+	}
+	
+	.collapse-icon-main {
+		width: 1.25rem;
+		height: 1.25rem;
+		color: white;
+		transition: transform 0.3s ease;
+		opacity: 0;
+	}
+	
+	.collapse-tab-main:hover .collapse-icon-main {
+		opacity: 1;
+	}
+	
+	.collapse-icon-main.rotated {
+		transform: rotate(180deg);
+	}
+	
+	/* Animación de pulso cuando está colapsado */
+	.collapse-tab-main:not(.expanded) {
+		animation: mainTabPulse 2s ease-in-out infinite;
+	}
+	
+	@keyframes mainTabPulse {
+		0%, 100% {
+			opacity: 0.6;
+		}
+		50% {
+			opacity: 0.9;
+		}
+	}
+	
+	/* Responsive - Mobile */
+	@media (max-width: 768px) {
+		.collapse-tab-main {
+			width: 0.875rem;
+			height: 3rem;
+		}
+		
+		.collapse-tab-main:hover {
+			width: 1.5rem;
+		}
+		
+		.collapse-icon-main {
+			width: 1rem;
+			height: 1rem;
+		}
 	}
 </style>

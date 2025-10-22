@@ -6,6 +6,9 @@
 	// Determinar el estado del paso
 	let status = $derived(step.isComplete ? 'completed' : (isActive ? 'active' : 'pending'));
 	
+	// Estado de colapso
+	let isCollapsed = $state(false);
+	
 	// Referencia al elemento
 	let cardElement;
 	
@@ -28,6 +31,10 @@
 			}, 100);
 		}
 	});
+	
+	function toggleCollapse() {
+		isCollapsed = !isCollapsed;
+	}
 </script>
 
 <div 
@@ -36,8 +43,9 @@
 	class:active={isActive}
 	class:complete={step.isComplete}
 	class:pending={!isActive && !step.isComplete}
+	class:collapsed={isCollapsed}
 >
-	<!-- Header con timeline -->
+	<!-- Header con timeline y botón de colapso -->
 	<div class="step-header">
 		<div class="timeline-wrapper">
 			<!-- Línea vertical superior -->
@@ -71,12 +79,34 @@
 			{/if}
 			<h3 class="step-title">{step.title}</h3>
 		</div>
+		
+		<!-- Botón de colapso en el header -->
+		<button
+			type="button"
+			onclick={toggleCollapse}
+			class="collapse-btn-top"
+			class:collapsed={isCollapsed}
+			aria-label={isCollapsed ? 'Expandir paso' : 'Colapsar paso'}
+		>
+			<svg 
+				class="collapse-icon-top" 
+				class:rotated={isCollapsed}
+				viewBox="0 0 24 24" 
+				fill="none" 
+				stroke="currentColor" 
+				stroke-width="2"
+			>
+				<path d="M6 9l6 6 6-6"/>
+			</svg>
+		</button>
 	</div>
 
 	<!-- Contenido del Paso -->
-	<div class="step-content">
-		<ContentRenderer content={step.content} type={step.type} isComplete={step.isComplete} />
-	</div>
+	{#if !isCollapsed}
+		<div class="step-content">
+			<ContentRenderer content={step.content} type={step.type} isComplete={step.isComplete} />
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -88,6 +118,11 @@
 		transition: all 0.2s ease;
 		animation: slideIn 0.3s ease-out;
 		backdrop-filter: blur(4px);
+		position: relative;
+	}
+	
+	.step-card.collapsed {
+		padding-bottom: 10px;
 	}
 
 	.step-card:hover {
@@ -282,6 +317,59 @@
 		to {
 			opacity: 1;
 			transform: translateY(0);
+		}
+	}
+	
+	/* Botón de colapso en el header */
+	.collapse-btn-top {
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
+		border: none;
+		background: rgba(99, 102, 241, 0.15);
+		border-radius: 6px;
+		color: #818cf8;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		margin-left: auto;
+	}
+	
+	.collapse-btn-top:hover {
+		background: rgba(99, 102, 241, 0.25);
+		transform: scale(1.1);
+	}
+	
+	.collapse-btn-top:active {
+		transform: scale(0.95);
+	}
+	
+	.collapse-btn-top.collapsed {
+		background: rgba(99, 102, 241, 0.2);
+	}
+	
+	.collapse-icon-top {
+		width: 16px;
+		height: 16px;
+		transition: transform 0.3s ease;
+	}
+	
+	.collapse-icon-top.rotated {
+		transform: rotate(-180deg);
+	}
+	
+	/* Responsive - Mobile */
+	@media (max-width: 768px) {
+		.collapse-btn-top {
+			width: 20px;
+			height: 20px;
+		}
+		
+		.collapse-icon-top {
+			width: 14px;
+			height: 14px;
 		}
 	}
 </style>
