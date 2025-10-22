@@ -297,7 +297,7 @@
 
 <!-- Fondo dark futurista - Single page sin scroll -->
 <div
-	class="h-screen overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 text-white"
+	class="h-screen overflow-hidden bg-gradient-to-br from-gray-950/20 via-slate-900/20 to-gray-950/20 text-white"
 >
 	<div class="h-full flex flex-col px-6 py-6">
 		<!-- Pregunta original compacta -->
@@ -308,11 +308,17 @@
 					<div class="">
 						<h1 class="text-2xl font-bold text-indigo-400">Question</h1>
 					</div>
-					<div class="-mt-6">
+					<div class="flex items-center gap-3 -mt-10">
+						<button
+							onclick={handleGoBack}
+							class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
+						>
+							← Volver
+						</button>
 						{#if questionData.lengMathPregunta}
 							<Math content={questionData.pregunta} isBlock={false} />
 						{:else}
-							<p class="text-yellow-300 text-2xl italic ">{questionData.pregunta}</p>
+							<p class="text-yellow-300 text-2xl italic">{questionData.pregunta}</p>
 						{/if}
 					</div>
 					{#if $explanationStore.render.isRendering && renderProgress < 100}
@@ -321,29 +327,16 @@
 							<span class="progress-text">{renderProgress}%</span>
 						</div>
 					{/if}
-				</div>
-			</div>
-			<div class="flex-shrink-0 mt-4">
-				<div class="">
-					<div class="flex items-start gap-3 mb-3">
-						<button
-							onclick={handleGoBack}
-							class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
-						>
-							← Volver
-						</button>
-						<div class="flex-1"></div>
-						<div class="flex gap-3 text-xs">
-							<div class="flex-1 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
-								<span class="text-red-400 font-medium">Tu:</span>
-								<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
-							</div>
-							<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-								<span class="text-green-400 font-medium">Correcta:</span>
-								<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate"
-									>{questionData.respuestaCorrecta}</span
-								>
-							</div>
+					<div class="flex gap-3 text-xs max-w-[600px] -mt-5">
+						<div class="flex-1 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+							<span class="text-red-400 font-medium">Tu:</span>
+							<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
+						</div>
+						<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+							<span class="text-green-400 font-medium">Correcta:</span>
+							<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate"
+								>{questionData.respuestaCorrecta}</span
+							>
 						</div>
 					</div>
 				</div>
@@ -379,7 +372,7 @@
 		{:else}
 			<!-- Grid de 3 columnas: Timeline | Pizarrón | Explicación -->
 			{#if $explanationStore.steps.length > 0}
-				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0">
+				<div class="flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr_600px] gap-4 min-h-0 mt-4">
 					<!-- Línea de tiempo vertical -->
 					<div class="h-full">
 						<VerticalTimeline
