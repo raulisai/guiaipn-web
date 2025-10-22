@@ -223,9 +223,14 @@ class SyncService {
 	 */
 	async renderContent(checkpoint) {
 		const content = checkpoint.content;
-		const speed = this.calculateSpeed(content.length);
+		
+		// Calcular velocidad basada en la duración de la voz
+		const speed = this.voiceEnabled 
+			? this.calculateSpeedBasedOnVoice(content)
+			: this.calculateSpeed(content.length);
 		
 		console.log(`✍️ Renderizando ${content.length} caracteres a ${speed}ms/char`);
+		console.log(`🎯 Duración estimada: ${(speed * content.length / 1000).toFixed(1)}s`);
 
 		for (let i = 0; i <= content.length; i++) {
 			// Verificar si se pausó o detuvo
@@ -259,12 +264,38 @@ class SyncService {
 	}
 
 	/**
-	 * Calcula velocidad de renderizado según longitud
+	 * Calcula velocidad de renderizado según longitud (sin voz)
 	 */
 	calculateSpeed(length) {
 		if (length < 100) return 25;
 		if (length < 300) return 20;
 		return 15;
+	}
+	
+	/**
+	 * Calcula velocidad basada en la duración estimada de la voz
+	 * Velocidad de lectura promedio: ~150 palabras por minuto
+	 * = ~2.5 palabras por segundo
+	 * = ~400ms por palabra (promedio 5 letras)
+	 * = ~80ms por carácter
+	 */
+	calculateSpeedBasedOnVoice(content) {
+		// Contar palabras (aproximado)
+		const wordCount = content.split(/\s+/).length;
+		
+		// Duración estimada de la voz en milisegundos
+		// 150 palabras/minuto = 2.5 palabras/segundo = 400ms/palabra
+		const estimatedVoiceDuration = wordCount * 400;
+		
+		// Calcular ms por carácter para que el texto termine con la voz
+		const msPerChar = estimatedVoiceDuration / content.length;
+		
+		// Asegurar un mínimo y máximo razonable
+		const speed = Math.max(50, Math.min(150, msPerChar));
+		
+		console.log(`🎵 Palabras: ${wordCount}, Duración voz estimada: ${(estimatedVoiceDuration/1000).toFixed(1)}s`);
+		
+		return Math.round(speed);
 	}
 
 	/**

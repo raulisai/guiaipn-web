@@ -659,7 +659,7 @@
 <style>
 	.blackboard-container {
 		animation: fadeIn 0.5s ease-in;
-		height: 100%;
+		height: 90%;
 		display: flex;
 		flex-direction: column;
 	}
