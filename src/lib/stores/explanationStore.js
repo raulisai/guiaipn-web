@@ -42,6 +42,7 @@ function createExplanationStore() {
 		buffer: {
 			steps: [], // Pasos completos con todo su contenido
 			canvasCommands: [], // Todos los comandos de canvas
+			componentCommands: [], // Comandos para componentes adicionales
 			isComplete: false // Si ya se recibió toda la información
 		},
 
@@ -57,6 +58,7 @@ function createExplanationStore() {
 
 		// Comandos del canvas (para compatibilidad)
 		canvasCommands: [],
+		componentCommands: [],
 
 		// Errores
 		error: null,
@@ -141,6 +143,7 @@ function createExplanationStore() {
 				questionHash: data.question_hash,
 				steps: [],
 				canvasCommands: [],
+				componentCommands: [],
 				error: null
 			}));
 		},
@@ -168,6 +171,33 @@ function createExplanationStore() {
 						...state.buffer,
 						steps: [...state.buffer.steps, newStep]
 					}
+				};
+			});
+		},
+
+		/**
+		 * Agrega un comando de componente
+		 * ALMACENA EN BUFFER
+		 * @param {Object} data - Datos del comando (puede tener step_number y command anidado)
+		 */
+		addComponentCommand(data) {
+			update((state) => {
+				const stepNumber = data.step_number || data.step;
+				const normalizedCommand = {
+					step: stepNumber,
+					command: data.command,
+					renderedAt: null
+				};
+
+				console.log('🧩 Component command guardado:', normalizedCommand);
+
+				return {
+					...state,
+					buffer: {
+						...state.buffer,
+						componentCommands: [...state.buffer.componentCommands, normalizedCommand]
+					},
+					componentCommands: [...state.componentCommands, normalizedCommand]
 				};
 			});
 		},
@@ -225,7 +255,8 @@ function createExplanationStore() {
 					buffer: {
 						...state.buffer,
 						canvasCommands: [...state.buffer.canvasCommands, normalizedCommand]
-					}
+					},
+					canvasCommands: [...state.canvasCommands, normalizedCommand]
 				};
 			});
 		},
@@ -351,7 +382,7 @@ function createExplanationStore() {
 			let hasMore = false;
 			
 			update((state) => {
-				const { buffer, render, steps, canvasCommands } = state;
+				const { buffer, render, steps, canvasCommands, componentCommands } = state;
 				
 				// Si no hay pasos en buffer, no hay nada que renderizar
 				if (buffer.steps.length === 0) {
@@ -371,6 +402,7 @@ function createExplanationStore() {
 				// Clonar arrays para modificar
 				const newSteps = [...steps];
 				const newCanvasCommands = [...canvasCommands];
+				const newComponentCommands = [...componentCommands];
 				
 				// Buscar o crear el paso en el array de renderizado
 				let renderStepIndex = newSteps.findIndex(s => s.step === currentBufferStep.step);
@@ -427,6 +459,26 @@ function createExplanationStore() {
 					};
 				}
 				
+				// Contenido completo, renderizar comandos de componentes de este paso
+				const stepComponentCommands = buffer.componentCommands.filter(cmd => cmd.step === currentBufferStep.step);
+				
+				if (render.currentComponentIndex < stepComponentCommands.length) {
+					const componentCmd = stepComponentCommands[render.currentComponentIndex];
+					newComponentCommands.push(componentCmd);
+					hasMore = true;
+					
+					return {
+						...state,
+						steps: newSteps,
+						componentCommands: newComponentCommands,
+						render: {
+							...render,
+							currentComponentIndex: render.currentComponentIndex + 1,
+							isRendering: true
+						}
+					};
+				}
+				
 				// Paso completado, marcar como completo
 				renderStep.isComplete = currentBufferStep.isComplete;
 				newSteps[renderStepIndex] = renderStep;
@@ -448,6 +500,7 @@ function createExplanationStore() {
 							currentStepIndex: nextStepIndex,
 							currentCharIndex: 0,
 							currentCanvasIndex: 0,
+							currentComponentIndex: 0,
 							isRendering: true
 						}
 					};
@@ -478,7 +531,8 @@ function createExplanationStore() {
 					isRendering: true,
 					currentStepIndex: 0,
 					currentCharIndex: 0,
-					currentCanvasIndex: 0
+					currentCanvasIndex: 0,
+					currentComponentIndex: 0
 				}
 			}));
 		},
@@ -606,17 +660,20 @@ function createExplanationStore() {
 				},
 				steps: [],
 				canvasCommands: [],
+				componentCommands: [],
 				buffer: {
 					steps: [],
 					canvasCommands: [],
+					componentCommands: [],
 					isComplete: false
 				},
 				render: {
 					currentStepIndex: 0,
 					currentCharIndex: 0,
 					currentCanvasIndex: 0,
+					currentComponentIndex: 0,
 					isRendering: false,
-					renderSpeed: 15  // Más rápido para sincronizar mejor con voz
+					renderSpeed: 15 // Más rápido para sincronizar mejor con voz
 				},
 				error: null,
 				currentQuestion: null

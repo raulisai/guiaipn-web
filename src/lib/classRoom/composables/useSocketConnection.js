@@ -72,9 +72,19 @@ export function useSocketConnection() {
 			explanationStore.startStep(data);
 
 			// Procesar comandos de canvas si vienen en el paso
-			if (data.canvas_commands && Array.isArray(data.canvas_commands)) {
+			if (Array.isArray(data.canvas_commands)) {
 				data.canvas_commands.forEach((cmd) => {
 					explanationStore.addCanvasCommand({
+						step_number: data.step_number,
+						command: cmd
+					});
+				});
+			}
+
+			// Procesar comandos de componentes si vienen en el paso
+			if (Array.isArray(data.component_commands)) {
+				data.component_commands.forEach((cmd) => {
+					explanationStore.addComponentCommand({
 						step_number: data.step_number,
 						command: cmd
 					});
@@ -90,6 +100,11 @@ export function useSocketConnection() {
 		// Listener de comandos de canvas
 		socketService.onCanvasCommand((data) => {
 			explanationStore.addCanvasCommand(data);
+		});
+
+		// Listener de comandos de componentes
+		socketService.onComponentCommand?.((data) => {
+			explanationStore.addComponentCommand(data);
 		});
 
 		// Listener de paso completado

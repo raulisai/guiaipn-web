@@ -539,6 +539,23 @@ class SocketService {
 	}
 
 	/**
+	 * Escucha comandos para componentes interactivos
+	 * @param {Function} callback - Función a ejecutar
+	 */
+	onComponentCommand(callback) {
+		this.externalListeners.set('component_command', callback);
+		
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('🧩 Comando de componente:', data.command);
+				callback(data);
+			};
+			this.socket.on('component_command', listener);
+			this.listeners.set('component_command', listener);
+		}
+	}
+
+	/**
 	 * Escucha la finalización de un paso
 	 * @param {Function} callback - Función a ejecutar
 	 */
