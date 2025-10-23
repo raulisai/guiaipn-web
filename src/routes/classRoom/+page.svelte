@@ -9,7 +9,7 @@
 	import FloatingControls from './components/FloatingControls.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
-	import CanvasVisualization from './components/CanvasVisualization.svelte';
+	import CanvasVisualization from './components/CanvasVisualizationModular.svelte';
 	import ProgressIndicator from './components/ProgressIndicator.svelte';
 	import MathComponent from '../examen/componentes/Math.svelte';
 
