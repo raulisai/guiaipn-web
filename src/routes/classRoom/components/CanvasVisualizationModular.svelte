@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import CanvasCommandRenderer from '$lib/classRoom/canvas_commands/CanvasCommandRenderer.svelte';
 	
 	let { commands = [], currentStep = 1, isRendering = false } = $props();
@@ -43,58 +43,6 @@
 		return Math.min(1.0, elapsed / fadeDuration);
 	}
 	
-	// Detectar nuevos comandos (deshabilitado - usando renderizado inmediato)
-	// $effect(() => {
-	// 	if (commands.length > 0) {
-	// 		const currentCommandCount = commands.length;
-	// 		const hasNewContent = currentCommandCount > previousCommandCount;
-	// 		
-	// 		if (hasNewContent) {
-	// 			const newCommands = commands.slice(previousCommandCount);
-	// 			newCommands.forEach((cmd, idx) => {
-	// 				renderQueue.push({
-	// 					command: cmd,
-	// 					originalIndex: previousCommandCount + idx,
-	// 					step: cmd.step || 1
-	// 				});
-	// 			});
-	// 			
-	// 			if (!isAnimating) {
-	// 				processRenderQueue();
-	// 			}
-	// 		}
-	// 		
-	// 		previousCommandCount = currentCommandCount;
-	// 	}
-	// });
-	
-	// Procesar cola de renderizado (deshabilitado - usando renderizado inmediato)
-	// async function processRenderQueue() {
-	// 	if (renderQueue.length === 0 || isAnimating) return;
-	// 	
-	// 	isAnimating = true;
-	// 	
-	// 	while (renderQueue.length > 0) {
-	// 		const item = renderQueue.shift();
-	// 		const { command, originalIndex, step } = item;
-	// 		
-	// 		if (!renderedCommands.has(step)) {
-	// 			renderedCommands.set(step, new Set());
-	// 		}
-	// 		renderedCommands.get(step).add(originalIndex);
-	// 		commandTimestamps.set(originalIndex, Date.now());
-	// 		
-	// 		const delay = renderQueue.length > 5 ? 1200 : 1800;
-	// 		await new Promise(resolve => setTimeout(resolve, delay));
-	// 		
-	// 		if (surfaceRef) {
-	// 			scrollToLatestStep();
-	// 		}
-	// 	}
-	// 	
-	// 	isAnimating = false;
-	// }
-	
 	// Scroll al último paso
 	function scrollToLatestStep() {
 		if (!surfaceRef) return;
@@ -110,7 +58,9 @@
 	// Renderizado inmediato de todos los comandos
 	$effect(() => {
 		if (commands.length > 0 && sortedSteps.length > 0) {
-			// Recrear el Map para forzar reactividad
+			const currentCommandCount = commands.length;
+			const hasNewContent = currentCommandCount > previousCommandCount;
+			
 			const newRenderedCommands = new Map();
 			const newTimestamps = new Map();
 			
@@ -131,9 +81,16 @@
 				}
 			});
 			
-			// Actualizar los Maps
 			renderedCommands = newRenderedCommands;
 			commandTimestamps = newTimestamps;
+			previousCommandCount = currentCommandCount;
+			
+			if (hasNewContent) {
+				Promise.resolve().then(async () => {
+					await tick();
+					scrollToLatestStep();
+				});
+			}
 		}
 	});
 	
