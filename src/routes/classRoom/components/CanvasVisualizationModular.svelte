@@ -42,6 +42,65 @@
 		const fadeDuration = 1000; // 1 segundo de fade-in
 		return Math.min(1.0, elapsed / fadeDuration);
 	}
+
+	function extractCommandMeta(command) {
+		let raw = command;
+		if (command?.command && typeof command.command === 'object') {
+			raw = command.command;
+		}
+		const type = raw?.command || raw?.type || '';
+		const params = raw?.parameters || raw?.params || {};
+		return { type: type?.toLowerCase?.() || '', params };
+	}
+
+	function getPreferredWidth(command, availableWidth) {
+		const { type, params } = extractCommandMeta(command);
+		const maxWidth = Math.max(240, availableWidth);
+		const clampWidth = (value) => Math.min(Math.max(240, value), maxWidth);
+
+		switch (type) {
+			case 'draw_text': {
+				const text = params.text || '';
+				const charWidth = params.font?.includes('bold') ? 11 : 9;
+				const padding = 80;
+				return clampWidth(text.length * charWidth + padding);
+			}
+			case 'draw_line': {
+				const x1 = Number.isFinite(params.x1) ? params.x1 : 0;
+				const x2 = Number.isFinite(params.x2) ? params.x2 : availableWidth;
+				const length = Math.abs(x2 - x1) + 80;
+				return clampWidth(length);
+			}
+			case 'draw_arrow': {
+				const x1 = Number.isFinite(params.x1) ? params.x1 : 40;
+				const x2 = Number.isFinite(params.x2) ? params.x2 : availableWidth - 40;
+				const length = Math.abs(x2 - x1) + 100;
+				return clampWidth(length);
+			}
+			case 'draw_circle': {
+				const radius = Number.isFinite(params.radius) ? params.radius : 60;
+				return clampWidth(radius * 2 + 120);
+			}
+			case 'draw_triangle':
+			case 'draw_vector':
+			case 'highlight': {
+				return clampWidth((params?.width || 320));
+			}
+			case 'draw_equation': {
+				const equation = params.equation || params.latex || '';
+				const lines = equation.split('\\').length;
+				const baseWidth = Math.max(equation.length * 8, 300);
+				const multiplier = Math.min(lines, 3);
+				return clampWidth(baseWidth / multiplier + 120);
+			}
+			case 'draw_diagram':
+			case 'draw_axis': {
+				return maxWidth;
+			}
+			default:
+				return clampWidth(params.width || 320);
+		}
+	}
 	
 	// Scroll al último paso
 	function scrollToLatestStep() {
@@ -127,23 +186,26 @@
 					
 					<div class="commands-container">
 						{#each canvasByStep[step] || [] as cmd, idx (idx)}
-							{@const commandIndex = commands.findIndex(c => c === cmd)}
-							{@const stepRendered = renderedCommands.get(Number(step))}
-							{@const isRendered = stepRendered?.has(commandIndex)}
-							{@const opacity = isRendered ? getCommandOpacity(commandIndex) : 0}
-							{console.log('Comando:', cmd)}
-							
-							{#if isRendered}
+						{@const commandIndex = commands.findIndex(c => c === cmd)}
+						{@const stepRendered = renderedCommands.get(Number(step))}
+						{@const isRendered = stepRendered?.has(commandIndex)}
+						{@const preferredWidth = getPreferredWidth(cmd, containerWidth)}
+						{@const opacity = isRendered ? getCommandOpacity(commandIndex) : 0}
+						{console.log('Comando:', cmd)}
+
+						{#if isRendered}
+							<div class="command-wrapper" style={`width: ${preferredWidth}px; max-width: 100%;`}>
 								<CanvasCommandRenderer 
 									command={cmd}
-									canvasWidth={containerWidth}
+									canvasWidth={preferredWidth}
 									{opacity}
 								/>
-							{/if}
-						{/each}
-					</div>
+							</div>
+						{/if}
+					{/each}
 				</div>
-			{/each}
+			</div>
+		{/each}
 			
 			{#if sortedSteps.length === 0}
 				<div class="empty-state">
@@ -227,9 +289,24 @@
 	}
 	
 	.commands-container {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 16px;
+		align-items: start;
+		justify-items: center;
+	}
+
+	.command-wrapper {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	@media (max-width: 640px) {
+		.commands-container {
+			grid-template-columns: 1fr;
+			gap: 12px;
+		}
 	}
 	
 	.empty-state {
