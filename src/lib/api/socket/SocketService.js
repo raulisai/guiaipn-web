@@ -193,6 +193,14 @@ class SocketService {
 				this.socket.on('canvas_command', listener);
 				this.listeners.set('canvas_command', listener);
 			},
+			'component_command': (cb) => {
+				const listener = (data) => {
+					console.log('🧩 Comando de componente:', data);
+					cb(data);
+				};
+				this.socket.on('component_command', listener);
+				this.listeners.set('component_command', listener);
+			},
 			'step_complete': (cb) => {
 				const listener = (data) => {
 					console.log(`✅ Paso ${data.step_number} completado`);
@@ -224,6 +232,17 @@ class SocketService {
 			if (eventName !== 'connection_established' && eventMap[eventName]) {
 				eventMap[eventName](callback);
 			}
+		}
+
+		// Si ya existe un listener externo para component_command, engancharlo inmediatamente
+		const componentCallback = this.externalListeners.get('component_command');
+		if (componentCallback && !this.listeners.has('component_command')) {
+			const listener = (data) => {
+				console.log('🧩 Comando de componente:', data);
+				componentCallback(data);
+			};
+			this.socket.on('component_command', listener);
+			this.listeners.set('component_command', listener);
 		}
 	}
 

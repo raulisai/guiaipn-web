@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { explanationStore } from '$lib/stores';
 	import { createClassRoomController } from '$lib/classRoom';
+	import { normalizeComponentCommand } from '$lib/classRoom/component_commands/index.js';
 
 	// Componentes
 	import CollapsibleSteps from './components/CollapsibleSteps.svelte';
@@ -10,6 +11,7 @@
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
 	import Pizarron from './components/Pizarron.svelte';
+	import ComponentCommandRenderer from '$lib/classRoom/component_commands/ComponentCommandRenderer.svelte';
 	import ProgressIndicator from './components/ProgressIndicator.svelte';
 	import MathComponent from '../examen/componentes/Math.svelte';
 
@@ -34,6 +36,25 @@
 			$explanationStore.stepProgress.percentage
 		)
 	);
+
+	// Component commands filtrados por progreso para el panel
+    const currentPanelComponentCommands = $derived.by(() => {
+        const rawCommands = controller.getVisibleComponentCommands(
+            $explanationStore.currentStep,
+            $explanationStore.stepProgress.percentage,
+            'panel'
+        ) || [];
+
+        const normalized = rawCommands
+            .map((cmd) => normalizeComponentCommand(cmd))
+            .filter(Boolean);
+
+        if (normalized.length > 0) {
+            console.log('🧩 Component commands visibles (panel):', normalized);
+        }
+
+        return normalized;
+    });
 
 	// Datos de la pregunta desde el controlador
 	const questionData = $derived(controller.getQuestionData());
@@ -210,13 +231,26 @@
 
 					<!-- Explicación (1/4) - Se oculta cuando está colapsada -->
 					{#if !isExplanationCollapsed}
-						<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
-							<CollapsibleSteps 
-								steps={$explanationStore.steps}
-								currentStep={$explanationStore.currentStep}
-							/>
+				<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
+					{#if currentPanelComponentCommands.length > 0}
+						<div class="panel-component-stream max-h-72 overflow-y-auto pr-1 space-y-3 pb-4 flex-shrink-0">
+							{#each currentPanelComponentCommands as componentCommand, idx (idx)}
+								<ComponentCommandRenderer
+									command={componentCommand}
+									context="panel"
+									onRender={(normalized) => console.log('🧩 ComponentCommandRenderer render:', normalized)}
+								/>
+							{/each}
 						</div>
 					{/if}
+					<div class="flex-1 min-h-0">
+						<CollapsibleSteps 
+							steps={$explanationStore.steps}
+							currentStep={$explanationStore.currentStep}
+						/>
+					</div>
+				</div>
+			{/if}
 					
 					<!-- Botón de colapso tipo "cachito" -->
 					<button

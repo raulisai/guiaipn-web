@@ -5,6 +5,7 @@
 
 import { syncService } from '$lib/services/syncService';
 import { explanationStore } from '$lib/stores';
+import { normalizeComponentCommand } from '../component_commands/index.js';
 import { get } from 'svelte/store';
 
 /**
@@ -109,6 +110,36 @@ export function useSyncCallbacks(options = {}) {
 	}
 
 	/**
+	 * Filtrar comandos según progreso
+	 * @param {Array} commands - Comandos a filtrar
+	 * @param {number} currentStep - Paso actual
+	 * @param {number} stepProgress - Progreso del paso actual (0-100)
+	 * @returns {Array} Comandos visibles
+	 */
+	function filterCommandsByProgress(commands, currentStep, stepProgress) {
+		return commands.filter((cmd) => {
+			if (cmd.step < currentStep) {
+				return true;
+			}
+
+			if (cmd.step === currentStep) {
+				const commandsForStep = commands.filter((c) => c.step === currentStep);
+				const totalCommandsInStep = commandsForStep.length;
+
+				if (totalCommandsInStep === 0) return false;
+
+				const commandIndexInStep = commandsForStep.findIndex((c) => c === cmd);
+				const percentagePerCommand = 100 / totalCommandsInStep;
+				const requiredPercentage = (commandIndexInStep + 1) * percentagePerCommand;
+
+				return stepProgress >= requiredPercentage;
+			}
+
+			return false;
+		});
+	}
+
+	/**
 	 * Calcular comandos de canvas visibles según progreso
 	 * @param {number} currentStep - Paso actual
 	 * @param {number} stepProgress - Progreso del paso actual (0-100)
@@ -116,29 +147,35 @@ export function useSyncCallbacks(options = {}) {
 	 */
 	function getVisibleCanvasCommands(currentStep, stepProgress) {
 		const store = get(explanationStore);
-		return store.buffer.canvasCommands.filter((cmd) => {
-			// Pasos anteriores: mostrar todos
-			if (cmd.step < currentStep) {
+		return filterCommandsByProgress(store.buffer.canvasCommands, currentStep, stepProgress);
+	}
+
+	/**
+	 * Calcular comandos de componentes visibles según progreso
+	 * @param {number} currentStep - Paso actual
+	 * @param {number} stepProgress - Progreso del paso actual (0-100)
+	 * @param {string} placement - Ubicación del componente (opcional, por defecto 'panel')
+	 * @returns {Array} Comandos visibles
+	 */
+	function getVisibleComponentCommands(currentStep, stepProgress, placement = 'panel') {
+		const store = get(explanationStore);
+
+		return store.buffer.componentCommands.filter((cmd) => {
+			const normalized = normalizeComponentCommand(cmd);
+			if (!normalized) return false;
+			if (normalized.placement !== placement) return false;
+
+			const triggerPercentage = normalized.params?.triggerPercentage ?? normalized.params?.trigger_percentage ?? 0;
+			const clampedTrigger = Math.min(100, Math.max(0, triggerPercentage));
+
+			if (normalized.step < currentStep) {
 				return true;
 			}
-			
-			// Paso actual: calcular según progreso
-			if (cmd.step === currentStep) {
-				const stepCommands = store.buffer.canvasCommands.filter(
-					c => c.step === currentStep
-				);
-				const totalCommandsInStep = stepCommands.length;
-				
-				if (totalCommandsInStep === 0) return false;
-				
-				const commandIndexInStep = stepCommands.findIndex(c => c === cmd);
-				const percentagePerCommand = 100 / totalCommandsInStep;
-				const requiredPercentage = (commandIndexInStep + 1) * percentagePerCommand;
-				
-				return stepProgress >= requiredPercentage;
+
+			if (normalized.step === currentStep) {
+				return stepProgress >= clampedTrigger;
 			}
-			
-			// Pasos futuros: no mostrar
+
 			return false;
 		});
 	}
@@ -146,6 +183,7 @@ export function useSyncCallbacks(options = {}) {
 	return {
 		setupCallbacks,
 		getVisibleCanvasCommands,
+		getVisibleComponentCommands,
 		logCanvasTriggers
 	};
 }

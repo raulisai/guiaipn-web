@@ -159,6 +159,17 @@ export function createClassRoomController(searchParams) {
 	}
 
 	/**
+	 * Obtener component commands visibles según progreso
+	 * @param {number} currentStep - Paso actual
+	 * @param {number} stepProgress - Progreso (0-100)
+	 * @param {string} placement - Ubicación deseada (panel/pizarron)
+	 * @returns {Array} Comandos visibles normalizados
+	 */
+	function getVisibleComponentCommands(currentStep, stepProgress, placement = 'panel') {
+		return syncCallbacks.getVisibleComponentCommands(currentStep, stepProgress, placement);
+	}
+
+	/**
 	 * Obtener progreso actual
 	 * @returns {number} Progreso (0-100)
 	 */
@@ -212,8 +223,9 @@ export function createClassRoomController(searchParams) {
 		submitFeedback,
 		skipFeedback,
 		
-		// Canvas
+		// Canvas y componentes dinámicos
 		getVisibleCanvasCommands,
+		getVisibleComponentCommands,
 		
 		// Datos
 		getQuestionData,
