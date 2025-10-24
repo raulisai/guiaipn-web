@@ -9,7 +9,7 @@
 	import FloatingControls from './components/FloatingControls.svelte';
 	import LoadingState from './components/LoadingState.svelte';
 	import ErrorState from './components/ErrorState.svelte';
-	import CanvasVisualization from './components/CanvasVisualizationModular.svelte';
+	import Pizarron from './components/Pizarron.svelte';
 	import ProgressIndicator from './components/ProgressIndicator.svelte';
 	import MathComponent from '../examen/componentes/Math.svelte';
 
@@ -194,12 +194,13 @@
 					<ProgressIndicator stepProgress={$explanationStore.stepProgress} />
 				{/if}
 				
+				<!-- Panel didactico que se auto ajusta -->
 				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
 					<!-- Pizarrón (expande cuando explicación está colapsada) -->
 					<div class="flex flex-col min-h-0 transition-all duration-300" class:flex-1={isExplanationCollapsed} class:lg:flex-[3]={!isExplanationCollapsed}>
 						
 						<div class="flex-1 overflow-auto">
-							<CanvasVisualization 
+							<Pizarron 
 								commands={currentCanvasCommands} 
 								currentStep={$explanationStore.currentStep}
 								isRendering={$explanationStore.render.isRendering}
