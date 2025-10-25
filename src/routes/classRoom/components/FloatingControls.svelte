@@ -4,7 +4,19 @@
 	import { socketService } from '$lib/api/socket';
 	import { speechService } from '$lib/services/speechService';
 
-	let { onStop = null, onToggleVoice = null, onPauseToggle = null, voiceEnabled = false } = $props();
+	const props = $props();
+
+let onStop = $state(null);
+let onToggleVoice = $state(null);
+let onPauseToggle = $state(null);
+let voiceEnabled = $state(false);
+
+$effect(() => {
+	onStop = props.onStop ?? null;
+	onToggleVoice = props.onToggleVoice ?? null;
+	onPauseToggle = props.onPauseToggle ?? null;
+	voiceEnabled = props.voiceEnabled ?? false;
+});
 	let showChatInput = $state(false);
 	let showVoiceInput = $state(false);
 	let chatMessage = $state('');
