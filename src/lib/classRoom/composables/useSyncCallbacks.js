@@ -99,7 +99,7 @@ export function useSyncCallbacks(options = {}) {
 			
 			// Verificar si alcanzamos un trigger
 			for (let i = 0; i < totalCommands; i++) {
-				const triggerPercentage = Math.round((i + 1) * percentagePerCommand);
+				const triggerPercentage = Math.round(i * percentagePerCommand);
 				
 				if (progress === triggerPercentage) {
 					console.log(`🎯 TRIGGER ${triggerPercentage}% - Activando comando ${i + 1}/${totalCommands}`);
@@ -130,7 +130,7 @@ export function useSyncCallbacks(options = {}) {
 
 				const commandIndexInStep = commandsForStep.findIndex((c) => c === cmd);
 				const percentagePerCommand = 100 / totalCommandsInStep;
-				const requiredPercentage = (commandIndexInStep + 1) * percentagePerCommand;
+				const requiredPercentage = commandIndexInStep * percentagePerCommand;
 
 				return stepProgress >= requiredPercentage;
 			}
