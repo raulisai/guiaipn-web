@@ -164,8 +164,16 @@ class SpeechService {
 		};
 
 		utterance.onerror = (event) => {
-			console.error('Error en síntesis de voz:', event);
+			const errorType = event?.error;
+			const isInterruption = errorType === 'interrupted' || errorType === 'canceled';
+			const logPrefix = isInterruption ? 'Advertencia en síntesis de voz' : 'Error en síntesis de voz';
+			(isInterruption ? console.warn : console.error)(`${logPrefix}${errorType ? ` (${errorType})` : ''}:`, event);
+			this.currentUtterance = null;
 			if (options.onError) options.onError(event);
+			if (this.queue.length > 0) {
+				const next = this.queue.shift();
+				this.speak(next.text, next.options);
+			}
 		};
 
 		// Si ya hay algo hablando, agregar a la cola

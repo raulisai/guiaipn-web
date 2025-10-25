@@ -189,30 +189,59 @@ class SyncService {
 			console.log('🔇 Voz desactivada, saltando audio');
 			return Promise.resolve();
 		}
-		
+
+		console.log('🔊 Hablando contenido:', checkpoint.content.substring(0, 50) + '...');
+		return this.playVoiceForCheckpoint(checkpoint);
+	}
+
+	playVoiceForCheckpoint(checkpoint, { textOverride = null, attempt = 0 } = {}) {
+		if (!this.voiceEnabled) {
+			return Promise.resolve();
+		}
+
+		const text = textOverride ?? checkpoint.content;
+		if (!text) {
+			return Promise.resolve();
+		}
+
+		const utterance = speechService.createUtterance(text);
+		if (!utterance) {
+			console.warn('⚠️ No se pudo crear utterance');
+			return Promise.resolve();
+		}
+
+		checkpoint.voiceStarted = true;
+		checkpoint.voiceCompleted = false;
+
 		return new Promise((resolve) => {
-			console.log('🔊 Hablando contenido:', checkpoint.content.substring(0, 50) + '...');
-			
-			const utterance = speechService.createUtterance(checkpoint.content);
-			
-			if (!utterance) {
-				console.warn('⚠️ No se pudo crear utterance');
-				resolve();
-				return;
-			}
-			
 			utterance.onend = () => {
 				checkpoint.voiceCompleted = true;
 				console.log('✅ Voz completada para paso:', checkpoint.stepIndex);
+				this.currentUtterance = null;
 				resolve();
 			};
-			
+
 			utterance.onerror = (error) => {
+				this.currentUtterance = null;
+				const errorType = error?.error;
+				const isRecoverable = this.voiceEnabled && !this.isPaused && attempt < 2 && (errorType === 'interrupted' || errorType === 'canceled');
+				if (isRecoverable) {
+					const retryDelay = 250;
+					console.warn(`⚠️ Voz interrumpida (intentando reintentar #${attempt + 1})`, {
+						step: checkpoint.step,
+						error: errorType
+					});
+					setTimeout(() => {
+						this.playVoiceForCheckpoint(checkpoint, { textOverride, attempt: attempt + 1 }).then(resolve);
+					}, retryDelay);
+					return;
+				}
+
 				console.error('❌ Error en voz:', error);
 				checkpoint.voiceCompleted = true;
-				resolve(); // Resolver aunque falle para continuar
+				resolve();
 			};
-			
+
 			this.currentUtterance = utterance;
 			speechService.speakUtterance(utterance);
 		});
@@ -355,7 +384,39 @@ class SyncService {
 			if (this.currentStepIndex >= 0 && this.currentStepIndex < this.checkpoints.length) {
 				this.checkpoints[this.currentStepIndex].voiceCompleted = true;
 			}
+		} else if (enabled) {
+			this.tryReplayCurrentStepVoice();
 		}
+	}
+
+	tryReplayCurrentStepVoice() {
+		if (!this.voiceEnabled || !this.isPlaying || this.isPaused) {
+			return;
+		}
+
+		if (speechService.isSpeaking && speechService.isSpeaking()) {
+			return;
+		}
+
+		if (this.currentStepIndex < 0 || this.currentStepIndex >= this.checkpoints.length) {
+			return;
+		}
+
+		const checkpoint = this.checkpoints[this.currentStepIndex];
+		if (!checkpoint || !checkpoint.content) {
+			return;
+		}
+
+		const state = get(explanationStore);
+		let textToSpeak = checkpoint.content;
+		if (state?.stepProgress?.stepNumber === checkpoint.step) {
+			const charIndex = state.stepProgress.charIndex ?? 0;
+			const remaining = checkpoint.content.substring(charIndex);
+			textToSpeak = remaining && remaining.trim().length > 0 ? remaining : checkpoint.content;
+		}
+
+		console.log('🔁 Reproduciendo nuevamente la voz del paso', checkpoint.step);
+		this.playVoiceForCheckpoint(checkpoint, { textOverride: textToSpeak });
 	}
 
 	/**

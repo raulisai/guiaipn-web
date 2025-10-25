@@ -24,6 +24,7 @@
 	let voiceMuted = $state(false);
 	let renderProgress = $state(0);
 	let hasStarted = $state(false);
+
 	let isExplanationCollapsed = $state(false);
 
 	// Crear controlador
@@ -38,23 +39,22 @@
 	);
 
 	// Component commands filtrados por progreso para el panel
-    const currentPanelComponentCommands = $derived.by(() => {
-        const rawCommands = controller.getVisibleComponentCommands(
-            $explanationStore.currentStep,
-            $explanationStore.stepProgress.percentage,
-            'panel'
-        ) || [];
+	const currentPanelComponentCommands = $derived.by(() => {
+		const rawCommands =
+			controller.getVisibleComponentCommands(
+				$explanationStore.currentStep,
+				$explanationStore.stepProgress.percentage,
+				'panel'
+			) || [];
 
-        const normalized = rawCommands
-            .map((cmd) => normalizeComponentCommand(cmd))
-            .filter(Boolean);
+		const normalized = rawCommands.map((cmd) => normalizeComponentCommand(cmd)).filter(Boolean);
 
-        if (normalized.length > 0) {
-            console.log('🧩 Component commands visibles (panel):', normalized);
-        }
+		if (normalized.length > 0) {
+			console.log('🧩 Component commands visibles (panel):', normalized);
+		}
 
-        return normalized;
-    });
+		return normalized;
+	});
 
 	// Datos de la pregunta desde el controlador
 	const questionData = $derived(controller.getQuestionData());
@@ -85,7 +85,7 @@
 		isConnecting = true;
 		controller.retry(async () => {
 			await controller.initialize({
-				onConnected: () => isConnecting = false,
+				onConnected: () => (isConnecting = false),
 				onError: (err) => {
 					connectionError = err;
 					isConnecting = false;
@@ -214,44 +214,52 @@
 				{#if hasStarted && $explanationStore.render.isRendering}
 					<ProgressIndicator stepProgress={$explanationStore.stepProgress} />
 				{/if}
-				
+
 				<!-- Panel didactico que se auto ajusta -->
 				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
 					<!-- Pizarrón (expande cuando explicación está colapsada) -->
-					<div class="flex flex-col min-h-0 transition-all duration-300" class:flex-1={isExplanationCollapsed} class:lg:flex-[3]={!isExplanationCollapsed}>
-						
+					<div
+						class="flex flex-col min-h-0 transition-all duration-300"
+						class:flex-1={isExplanationCollapsed}
+						class:lg:flex-[3]={!isExplanationCollapsed}
+					>
 						<div class="flex-1 overflow-auto">
-							<Pizarron 
-								commands={currentCanvasCommands} 
+							<Pizarron
+								commands={currentCanvasCommands}
 								currentStep={$explanationStore.currentStep}
 								isRendering={$explanationStore.render.isRendering}
 							/>
 						</div>
 					</div>
 
-					<!-- Explicación (1/4) - Se oculta cuando está colapsada -->
-					{#if !isExplanationCollapsed}
-				<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
+					<!-- Componentes dinámicos -->
 					{#if currentPanelComponentCommands.length > 0}
-						<div class="panel-component-stream max-h-72 overflow-y-auto pr-1 space-y-3 pb-4 flex-shrink-0">
+						<div
+							class="panel-component-stream h-full"
+						>
 							{#each currentPanelComponentCommands as componentCommand, idx (idx)}
 								<ComponentCommandRenderer
 									command={componentCommand}
 									context="panel"
-									onRender={(normalized) => console.log('🧩 ComponentCommandRenderer render:', normalized)}
+									onRender={(normalized) =>
+										console.log('🧩 ComponentCommandRenderer render:', normalized)}
 								/>
 							{/each}
 						</div>
 					{/if}
-					<div class="flex-1 min-h-0">
-						<CollapsibleSteps 
-							steps={$explanationStore.steps}
-							currentStep={$explanationStore.currentStep}
-						/>
-					</div>
-				</div>
-			{/if}
-					
+
+					<!-- Explicación (1/4) - Se oculta cuando está colapsada -->
+					{#if !isExplanationCollapsed}
+						<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
+							<div class="flex-1 min-h-0">
+								<CollapsibleSteps
+									steps={$explanationStore.steps}
+									currentStep={$explanationStore.currentStep}
+								/>
+							</div>
+						</div>
+					{/if}
+
 					<!-- Botón de colapso tipo "cachito" -->
 					<button
 						type="button"
@@ -260,15 +268,15 @@
 						class:expanded={!isExplanationCollapsed}
 						aria-label={isExplanationCollapsed ? 'Mostrar explicación' : 'Ocultar explicación'}
 					>
-						<svg 
-							class="collapse-icon-main" 
+						<svg
+							class="collapse-icon-main"
 							class:rotated={isExplanationCollapsed}
-							viewBox="0 0 24 24" 
-							fill="none" 
-							stroke="currentColor" 
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
 							stroke-width="2.5"
 						>
-							<path d="M15 18l-6-6 6-6"/>
+							<path d="M15 18l-6-6 6-6" />
 						</svg>
 					</button>
 				</div>
@@ -581,17 +589,17 @@
 		backdrop-filter: blur(4px);
 		z-index: 20;
 	}
-	
+
 	.collapse-tab-main:hover {
 		width: 2rem;
 		opacity: 1;
 		box-shadow: -5px 0 15px rgba(99, 102, 241, 0.5);
 	}
-	
+
 	.collapse-tab-main.expanded {
 		background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.8), rgba(79, 70, 229, 0.9));
 	}
-	
+
 	.collapse-icon-main {
 		width: 1.25rem;
 		height: 1.25rem;
@@ -599,40 +607,41 @@
 		transition: transform 0.3s ease;
 		opacity: 0;
 	}
-	
+
 	.collapse-tab-main:hover .collapse-icon-main {
 		opacity: 1;
 	}
-	
+
 	.collapse-icon-main.rotated {
 		transform: rotate(180deg);
 	}
-	
+
 	/* Animación de pulso cuando está colapsado */
 	.collapse-tab-main:not(.expanded) {
 		animation: mainTabPulse 2s ease-in-out infinite;
 	}
-	
+
 	@keyframes mainTabPulse {
-		0%, 100% {
+		0%,
+		100% {
 			opacity: 0.6;
 		}
 		50% {
 			opacity: 0.9;
 		}
 	}
-	
+
 	/* Responsive - Mobile */
 	@media (max-width: 768px) {
 		.collapse-tab-main {
 			width: 0.875rem;
 			height: 3rem;
 		}
-		
+
 		.collapse-tab-main:hover {
 			width: 1.5rem;
 		}
-		
+
 		.collapse-icon-main {
 			width: 1rem;
 			height: 1rem;
