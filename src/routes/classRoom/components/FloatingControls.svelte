@@ -1,8 +1,10 @@
 <script>
 	import { onDestroy } from 'svelte';
+	import { get } from 'svelte/store';
 	import { explanationStore } from '$lib/stores';
 	import { socketService } from '$lib/api/socket';
 	import { speechService } from '$lib/services/speechService';
+	import { syncService } from '$lib/services/syncService';
 
 	const props = $props();
 
@@ -63,29 +65,6 @@ $effect(() => {
 		};
 	}
 
-	function ensurePaused() {
-		if ($explanationStore.isPaused || !$explanationStore.isExplaining) {
-			return;
-		}
-
-		if (typeof onPauseToggle === 'function') {
-			onPauseToggle();
-			return;
-		}
-
-		const snapshot = buildPauseSnapshot();
-		if (!snapshot) {
-			console.warn('⚠️ No hay contexto de paso válido para pausar');
-			explanationStore.pauseExplanation();
-			return;
-		}
-		explanationStore.pauseExplanation();
-		explanationStore.savePauseContext(snapshot);
-		if (voiceEnabled) {
-			speechService.pause();
-		}
-	}
-
 	function clearAutoSendTimer() {
 		if (autoSendTimerId) {
 			clearTimeout(autoSendTimerId);
@@ -120,11 +99,11 @@ $effect(() => {
 	}
 
 	function toggleChatInput() {
+		handlePause();
 		const next = !showChatInput;
 		showChatInput = next;
 		if (next) {
 			showVoiceInput = false;
-			ensurePaused();
 			stopVoiceCapture();
 			clearAutoSendTimer();
 		} else {
@@ -133,11 +112,11 @@ $effect(() => {
 	}
 
 	function toggleVoiceInput() {
+		handlePause();
 		const next = !showVoiceInput;
 		showVoiceInput = next;
 		if (next) {
 			showChatInput = false;
-			ensurePaused();
 			startVoiceCapture();
 			voiceTranscript = '';
 		} else {
@@ -157,7 +136,6 @@ $effect(() => {
 		const globalWindow = /** @type {any} */ (window);
 		const SpeechRecognitionCtor = globalWindow.SpeechRecognition ?? globalWindow.webkitSpeechRecognition;
 		if (!SpeechRecognitionCtor) {
-			console.warn('⚠️ SpeechRecognition API no disponible en este navegador');
 			voiceTranscript = '';
 			isRecording = false;
 			return;
@@ -182,7 +160,6 @@ $effect(() => {
 		};
 
 		recognition.onerror = (event) => {
-			console.warn('⚠️ Error en reconocimiento de voz:', event.error);
 			stopVoiceCapture();
 		};
 
@@ -190,7 +167,11 @@ $effect(() => {
 			isRecording = false;
 		};
 
-		recognition.start();
+		try {
+			recognition.start();
+		} catch (error) {
+			console.error('❌ Error al iniciar reconocimiento:', error);
+		}
 	}
 
 	function stopVoiceCapture() {
@@ -228,7 +209,6 @@ $effect(() => {
 		} else {
 			const snapshot = buildPauseSnapshot();
 			if (!snapshot) {
-				console.warn('⚠️ No se pudo obtener snapshot de pausa; se mantiene estado actual');
 				explanationStore.pauseExplanation();
 				return;
 			}
@@ -247,7 +227,6 @@ $effect(() => {
 			return;
 		}
 
-		console.log(autoTriggered ? 'Mensaje auto-enviado:' : 'Mensaje:', message);
 		if (showVoiceInput) {
 			if (socketService.isSocketConnected()) {
 				socketService.emitAskQuestion(message, {
@@ -296,12 +275,12 @@ $effect(() => {
 	function handleBubbleInput(event) {
 		const target = event.target;
 		voiceTranscript = (target.innerText || '').trim();
-		scheduleAutoSend();
 	}
+
 </script>
 
 <div class="floating-controls-container">
-	{#if showVoiceInput && bubbleMessage.length > 0}
+	{#if showVoiceInput}
 		<div class="question-bubble">
 			<div
 				class="bubble-text"
@@ -311,9 +290,9 @@ $effect(() => {
 				role="textbox"
 				aria-label="Pregunta por voz"
 			>
-				{bubbleMessage}
+				{bubbleMessage || (isRecording ? 'Escuchando…' : '')}
 			</div>
-			{#if autoSendCountdown !== null}
+			{#if autoSendCountdown !== null && bubbleMessage.length > 0}
 				<div class="bubble-countdown">{autoSendCountdown || 0}</div>
 			{/if}
 		</div>
@@ -414,226 +393,226 @@ $effect(() => {
 			</button>
 		</div>
 	{/if}
+</div>
 
-	<style>
+<style>
+	.floating-controls-container {
+		position: fixed;
+		bottom: 24px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 40;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.floating-bar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 12px 20px;
+		background: rgba(10, 14, 39, 0.85);
+		border: 1px solid rgba(99, 102, 241, 0.4);
+		border-radius: 50px;
+		backdrop-filter: blur(16px);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.6),
+			0 0 40px rgba(99, 102, 241, 0.3),
+			inset 0 1px 0 rgba(99, 102, 241, 0.2);
+		animation: slideUp 0.4s ease-out;
+	}
+
+	.control-icon {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(99, 102, 241, 0.15);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		color: #818cf8;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		position: relative;
+	}
+
+	.control-icon::before {
+		content: '';
+		position: absolute;
+		inset: -2px;
+		border-radius: 50%;
+		background: linear-gradient(45deg, rgba(99, 102, 241, 0.4), rgba(129, 140, 248, 0.4));
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		z-index: -1;
+		filter: blur(8px);
+	}
+
+	.control-icon:hover:not(:disabled) {
+		background: rgba(99, 102, 241, 0.25);
+		border-color: rgba(99, 102, 241, 0.5);
+		transform: scale(1.05);
+		box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+	}
+
+	.control-icon:hover:not(:disabled)::before {
+		opacity: 1;
+	}
+
+	.control-icon:active:not(:disabled) {
+		transform: scale(0.95);
+	}
+
+	.control-icon:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+
+	.control-icon.voice-active {
+		background: rgba(34, 197, 94, 0.2);
+		border-color: rgba(34, 197, 94, 0.5);
+		color: rgb(34, 197, 94);
+		box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+	}
+
+	.control-icon.voice-active::before {
+		background: linear-gradient(45deg, rgba(34, 197, 94, 0.4), rgba(74, 222, 128, 0.4));
+		opacity: 1;
+	}
+
+	.control-icon.recording {
+		background: rgba(239, 68, 68, 0.2);
+		border-color: rgba(239, 68, 68, 0.4);
+		color: #f87171;
+		box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
+	}
+
+	.question-bubble {
+		position: absolute;
+		bottom: 88px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(15, 23, 42, 0.92);
+		border: 1px solid rgba(99, 102, 241, 0.35);
+		border-radius: 16px;
+		padding: 12px 16px;
+		max-width: 420px;
+		width: max-content;
+		color: #e2e8f0;
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		box-shadow:
+			0 8px 30px rgba(15, 23, 42, 0.4),
+			0 0 24px rgba(99, 102, 241, 0.25);
+		backdrop-filter: blur(18px);
+	}
+
+	.bubble-text {
+		font-size: 0.9rem;
+		line-height: 1.3;
+		white-space: pre-line;
+	}
+
+	.bubble-countdown {
+		min-width: 28px;
+		height: 28px;
+		border-radius: 999px;
+		background: rgba(99, 102, 241, 0.2);
+		border: 1px solid rgba(129, 140, 248, 0.55);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+		color: #c7d2fe;
+		font-size: 0.85rem;
+	}
+
+	.chat-input-container {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		background: rgba(10, 14, 39, 0.9);
+		border: 1px solid rgba(99, 102, 241, 0.4);
+		border-radius: 50px;
+		backdrop-filter: blur(16px);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.6),
+			0 0 30px rgba(99, 102, 241, 0.25);
+		animation: slideUp 0.3s ease-out;
+		min-width: 320px;
+	}
+
+	.chat-input {
+		flex: 1;
+		background: transparent;
+		border: none;
+		outline: none;
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		padding: 8px 12px;
+	}
+
+	.chat-input::placeholder {
+		color: rgba(203, 213, 225, 0.4);
+	}
+
+	.send-btn {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(99, 102, 241, 0.3);
+		border: 1px solid rgba(99, 102, 241, 0.5);
+		color: #818cf8;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.send-btn:hover {
+		background: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
+		transform: scale(1.05);
+	}
+
+	.send-btn:active {
+		transform: scale(0.95);
+	}
+
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 640px) {
 		.floating-controls-container {
-			position: fixed;
-			bottom: 24px;
-			left: 50%;
-			transform: translateX(-50%);
-			z-index: 40;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 12px;
+			bottom: 16px;
 		}
 
 		.floating-bar {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			padding: 12px 20px;
-			background: rgba(10, 14, 39, 0.85);
-			border: 1px solid rgba(99, 102, 241, 0.4);
-			border-radius: 50px;
-			backdrop-filter: blur(16px);
-			box-shadow:
-				0 8px 32px rgba(0, 0, 0, 0.6),
-				0 0 40px rgba(99, 102, 241, 0.3),
-				inset 0 1px 0 rgba(99, 102, 241, 0.2);
-			animation: slideUp 0.4s ease-out;
+			padding: 10px 16px;
+			gap: 6px;
 		}
 
 		.control-icon {
-			width: 44px;
-			height: 44px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: rgba(99, 102, 241, 0.15);
-			border: 1px solid rgba(99, 102, 241, 0.3);
-			color: #818cf8;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			position: relative;
-		}
-
-		.control-icon::before {
-			content: '';
-			position: absolute;
-			inset: -2px;
-			border-radius: 50%;
-			background: linear-gradient(45deg, rgba(99, 102, 241, 0.4), rgba(129, 140, 248, 0.4));
-			opacity: 0;
-			transition: opacity 0.3s ease;
-			z-index: -1;
-			filter: blur(8px);
-		}
-
-		.control-icon:hover:not(:disabled) {
-			background: rgba(99, 102, 241, 0.25);
-			border-color: rgba(99, 102, 241, 0.5);
-			transform: scale(1.05);
-			box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-		}
-
-		.control-icon:hover:not(:disabled)::before {
-			opacity: 1;
-		}
-
-		.control-icon:active:not(:disabled) {
-			transform: scale(0.95);
-		}
-
-		.control-icon:disabled {
-			opacity: 0.4;
-			cursor: not-allowed;
-		}
-
-		.control-icon.voice-active {
-			background: rgba(34, 197, 94, 0.2);
-			border-color: rgba(34, 197, 94, 0.5);
-			color: rgb(34, 197, 94);
-			box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
-		}
-
-		.control-icon.voice-active::before {
-			background: linear-gradient(45deg, rgba(34, 197, 94, 0.4), rgba(74, 222, 128, 0.4));
-			opacity: 1;
-		}
-
-		.control-icon.recording {
-			background: rgba(239, 68, 68, 0.2);
-			border-color: rgba(239, 68, 68, 0.4);
-			color: #f87171;
-			box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
-		}
-
-		.question-bubble {
-			position: absolute;
-			bottom: 88px;
-			left: 50%;
-			transform: translateX(-50%);
-			background: rgba(15, 23, 42, 0.92);
-			border: 1px solid rgba(99, 102, 241, 0.35);
-			border-radius: 16px;
-			padding: 12px 16px;
-			max-width: 420px;
-			width: max-content;
-			color: #e2e8f0;
-			display: flex;
-			gap: 12px;
-			align-items: center;
-			box-shadow:
-				0 8px 30px rgba(15, 23, 42, 0.4),
-				0 0 24px rgba(99, 102, 241, 0.25);
-			backdrop-filter: blur(18px);
-		}
-
-		.bubble-text {
-			font-size: 0.9rem;
-			line-height: 1.3;
-			white-space: pre-line;
-		}
-
-		.bubble-countdown {
-			min-width: 28px;
-			height: 28px;
-			border-radius: 999px;
-			background: rgba(99, 102, 241, 0.2);
-			border: 1px solid rgba(129, 140, 248, 0.55);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-weight: 600;
-			color: #c7d2fe;
-			font-size: 0.85rem;
+			width: 40px;
+			height: 40px;
 		}
 
 		.chat-input-container {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			padding: 8px 12px;
-			background: rgba(10, 14, 39, 0.9);
-			border: 1px solid rgba(99, 102, 241, 0.4);
-			border-radius: 50px;
-			backdrop-filter: blur(16px);
-			box-shadow:
-				0 8px 32px rgba(0, 0, 0, 0.6),
-				0 0 30px rgba(99, 102, 241, 0.25);
-			animation: slideUp 0.3s ease-out;
-			min-width: 320px;
+			min-width: 280px;
 		}
-
-		.chat-input {
-			flex: 1;
-			background: transparent;
-			border: none;
-			outline: none;
-			color: #e2e8f0;
-			font-size: 0.875rem;
-			padding: 8px 12px;
-		}
-
-		.chat-input::placeholder {
-			color: rgba(203, 213, 225, 0.4);
-		}
-
-		.send-btn {
-			width: 36px;
-			height: 36px;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: rgba(99, 102, 241, 0.3);
-			border: 1px solid rgba(99, 102, 241, 0.5);
-			color: #818cf8;
-			cursor: pointer;
-			transition: all 0.2s ease;
-		}
-
-		.send-btn:hover {
-			background: rgba(99, 102, 241, 0.5);
-			box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
-			transform: scale(1.05);
-		}
-
-		.send-btn:active {
-			transform: scale(0.95);
-		}
-
-		@keyframes slideUp {
-			from {
-				opacity: 0;
-				transform: translateY(20px);
-			}
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
-
-		@media (max-width: 640px) {
-			.floating-controls-container {
-				bottom: 16px;
-			}
-
-			.floating-bar {
-				padding: 10px 16px;
-				gap: 6px;
-			}
-
-			.control-icon {
-				width: 40px;
-				height: 40px;
-			}
-
-			.chat-input-container {
-				min-width: 280px;
-			}
-		}
-	</style>
-</div>
+	}
+</style>
