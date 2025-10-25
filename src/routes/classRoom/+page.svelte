@@ -97,6 +97,14 @@
 		controller.stop();
 	}
 
+	function handlePauseToggle() {
+		if ($explanationStore.isPaused) {
+			controller.resume();
+		} else {
+			controller.pause();
+		}
+	}
+
 	function handleRetry() {
 		connectionError = null;
 		isConnecting = true;
@@ -304,7 +312,12 @@
 
 <!-- Controles flotantes en la parte inferior -->
 {#if $explanationStore.steps.length > 0}
-	<FloatingControls onStop={handleStop} onToggleVoice={toggleVoice} voiceEnabled={!voiceMuted} />
+	<FloatingControls
+		onStop={handleStop}
+		onToggleVoice={toggleVoice}
+		onPauseToggle={handlePauseToggle}
+		voiceEnabled={!voiceMuted}
+	/>
 {/if}
 
 <!-- Modal de Feedback -->

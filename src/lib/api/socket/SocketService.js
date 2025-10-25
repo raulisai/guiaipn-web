@@ -29,6 +29,8 @@ class SocketService {
 		this.listeners = new Map(); // Guardar referencias de listeners
 		this.token = null; // Guardar token JWT para incluirlo en eventos
 		this.externalListeners = new Map(); // Listeners externos registrados antes de conectar
+		this.lastPausePayload = null;
+		this.lastResumePayload = null;
 	}
 
 	/**
@@ -112,6 +114,9 @@ class SocketService {
 
 			this.socket.on('error', (error) => {
 				console.error('🚫 Error de Socket.IO:', error);
+				if (error?.code === 'RESUME_ERROR' && this.lastResumePayload) {
+					console.error('ℹ️ Último payload enviado en resume_explanation:', this.lastResumePayload);
+				}
 				this.handleError(error);
 				reject(error);
 			});
@@ -370,7 +375,7 @@ class SocketService {
 	 * @param {number} currentStep - Paso actual
 	 * @param {number} positionInStep - Posición en el paso
 	 */
-	emitPauseExplanation(currentStep, positionInStep = 0) {
+	emitPauseExplanation(currentStep = null, positionInStep = 0) {
 		if (!this.isSocketConnected()) {
 			console.error('❌ Socket no conectado');
 			return;
@@ -381,18 +386,29 @@ class SocketService {
 			return;
 		}
 
-		console.log('⏸️ Pausando explicación');
-		this.socket.emit('pause_explanation', {
-			token: this.token,
-			current_step: currentStep,
-			position_in_step: positionInStep
-		});
+		console.warn('⚠️ emitPauseExplanation omitido: endpoint backend no disponible');
+		return;
+
+		const payload = {
+			token: this.token
+		};
+
+		if (typeof currentStep === 'number' && currentStep > 0) {
+			payload.current_step = currentStep;
+			payload.position_in_step = positionInStep ?? 0;
+		}
+
+		this.lastPausePayload = payload;
+		console.log('⏸️ Pausando explicación', payload);
+		this.socket.emit('pause_explanation', payload);
 	}
 
 	/**
 	 * Reanuda la explicación pausada
+	 * @param {number|null} currentStep - Paso en el que se reanuda
+	 * @param {number} positionInStep - Índice dentro del paso
 	 */
-	emitResumeExplanation() {
+	emitResumeExplanation(currentStep = null, positionInStep = 0) {
 		if (!this.isSocketConnected()) {
 			console.error('❌ Socket no conectado');
 			return;
@@ -403,10 +419,29 @@ class SocketService {
 			return;
 		}
 
-		console.log('▶️ Reanudando explicación');
-		this.socket.emit('resume_explanation', {
+		console.warn('⚠️ emitResumeExplanation omitido: endpoint backend no disponible');
+		return;
+
+		let resumeStep = currentStep;
+		let resumePosition = positionInStep;
+
+		if (!(typeof resumeStep === 'number' && resumeStep > 0) && this.lastPausePayload) {
+			resumeStep = this.lastPausePayload.current_step ?? resumeStep;
+			resumePosition = this.lastPausePayload.position_in_step ?? resumePosition;
+		}
+
+		const payload = {
 			token: this.token
-		});
+		};
+
+		if (typeof resumeStep === 'number' && resumeStep > 0) {
+			payload.current_step = resumeStep;
+			payload.position_in_step = resumePosition ?? 0;
+		}
+
+		console.log('▶️ Reanudando explicación', payload);
+		this.lastResumePayload = payload;
+		this.socket.emit('resume_explanation', payload);
 	}
 
 	/**

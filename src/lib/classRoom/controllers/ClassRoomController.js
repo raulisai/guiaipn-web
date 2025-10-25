@@ -216,6 +216,11 @@ export function createClassRoomController(searchParams) {
 		
 		// Control de voz
 		toggleVoice,
+		pause: explanationControl.pause,
+		resume: explanationControl.resume,
+		savePauseContext: explanationControl.savePauseContext,
+		clearPauseContext: explanationControl.clearPauseContext,
+		getPauseContext: explanationControl.getPauseContext,
 		
 		// Navegación
 		stop,

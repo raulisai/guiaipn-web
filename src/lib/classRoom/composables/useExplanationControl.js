@@ -4,6 +4,7 @@
  */
 
 import { goto } from '$app/navigation';
+import { get } from 'svelte/store';
 import { socketService } from '$lib/api/socket';
 import { explanationStore } from '$lib/stores';
 import { syncService } from '$lib/services/syncService';
@@ -87,6 +88,62 @@ export function useExplanationControl() {
 		}
 	}
 
+	function buildPauseContext(state) {
+		const stepIndex = state.render.currentStepIndex ?? 0;
+		const displayStep = state.buffer.steps[stepIndex] || state.steps[stepIndex] || null;
+		const renderedStep = state.steps[stepIndex] || null;
+
+		return {
+			timestamp: Date.now(),
+			stepNumber: state.stepProgress.stepNumber || displayStep?.step || state.currentStep,
+			charIndex: state.stepProgress.charIndex ?? 0,
+			totalChars: state.stepProgress.totalChars ?? displayStep?.content?.length ?? 0,
+			currentContent: renderedStep?.content || '',
+			title: displayStep?.title || renderedStep?.title || null
+		};
+	}
+
+	function pause() {
+		const state = get(explanationStore);
+		if (state.isPaused) {
+			return state.pauseContext || null;
+		}
+
+		const context = buildPauseContext(state);
+		explanationStore.pauseExplanation();
+		explanationStore.savePauseContext(context);
+		speechService.pause();
+		syncService.pause();
+		console.log('⏸️ Explicación pausada en contexto:', context);
+		return context;
+	}
+
+	function resume() {
+		const state = get(explanationStore);
+		if (!state.isPaused) {
+			return;
+		}
+
+		syncService.resume();
+		explanationStore.resumeExplanation();
+		speechService.resume();
+		explanationStore.clearPauseContext();
+		console.log('▶️ Explicación reanudada');
+	}
+
+	function savePauseContext(context) {
+		explanationStore.savePauseContext(context);
+	}
+
+	function clearPauseContext() {
+		explanationStore.clearPauseContext();
+	}
+
+	function getPauseContext() {
+		const state = get(explanationStore);
+		return state.pauseContext;
+	}
+
 	/**
 	 * Obtener progreso actual
 	 * @returns {number} Progreso en porcentaje (0-100)
@@ -114,6 +171,11 @@ export function useExplanationControl() {
 		goBack,
 		toggleVoice,
 		getProgress,
+		pause,
+		resume,
+		savePauseContext,
+		clearPauseContext,
+		getPauseContext,
 		cleanup
 	};
 }

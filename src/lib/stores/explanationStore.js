@@ -64,7 +64,8 @@ function createExplanationStore() {
 		error: null,
 
 		// Pregunta actual
-		currentQuestion: null
+		currentQuestion: null,
+		pauseContext: null
 	});
 
 	return {
@@ -344,6 +345,20 @@ function createExplanationStore() {
 			update((state) => ({
 				...state,
 				isPaused: false
+			}));
+		},
+
+		savePauseContext(context) {
+			update((state) => ({
+				...state,
+				pauseContext: context
+			}));
+		},
+
+		clearPauseContext() {
+			update((state) => ({
+				...state,
+				pauseContext: null
 			}));
 		},
 
@@ -722,7 +737,8 @@ function createExplanationStore() {
 					renderSpeed: 15 // Más rápido para sincronizar mejor con voz
 				},
 				error: null,
-				currentQuestion: null
+				currentQuestion: null,
+				pauseContext: null
 			});
 		}
 	};
