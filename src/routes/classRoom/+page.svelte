@@ -24,6 +24,8 @@
 	let voiceMuted = $state(false);
 	let renderProgress = $state(0);
 	let hasStarted = $state(false);
+	let hasClearedBeforeStart = $state(false);
+	let lastQuestionHash = $state(null);
 
 	let isExplanationCollapsed = $state(false);
 
@@ -58,6 +60,21 @@
 
 	// Datos de la pregunta desde el controlador
 	const questionData = $derived(controller.getQuestionData());
+
+	$effect(() => {
+		const currentHash = $explanationStore.questionHash;
+		if (currentHash && currentHash !== lastQuestionHash) {
+			lastQuestionHash = currentHash;
+			hasClearedBeforeStart = false;
+		}
+	});
+
+	$effect(() => {
+		if (!hasStarted && !hasClearedBeforeStart && $explanationStore.buffer.isComplete) {
+			explanationStore.clearRenderedContent();
+			hasClearedBeforeStart = true;
+		}
+	});
 
 	onMount(async () => {
 		await controller.initialize({
@@ -191,13 +208,13 @@
 				onGoBack={handleGoBack}
 			/>
 		{:else if $explanationStore.isLoading || (!$explanationStore.buffer.isComplete && !hasStarted)}
-			<!-- Mostrar loading mientras se carga el buffer completo -->
-			<LoadingState
-				bufferSteps={$explanationStore.buffer.steps.length}
-				totalSteps={$explanationStore.totalSteps}
-				isBuffering={$explanationStore.buffer.steps.length > 0}
-			/>
-		{:else if $explanationStore.buffer.isComplete && !hasStarted}
+    <!-- Mostrar loading mientras se carga el buffer completo -->
+    <LoadingState
+        bufferSteps={$explanationStore.buffer.steps.length}
+        totalSteps={$explanationStore.totalSteps}
+        isBuffering={$explanationStore.buffer.steps.length > 0}
+    />
+{:else if $explanationStore.buffer.isComplete && !hasStarted}
 			<!-- Botón de PLAY para iniciar (solo cuando el buffer está completo) -->
 			<div class="flex-1 flex items-center justify-center">
 				<button onclick={handlePlay} class="play-button">

@@ -4,6 +4,7 @@
  */
 
 import { speechService } from '$lib/services/speechService';
+import { explanationStore } from '$lib/stores';
 import {
 	useSocketConnection,
 	useExplanationControl,
@@ -48,6 +49,8 @@ export function createClassRoomController(searchParams) {
 			onError = null,
 			onProgressUpdate = null
 		} = callbacks;
+
+		explanationStore.reset();
 
 		// Habilitar voz
 		speechService.setEnabled(true);

@@ -144,6 +144,27 @@ function createExplanationStore() {
 				steps: [],
 				canvasCommands: [],
 				componentCommands: [],
+				buffer: {
+					steps: [],
+					canvasCommands: [],
+					componentCommands: [],
+					isComplete: false
+				},
+				stepProgress: {
+					stepNumber: 0,
+					percentage: 0,
+					charIndex: 0,
+					totalChars: 0,
+					canvasTriggered: false
+				},
+				render: {
+					currentStepIndex: 0,
+					currentCharIndex: 0,
+					currentCanvasIndex: 0,
+					currentComponentIndex: 0,
+					isRendering: false,
+					renderSpeed: state.render.renderSpeed
+				},
 				error: null
 			}));
 		},
@@ -614,6 +635,31 @@ function createExplanationStore() {
 					content: step.content || '',
 					isComplete: step.isComplete || false
 				}))
+			}));
+		},
+
+		clearRenderedContent() {
+			update((state) => ({
+				...state,
+				steps: [],
+				canvasCommands: [],
+				componentCommands: [],
+				currentStep: 0,
+				stepProgress: {
+					stepNumber: 0,
+					percentage: 0,
+					charIndex: 0,
+					totalChars: 0,
+					canvasTriggered: false
+				},
+				render: {
+					...state.render,
+					currentStepIndex: 0,
+					currentCharIndex: 0,
+					currentCanvasIndex: 0,
+					currentComponentIndex: 0,
+					isRendering: false
+				}
 			}));
 		},
 
