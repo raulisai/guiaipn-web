@@ -192,15 +192,27 @@ $effect(() => {
 	}
 
 	function handlePause() {
+		const wasPaused = $explanationStore.isPaused;
+
+		if (wasPaused) {
+			if (showChatInput) {
+				showChatInput = false;
+			}
+			if (showVoiceInput) {
+				showVoiceInput = false;
+				voiceTranscript = '';
+				clearAutoSendTimer();
+				stopVoiceCapture();
+			}
+		}
+
 		if (typeof onPauseToggle === 'function') {
 			onPauseToggle();
 			return;
 		}
 
-		if ($explanationStore.isPaused) {
+		if (wasPaused) {
 			const pauseContext = $explanationStore.pauseContext ?? buildPauseSnapshot();
-			const resumeStep = Math.max(1, pauseContext?.stepNumber ?? $explanationStore.currentStep ?? 1);
-			const resumeOffset = pauseContext?.charIndex ?? $explanationStore.stepProgress.charIndex ?? 0;
 			explanationStore.resumeExplanation();
 			explanationStore.clearPauseContext();
 			if (voiceEnabled) {

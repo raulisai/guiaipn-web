@@ -17,9 +17,6 @@
 		}
 		return result;
 	});
-
-	console.log('Comando recibidosssss:', normalizedCommand.params);
-	
 	// Obtener el loader del componente (función de importación dinámica)
 	const componentLoader = $derived(
 		normalizedCommand && normalizedCommand.type && typeof normalizedCommand.type === 'string'

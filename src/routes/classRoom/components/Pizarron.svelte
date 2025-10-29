@@ -4,7 +4,6 @@
 	
 	let { commands = [], currentStep = 1, isRendering = false } = $props();
 
-	console.log('Comandos:', commands);
 	
 	// Agrupar comandos por paso
 	let canvasByStep = $derived.by(() => {
@@ -25,7 +24,6 @@
 	// Referencia al contenedor scrolleable
 	let surfaceRef = $state(null);
 	
-	console.log('Pasos ordenados:', sortedSteps);
 	// Sistema de renderizado progresivo
 	let previousCommandCount = $state(0);
 	let renderQueue = $state([]);
