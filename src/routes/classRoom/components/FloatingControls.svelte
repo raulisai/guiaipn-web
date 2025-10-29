@@ -99,7 +99,7 @@ $effect(() => {
 	}
 
 	function toggleChatInput() {
-		handlePause();
+		handlePause({ ensurePaused: true, preserveInputs: true });
 		const next = !showChatInput;
 		showChatInput = next;
 		if (next) {
@@ -112,7 +112,7 @@ $effect(() => {
 	}
 
 	function toggleVoiceInput() {
-		handlePause();
+		handlePause({ ensurePaused: true, preserveInputs: true });
 		const next = !showVoiceInput;
 		showVoiceInput = next;
 		if (next) {
@@ -191,10 +191,34 @@ $effect(() => {
 		isRecording = false;
 	}
 
-	function handlePause() {
+	function handlePause(options = {}) {
+		const { preserveInputs = false, ensurePaused = false } = options;
 		const wasPaused = $explanationStore.isPaused;
 
-		if (wasPaused) {
+		if (ensurePaused && wasPaused) {
+			return;
+		}
+
+		if (ensurePaused && !wasPaused) {
+			if (typeof onPauseToggle === 'function') {
+				onPauseToggle();
+				return;
+			}
+
+			const snapshot = buildPauseSnapshot();
+			if (!snapshot) {
+				explanationStore.pauseExplanation();
+				return;
+			}
+			explanationStore.pauseExplanation();
+			explanationStore.savePauseContext(snapshot);
+			if (voiceEnabled) {
+				speechService.pause();
+			}
+			return;
+		}
+
+		if (wasPaused && !preserveInputs) {
 			if (showChatInput) {
 				showChatInput = false;
 			}

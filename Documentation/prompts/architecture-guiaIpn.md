@@ -1,0 +1,793 @@
+ARQUITECTURA BACKEND - SISTEMA DE APRENDIZAJE INMERSIVO
+========================================================
+
+1. STACK TECNOLÓGICO backend
+---------------------------
+Backend: Flask + Flask-SocketIO
+Base de Datos: Supabase (PostgreSQL)
+Documentacion: Swagger
+Cache: Redis
+Auth: Supabase Auth (Google OAuth)
+IA: OpenAI API
+Transcripción: Web Speech API (MVP)
+
+2. FLUJO UNIFICADO DEL SISTEMA
+-------------------------------
+
+⭐ FLUJO COMPLETO: EXAMEN (HTTP) + EXPLICACIÓN (Socket.IO) + INTERRUPCIONES + FOLLOW-UP
+
+[FASE 1: PRESENTACIÓN DE PREGUNTA - HTTP REST]
+   |
+   v
+[Frontend] --HTTP GET--> /api/v1/questions/random?subject=matematicas
+   |                       Headers: {Authorization: Bearer <token>}
+   v
+[Backend: QuestionRepo.get_random_by_subject()]
+   |
+   v
+[Response 200 OK]
+{
+  "question_id": "uuid",
+  "question": "¿Cuál es la derivada de x²?",
+  "options": {"a": "2x", "b": "x", "c": "2", "d": "x²"},
+  "subject": "calculo",
+  "difficulty": "medium",
+  "use_latex": true
+}
+   |
+   v
+[Usuario responde en Frontend]
+   |
+   v
+[Frontend] --HTTP POST--> /api/v1/questions/{question_id}/answer
+   |                        Body: {"user_answer": "b"}
+   |                        Headers: {Authorization: Bearer <token>}
+   v
+[Frontend: Validar respuesta]
+   |
+   +--------+--------+
+   |                 |
+   v                 v
+[CORRECTA]      [INCORRECTA]
+   |                 |
+   v                 v
+[Response 200]    [Response 200]
+{                 {
+  "correct": true,  "correct": false,
+  "message": "¡Correcto!"  "correct_answer": "a",
+}                   "message": "Incorrecto"
+   |               }
+   v                 |
+[Frontend solicita]  v
+[siguiente pregunta] [Frontend muestra botón "Explicar"]
+   |                 |
+   v                 v
+[Volver a FASE 1]  [Usuario hace clic en "Explicar"]
+                       |
+                       v
+              [FASE 2: EXPLICACIÓN PRINCIPAL - Socket.IO]
+
+[FASE 2: EXPLICACIÓN PRINCIPAL - Socket.IO STREAMING]
+   |
+   v
+[Frontend establece conexión Socket.IO]
+   |  (solo cuando usuario solicita explicación)
+   v
+[Frontend] --Socket.IO--> connect
+   |                       {auth: {token: "jwt"}}
+   v
+[Backend: Validar token y crear sesión Redis]
+   |
+   v
+[Emit: connection_established]
+{session_id: "uuid", user_info: {...}}
+   |
+   v
+[Frontend] --Socket.IO--> start_explanation
+   |                       {question_id: "uuid"}
+   v
+[Backend: ExamService.get_or_create_explanation()]
+   |
+   +---> [1. Buscar pregunta en questions por ID]
+   |          |
+   |          v
+   |     [Pregunta encontrada]
+   |     {question, options, correct_answer, subject}
+   |          |
+   |          v
+   +---> [2. Buscar en exam_question_explanations]
+   |          |
+   |     +----+----+
+   |     |         |
+   |     v         v
+   | [EXISTE]  [NO EXISTE]
+   |     |         |
+   |     |         v
+   |     |    [3. Generar con IA]
+   |     |         |
+   |     |         v
+   |     |    [AIService.generate_answer()]
+   |     |    - Prompt: get_exam_question_prompt()
+   |     |    - Incluye: subject, opciones, respuesta correcta
+   |     |    - OpenAI API - JSON estructurado
+   |     |         |
+   |     |         v
+   |     |    [4. Guardar en exam_question_explanations]
+   |     |    - quality_score: 0.00
+   |     |    - generated_by: 'ai'
+   |     |    - prompt_version: 'v1.0'
+   |     |         |
+   |     v         v
+   |     +----+----+
+   |          |
+   |          v
+   +---> [5. Incrementar usage_count]
+              |
+              v
+       [StreamingService.start_streaming()]
+              |
+              v
+       [Emit: explanation_start]
+       {total_steps, duration, question_id}
+              |
+              v
+       [FASE 3: STREAMING CON INTERRUPCIONES]
+
+
+[FASE 3: STREAMING CON INTERRUPCIONES]
+              |
+              v
+         +----->[LOOP: Por cada paso de la explicación]
+         |           |
+         |           v
+         |      [Emit: step_start]
+         |      {step_number, title, content_type}
+         |           |
+         |           v
+         |      [Emit: content_chunk] (múltiples)
+         |      - Intervalo 50-100ms
+         |      - Efecto typewriter en Frontend
+         |           |
+         |           v
+         |      [Emit: canvas_command] (si aplica)
+         |      - Dibujar figuras geométricas
+         |      - Gráficas, ecuaciones
+         |      - Animaciones paso a paso
+         |           |
+         |           v
+         |      ¿Usuario interrumpe? (interrupt_explanation)
+         |       SI / NO
+         |       |     |
+         |       v     |
+         |   [PAUSAR STREAMING]  |
+         |      |      |
+         |      v      |
+         |   [Frontend] --Socket.IO--> interrupt_explanation |
+         |   {clarification_question: "qué es X?", |
+         |    current_context: "paso 2 de derivadas"} |
+         |      |      |
+         |      v      |
+         |   [Backend: AIService.generate_answer()] |
+         |   - Prompt: get_clarification_prompt() |
+         |   - Contexto: pregunta original + paso actual |
+         |   - Respuesta CORTA (1-2 pasos) |
+         |   - NO SE GUARDA EN DB |
+         |      |      |
+         |      v      |
+         |   [Emit: clarification_start] |
+         |   {is_brief: true, estimated_duration: 15} |
+         |      |      |
+         |      v      |
+         |   [Streaming de aclaración] |
+         |   - Más rápido (30ms chunks) |
+         |   - Sin canvas (solo texto) |
+         |      |      |
+         |      v      |
+         |   [Emit: clarification_complete] |
+         |      |      |
+         |      v      v
+         |   [REANUDAR STREAMING PRINCIPAL]
+         |   - Continuar desde donde se quedó
+         |           |
+         |           v
+         +---[Emit: step_complete]
+                     |
+                     v
+              ¿Más pasos?
+               SI / NO
+               |     |
+               +<----+
+               |
+               v
+         [Emit: explanation_complete]
+         {total_duration, steps_completed}
+               |
+               v
+         [FASE 4: PREGUNTAS ADICIONALES]
+
+
+[FASE 4: PREGUNTAS ADICIONALES (OPCIONALES)]
+   |
+   v
+[¿Usuario tiene más dudas?]
+   SI / NO
+   |     |
+   |     v
+   |   [Solicitar feedback]
+   |   - ¿Fue útil? (helpful_votes)
+   |   - ¿Hubo errores? (flag)
+   |        |
+   |        v
+   |     [FIN - Siguiente pregunta de examen]
+   |
+   v
+[Frontend] --Socket.IO--> ask_follow_up_question
+   |                       {question: "explica más sobre X",
+   |                        related_to: question_id}
+   v
+[Backend: AIService.generate_answer()]
+   |
+   +---> [Normalizar y generar hash]
+   |          |
+   |          v
+   |     [Buscar en ai_answers]
+   |          |
+   |     +----+----+
+   |     |         |
+   |     v         v
+   | [EXISTE]  [NO EXISTE]
+   |     |         |
+   |     |         v
+   |     |    [Generar con IA]
+   |     |    - Prompt: get_follow_up_prompt()
+   |     |    - Contexto: pregunta de examen + explicación previa
+   |     |    - Respuesta LARGA (3-5 pasos)
+   |     |         |
+   |     |         v
+   |     |    [Guardar en ai_answers]
+   |     |         |
+   |     v         v
+   |     +----+----+
+   |          |
+   |          v
+   +---> [StreamingService.start_streaming()]
+              |
+              v
+       [Emit: follow_up_start]
+       {total_steps, duration, is_follow_up: true}
+              |
+              v
+       [Streaming completo (igual que FASE 3)]
+       - Puede tener interrupciones también
+       - Puede tener canvas
+              |
+              v
+       [Emit: follow_up_complete]
+              |
+              v
+       [¿Más preguntas adicionales?]
+        SI: Volver a FASE 4
+        NO: Solicitar feedback y FIN
+
+4. ESQUEMAS DE BASE DE DATOS (SUPABASE)
+----------------------------------------
+
+-- Habilitar extensiones necesarias
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm"; -- Para búsquedas de texto
+CREATE EXTENSION IF NOT EXISTS "unaccent"; -- Para normalizar texto
+
+-- =========================================
+-- 2. TABLAS CORE DEL SISTEMA
+-- =========================================
+
+-- Perfiles de usuario (extiende auth.users de Supabase)
+CREATE TABLE profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT UNIQUE,
+    full_name TEXT,
+    avatar_url TEXT,
+    
+    -- Plan y créditos
+    plan_type TEXT DEFAULT 'free' CHECK (plan_type IN ('free', 'basic', 'premium', 'pro')),
+    credits_remaining INTEGER DEFAULT 10,
+    credits_total INTEGER DEFAULT 10,
+    daily_limit INTEGER DEFAULT 5,
+    daily_used INTEGER DEFAULT 0,
+    last_reset_date DATE DEFAULT CURRENT_DATE,
+    
+    -- Configuración
+    preferred_language TEXT DEFAULT 'es',
+    learning_level TEXT DEFAULT 'medium',
+    
+    -- Metadata
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Banco de preguntas del examen
+CREATE TABLE questions (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    
+    -- Identificación
+    code TEXT UNIQUE NOT NULL, -- ej: "2024Algebra14"
+    subject TEXT NOT NULL, -- algebra, calculo, fisica, etc
+    topic TEXT,
+    difficulty TEXT DEFAULT 'medium' CHECK (difficulty IN ('easy', 'medium', 'hard')),
+    
+    -- Contenido
+    question TEXT NOT NULL,
+    options JSONB NOT NULL, -- {a: "...", b: "...", c: "...", d: "..."}
+    correct_answer TEXT NOT NULL,
+    explanation TEXT,
+    
+    -- Configuración LaTeX
+    use_latex BOOLEAN DEFAULT FALSE,
+    
+    -- Estadísticas
+    times_seen INTEGER DEFAULT 0,
+    times_correct INTEGER DEFAULT 0,
+    exam_probability NUMERIC(3,2) DEFAULT 0.50, -- 0.00 a 1.00
+    
+    -- Metadata
+    tags TEXT[] DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Respuestas IA precalculadas (para preguntas adicionales/follow-up)
+CREATE TABLE ai_answers (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    question_hash TEXT UNIQUE NOT NULL, -- SHA256 de la pregunta normalizada
+    question_text TEXT NOT NULL,
+    
+    -- Relación opcional con pregunta de examen
+    related_question_id UUID REFERENCES questions(id), -- NULL si es pregunta libre
+    
+    -- Respuesta estructurada
+    answer_steps JSONB NOT NULL, -- Array de pasos de explicación COMPLETA (3-5 pasos)
+    total_duration INTEGER DEFAULT 60, -- segundos estimados
+    
+    -- Estadísticas
+    usage_count INTEGER DEFAULT 0,
+    helpful_votes INTEGER DEFAULT 0,
+    total_votes INTEGER DEFAULT 0,
+    
+    -- Metadata
+    generated_by TEXT DEFAULT 'manual', -- manual, gpt-3.5, gpt-4
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Historial de interacciones
+CREATE TABLE interactions (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    session_id TEXT,
+    
+    -- Pregunta y respuesta
+    question_text TEXT NOT NULL,
+    question_type TEXT DEFAULT 'text', -- text, voice, exam
+    answer_id UUID REFERENCES ai_answers(id),
+    question_id UUID REFERENCES questions(id),
+    
+    -- Métricas
+    response_time_ms INTEGER,
+    credits_used INTEGER DEFAULT 1,
+    completed BOOLEAN DEFAULT TRUE,
+    
+    -- Feedback
+    rating INTEGER CHECK (rating BETWEEN 1 AND 5),
+    understood BOOLEAN,
+    seen_in_exam BOOLEAN DEFAULT FALSE,
+    
+    -- Metadata
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sesiones de estudio
+CREATE TABLE study_sessions (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    
+    -- Información de sesión
+    session_type TEXT DEFAULT 'practice', -- practice, exam, review
+    status TEXT DEFAULT 'active', -- active, completed, abandoned
+    
+    -- Estadísticas
+    questions_asked INTEGER DEFAULT 0,
+    questions_answered INTEGER DEFAULT 0,
+    correct_answers INTEGER DEFAULT 0,
+    total_duration_seconds INTEGER DEFAULT 0,
+    
+    -- Timestamps
+    started_at TIMESTAMPTZ DEFAULT NOW(),
+    ended_at TIMESTAMPTZ,
+    
+    -- Metadata
+    metadata JSONB DEFAULT '{}'::jsonb
+);
+
+-- Progreso del usuario
+CREATE TABLE user_progress (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    subject TEXT NOT NULL,
+    
+    -- Métricas
+    total_practiced INTEGER DEFAULT 0,
+    total_correct INTEGER DEFAULT 0,
+    mastery_level NUMERIC(3,2) DEFAULT 0.00, -- 0.00 a 1.00
+    streak_days INTEGER DEFAULT 0,
+    
+    -- Timestamps
+    last_practice_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    UNIQUE(user_id, subject)
+);
+
+-- Uso de créditos
+CREATE TABLE credit_usage (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    
+    -- Detalle del uso
+    action_type TEXT NOT NULL, -- ai_question, voice, premium_feature
+    credits_used INTEGER NOT NULL,
+    credits_before INTEGER NOT NULL,
+    credits_after INTEGER NOT NULL,
+    
+    -- Contexto
+    interaction_id UUID REFERENCES interactions(id),
+    details JSONB DEFAULT '{}'::jsonb,
+    
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Planes de suscripción
+CREATE TABLE subscription_plans (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    
+    -- Límites
+    monthly_credits INTEGER NOT NULL,
+    daily_limit INTEGER NOT NULL,
+    
+    -- Features
+    features JSONB DEFAULT '{}'::jsonb,
+    
+    -- Precio
+    price_monthly NUMERIC(10,2) DEFAULT 0,
+    price_yearly NUMERIC(10,2) DEFAULT 0,
+    
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Suscripciones de usuarios
+CREATE TABLE user_subscriptions (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    plan_id UUID REFERENCES subscription_plans(id),
+    
+    -- Estado
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'expired', 'trial')),
+    
+    -- Fechas
+    started_at TIMESTAMPTZ DEFAULT NOW(),
+    ends_at TIMESTAMPTZ,
+    
+    -- Pago
+    stripe_subscription_id TEXT
+);
+
+-- Biblioteca de comandos de canvas (para visualizaciones)
+CREATE TABLE canvas_library (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    
+    -- Comandos
+    commands JSONB NOT NULL,
+    
+    -- Metadata
+    tags TEXT[] DEFAULT '{}',
+    usage_count INTEGER DEFAULT 0,
+    
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+
+5. CONFIGURACIÓN REDIS
+----------------------
+
+# Estructura de keys en Redis
+
+# Sesiones activas
+session:{session_id} = {
+    "user_id": "uuid",
+    "connection_id": "socket_id",
+    "current_question": "hash",
+    "current_step": 0,
+    "pause_position": 0,
+    "is_paused": false,
+    "is_streaming": false,
+    "conversation_context": {},
+    "created_at": "timestamp",
+    "last_activity": "timestamp"
+}
+TTL: 1800 segundos (30 minutos)
+
+# Cache de respuestas
+answer_cache:{question_hash} = {
+    "steps": [...],
+    "total_duration": 120,
+    "cached_at": "timestamp"
+}
+TTL: 86400 segundos (24 horas)
+
+# Estado de audio/voz
+voice_state:{session_id} = {
+    "is_recording": false,
+    "start_time": "timestamp",
+    "chunks_received": 0
+}
+TTL: 300 segundos (5 minutos)
+
+# Rate limiting
+rate_limit:{user_id}:questions = count
+TTL: 60 segundos
+MAX: 10 preguntas por minuto
+
+6. EVENTOS SOCKET.IO DETALLADOS
+--------------------------------
+
+=== CLIENTE -> SERVIDOR ===
+
+1. connect
+   payload: {
+       auth: {
+           token: "supabase_jwt_token"
+       }
+   }
+   proceso:
+   - Validar token con Supabase
+   - Crear/recuperar session_id
+   - Guardar en Redis
+   - Emit: connection_established
+
+2. ask_question
+   payload: {
+       question: "texto de la pregunta",
+       context: {} // opcional
+   }
+   proceso:
+   - Validar pregunta no vacía
+   - Check rate limit
+   - Normalizar y generar hash
+   - Buscar en DB
+   - Iniciar streaming
+
+3. voice_start
+   payload: {
+       session_id: "uuid"
+   }
+   proceso:
+   - Pausar streaming actual
+   - Actualizar estado en Redis
+   - Preparar para recibir audio
+   - Emit: voice_recording_started
+
+4. voice_complete
+   payload: {
+       audio_data: "base64_audio",
+       duration: 5000 // ms
+   }
+   proceso:
+   - Transcribir con Web Speech
+   - Mostrar transcripción
+   - Esperar confirmación
+
+5. pause_explanation
+   payload: {
+       current_step: 3,
+       position_in_step: 150
+   }
+   proceso:
+   - Detener streaming
+   - Guardar posición
+   - Actualizar Redis
+   - Emit: explanation_paused
+
+6. resume_explanation
+   payload: {}
+   proceso:
+   - Recuperar posición
+   - Continuar streaming
+   - Emit: explanation_resumed
+
+=== SERVIDOR -> CLIENTE ===
+
+1. connection_established
+   payload: {
+       session_id: "uuid",
+       user_info: {
+           email: "user@gmail.com"
+       }
+   }
+
+2. waiting_phrase
+   payload: {
+       phrase: "Déjame buscar eso...",
+       category: "searching",
+       estimated_time: 2000
+   }
+
+3. explanation_start
+   payload: {
+       total_steps: 5,
+       estimated_duration: 180,
+       question_hash: "abc123"
+   }
+
+4. step_start
+   payload: {
+       step_number: 1,
+       title: "Introducción al tema",
+       content_type: "text",
+       has_visual: false
+   }
+
+5. content_chunk
+   payload: {
+       step_number: 1,
+       chunk: "Este es el siguiente fragmento...",
+       position: 150,
+       is_final: false
+   }
+
+6. canvas_command
+   payload: {
+       step_number: 2,
+       command: {
+           type: "rectangle",
+           x: 100,
+           y: 100,
+           width: 200,
+           height: 150,
+           color: "#3498db"
+       }
+   }
+
+7. step_complete
+   payload: {
+       step_number: 1,
+       duration_actual: 15000
+   }
+
+8. explanation_complete
+   payload: {
+       total_duration: 180000,
+       steps_completed: 5
+   }
+
+9. voice_transcription_result
+   payload: {
+       transcription: "¿Qué significa esto?",
+       confidence: 0.95,
+       requires_confirmation: true
+   }
+
+10. error
+    payload: {
+        code: "RATE_LIMIT_EXCEEDED",
+        message: "Demasiadas preguntas",
+        retry_after: 30
+    }
+
+7. SERVICIOS PRINCIPALES
+------------------------
+
+=== QuestionService ===
+class QuestionService:
+    def process_question(question: str) -> dict:
+        # 1. Validar
+        # 2. Normalizar
+        # 3. Generar hash
+        # 4. Buscar en DB
+        # 5. Si no existe, generar con IA
+        # 6. Retornar respuesta estructurada
+
+    def normalize_text(text: str) -> str:
+        # Lowercase
+        # Quitar acentos
+        # Trim espacios
+        # Remover puntuación extra
+
+    def generate_hash(text: str) -> str:
+        # SHA256 del texto normalizado
+
+=== StreamingService ===
+class StreamingService:
+    def start_streaming(answer: dict, session_id: str):
+        # 1. Enviar metadata
+        # 2. Por cada paso:
+        #    - Enviar step_start
+        #    - Chunks de texto
+        #    - Comandos canvas
+        #    - step_complete
+        # 3. explanation_complete
+
+    def pause_streaming(session_id: str, position: dict):
+        # Guardar estado actual
+        # Detener envío de chunks
+
+    def resume_streaming(session_id: str):
+        # Recuperar estado
+        # Continuar desde posición
+
+=== AIService ===
+class AIService:
+    def generate_answer(question: str, context: dict) -> dict:
+        # 1. Construir prompt
+        # 2. Llamar OpenAI API
+        # 3. Parsear respuesta JSON
+        # 4. Validar estructura
+        # 5. Retornar steps formateados
+
+    def build_prompt(question: str) -> str:
+        # System prompt + ejemplos
+        # Instrucciones de formato
+        # Contexto si existe
+
+=== VoiceService ===
+class VoiceService:
+    def transcribe_audio(audio_data: bytes) -> dict:
+        # 1. Decodificar base64
+        # 2. Usar Web Speech API
+        # 3. Retornar transcripción
+        # 4. Incluir confidence score
+
+=== SessionService ===
+class SessionService:
+    def create_session(user_id: str) -> str:
+        # Generar UUID
+        # Guardar en Redis
+        # Retornar session_id
+
+    def get_session(session_id: str) -> dict:
+        # Buscar en Redis
+        # Actualizar last_activity
+        # Retornar datos
+
+    def update_session(session_id: str, data: dict):
+        # Actualizar campos
+        # Renovar TTL
+
+8. MANEJO DE ERRORES
+--------------------
+
+try:
+    # Operación principal
+except ValidationError:
+    emit('error', {
+        'code': 'INVALID_INPUT',
+        'message': 'Pregunta inválida'
+    })
+except RateLimitError:
+    emit('error', {
+        'code': 'RATE_LIMIT',
+        'message': 'Demasiadas preguntas',
+        'retry_after': 60
+    })
+except OpenAIError:
+    # Fallback a respuesta genérica
+    emit('waiting_phrase', {
+        'phrase': 'Disculpa, hay un problema temporal'
+    })
+except Exception as e:
+    # Log error
+    # Emit generic error
+    # No exponer detalles internos
