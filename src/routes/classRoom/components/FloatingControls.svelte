@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy } from 'svelte';
+	import { onDestroy, createEventDispatcher } from 'svelte';
 	import { get } from 'svelte/store';
 	import { explanationStore } from '$lib/stores';
 	import { socketService } from '$lib/api/socket';
@@ -8,6 +8,7 @@
 	import { clarificationService } from '$lib/services';
 
 	const props = $props();
+	const dispatch = createEventDispatcher();
 
 	let onStop = $state(null);
 	let onToggleVoice = $state(null);
@@ -15,6 +16,9 @@
 	let onInterrupt = $state(null);
 	let voiceEnabled = $state(false);
 	let isExplaining = $state(false);
+	let voicePromptActive = $state(false);
+	let autoOpenVoiceInputSignal = $state(0);
+	let lastAutoOpenVoiceInputSignal = $state(0);
 
 	$effect(() => {
 		onStop = props.onStop ?? null;
@@ -23,6 +27,16 @@
 		onInterrupt = props.onInterrupt ?? null;
 		voiceEnabled = props.voiceEnabled ?? false;
 		isExplaining = props.isExplaining ?? false;
+		voicePromptActive = props.voicePromptActive ?? false;
+
+		const signal = props.autoOpenVoiceInputSignal ?? 0;
+		autoOpenVoiceInputSignal = signal;
+		if (signal !== lastAutoOpenVoiceInputSignal) {
+			lastAutoOpenVoiceInputSignal = signal;
+			if (signal > 0) {
+				openVoiceInput({ fromPrompt: true });
+			}
+		}
 	});
 	let showChatInput = $state(false);
 	let showVoiceInput = $state(false);
@@ -103,32 +117,63 @@
 		}, 3000);
 	}
 
+	function dispatchVoiceInputChange(isOpen) {
+		dispatch('voiceInputChange', { open: isOpen });
+	}
+
+	function openVoiceInput(options = {}) {
+		const { fromPrompt = false } = options;
+		handlePause({ ensurePaused: true, preserveInputs: true });
+
+		if (showVoiceInput) {
+			if (fromPrompt) {
+				scheduleAutoSend();
+			}
+			return;
+		}
+
+		showChatInput = false;
+		showVoiceInput = true;
+		startVoiceCapture();
+		voiceTranscript = '';
+		dispatchVoiceInputChange(true);
+
+		if (fromPrompt) {
+			scheduleAutoSend();
+		}
+	}
+
+	function closeVoiceInput() {
+		if (!showVoiceInput) {
+			return;
+		}
+
+		voiceTranscript = '';
+		bubbleMessage = '';
+		clearAutoSendTimer();
+		stopVoiceCapture();
+		showVoiceInput = false;
+		dispatchVoiceInputChange(false);
+	}
+
 	function toggleChatInput() {
 		handlePause({ ensurePaused: true, preserveInputs: true });
 		const next = !showChatInput;
 		showChatInput = next;
 		if (next) {
-			showVoiceInput = false;
-			stopVoiceCapture();
-			clearAutoSendTimer();
+			closeVoiceInput();
 		} else {
 			clearAutoSendTimer();
 		}
 	}
 
 	function toggleVoiceInput() {
-		handlePause({ ensurePaused: true, preserveInputs: true });
-		const next = !showVoiceInput;
-		showVoiceInput = next;
-		if (next) {
-			showChatInput = false;
-			startVoiceCapture();
-			voiceTranscript = '';
-		} else {
-			voiceTranscript = '';
-			clearAutoSendTimer();
-			stopVoiceCapture();
+		if (showVoiceInput) {
+			closeVoiceInput();
+			return;
 		}
+
+		openVoiceInput();
 	}
 
 	function startVoiceCapture() {
@@ -228,10 +273,7 @@
 				showChatInput = false;
 			}
 			if (showVoiceInput) {
-				showVoiceInput = false;
-				voiceTranscript = '';
-				clearAutoSendTimer();
-				stopVoiceCapture();
+				closeVoiceInput();
 			}
 		}
 
@@ -264,7 +306,8 @@
 	function handleSendMessage(autoTriggered = false) {
 		const chatText = chatMessage.trim();
 		const voiceText = showVoiceInput ? bubbleMessage.trim() : '';
-		const message = showVoiceInput ? voiceText : chatText;
+		const usingVoice = showVoiceInput;
+		const message = usingVoice ? voiceText : chatText;
 		if (!message) {
 			return;
 		}
@@ -343,13 +386,17 @@
 			}
 		}
 
+		dispatch('questionSent', {
+			source: usingVoice ? 'voice' : 'chat',
+			autoTriggered,
+			message
+		});
+
 		chatMessage = '';
 		voiceTranscript = '';
 		bubbleMessage = '';
 		showChatInput = false;
-		showVoiceInput = false;
-		clearAutoSendTimer();
-		stopVoiceCapture();
+		closeVoiceInput();
 	}
 
 	$effect(() => {
@@ -385,8 +432,7 @@
 		
 		// Abrir input de chat para hacer la pregunta de interrupción
 		showChatInput = true;
-		showVoiceInput = false;
-		stopVoiceCapture();
+		closeVoiceInput();
 		clearAutoSendTimer();
 	}
 
@@ -411,7 +457,7 @@
 		</div>
 	{/if}
 
-	<div class="floating-bar">
+	<div class="floating-bar" class:prompt-active={voicePromptActive}>
 		<button
 			class="control-icon"
 			onclick={handlePause}
@@ -440,8 +486,9 @@
 		</button>
 
 		<button
-			class="control-icon"
+			class="control-icon mic-icon"
 			class:recording={isRecording}
+			class:voice-prompt={voicePromptActive}
 			onclick={toggleVoiceInput}
 			aria-label={showVoiceInput ? 'Cerrar captura de voz' : 'Hacer pregunta por voz'}
 		>
@@ -544,6 +591,16 @@
 		animation: slideUp 0.4s ease-out;
 	}
 
+	.floating-bar.prompt-active {
+		background: rgba(76, 29, 149, 0.28);
+		border-color: rgba(192, 132, 252, 0.5);
+		box-shadow:
+			0 10px 38px rgba(59, 7, 100, 0.45),
+			0 0 48px rgba(192, 132, 252, 0.35),
+			inset 0 1px 0 rgba(221, 214, 254, 0.25);
+		backdrop-filter: blur(22px);
+	}
+
 	.control-icon {
 		width: 44px;
 		height: 44px;
@@ -600,6 +657,18 @@
 
 	.control-icon.voice-active::before {
 		background: linear-gradient(45deg, rgba(34, 197, 94, 0.4), rgba(74, 222, 128, 0.4));
+		opacity: 1;
+	}
+
+	.control-icon.mic-icon.voice-prompt {
+		background: rgba(168, 85, 247, 0.25);
+		border-color: rgba(192, 132, 252, 0.55);
+		color: #e9d5ff;
+		box-shadow: 0 0 26px rgba(192, 132, 252, 0.4);
+	}
+
+	.control-icon.mic-icon.voice-prompt::before {
+		background: linear-gradient(45deg, rgba(168, 85, 247, 0.5), rgba(147, 197, 253, 0.4));
 		opacity: 1;
 	}
 

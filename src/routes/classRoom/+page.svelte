@@ -14,6 +14,7 @@
 	import ComponentCommandRenderer from '$lib/classRoom/component_commands/ComponentCommandRenderer.svelte';
 	import ProgressIndicator from './components/ProgressIndicator.svelte';
 	import MathComponent from '../examen/componentes/Math.svelte';
+	import DoubtPromptModal from './components/DoubtPromptModal.svelte';
 
 	// Estados de UI
 	let isConnecting = $state(true);
@@ -27,6 +28,11 @@
 	let hasClearedBeforeStart = $state(false);
 	let lastQuestionHash = $state(null);
 	let autoFeedbackShown = $state(false);
+
+	let showDoubtPrompt = $state(false);
+	let awaitingDoubtResolution = $state(false);
+	let voicePromptActive = $state(false);
+	let autoOpenVoiceInputSignal = $state(0);
 
 	let isExplanationCollapsed = $state(false);
 
@@ -79,6 +85,10 @@
 			showFeedbackModal = false;
 			feedbackRating = null;
 			feedbackComment = '';
+			showDoubtPrompt = false;
+			awaitingDoubtResolution = false;
+			voicePromptActive = false;
+			autoOpenVoiceInputSignal = 0;
 		}
 	});
 
@@ -90,9 +100,29 @@
 	});
 
 	$effect(() => {
-		if (explanationFinished && !autoFeedbackShown && !showFeedbackModal) {
-			showFeedbackModal = true;
-			autoFeedbackShown = true;
+		if (!explanationFinished || awaitingDoubtResolution) {
+			return;
+		}
+
+		if (!autoFeedbackShown && !showFeedbackModal && !showDoubtPrompt) {
+			showDoubtPrompt = true;
+			voicePromptActive = true;
+		}
+	});
+
+	$effect(() => {
+		if ($explanationStore.isExplaining) {
+			voicePromptActive = false;
+		}
+	});
+
+	$effect(() => {
+		if (!awaitingDoubtResolution) {
+			return;
+		}
+
+		if ($explanationStore.isExplaining || $explanationStore.render.isRendering) {
+			awaitingDoubtResolution = false;
 		}
 	});
 
@@ -140,8 +170,10 @@
 	}
 
 	function handleGoBack() {
-		// Mostrar modal de feedback antes de volver
+		showDoubtPrompt = false;
+		voicePromptActive = false;
 		showFeedbackModal = true;
+		autoFeedbackShown = true;
 	}
 
 	function submitFeedback() {
@@ -165,6 +197,36 @@
 	function toggleVoice() {
 		voiceMuted = !voiceMuted;
 		controller.toggleVoice(!voiceMuted);
+	}
+
+	function handleDoubtAsk() {
+		showDoubtPrompt = false;
+		voicePromptActive = true;
+		autoOpenVoiceInputSignal = autoOpenVoiceInputSignal + 1;
+	}
+
+	function handleDoubtSkip() {
+		showDoubtPrompt = false;
+		voicePromptActive = false;
+		showFeedbackModal = true;
+		autoFeedbackShown = true;
+	}
+
+	function handleVoiceInputChange(event) {
+		const open = event?.detail?.open ?? false;
+		voicePromptActive = showDoubtPrompt ? true : open;
+	}
+
+	function handleQuestionSent() {
+		if (!explanationFinished) {
+			return;
+		}
+
+		awaitingDoubtResolution = true;
+		showDoubtPrompt = false;
+		voicePromptActive = false;
+		showFeedbackModal = false;
+		autoFeedbackShown = false;
 	}
 
 	function toggleExplanationCollapse() {
@@ -337,8 +399,20 @@
 		onToggleVoice={toggleVoice}
 		onPauseToggle={handlePauseToggle}
 		voiceEnabled={!voiceMuted}
+		voicePromptActive={voicePromptActive}
+		autoOpenVoiceInputSignal={autoOpenVoiceInputSignal}
+		on:voiceInputChange={handleVoiceInputChange}
+		on:questionSent={handleQuestionSent}
+		isExplaining={$explanationStore.isExplaining}
 	/>
 {/if}
+
+<DoubtPromptModal
+	visible={showDoubtPrompt}
+	onAsk={handleDoubtAsk}
+	onSkip={handleDoubtSkip}
+	characterSrc="/lufy1.png"
+/>
 
 <!-- Modal de Feedback -->
 {#if showFeedbackModal}
