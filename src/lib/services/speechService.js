@@ -118,6 +118,15 @@ class SpeechService {
 			return;
 		}
 
+		// Si había audio pausado (por ejemplo, al pausar la explicación), cancelarlo para evitar bloqueos
+		if (this.isPaused) {
+			console.log('speechService.speak(): cancelando audio pausado antes de reproducir');
+			this.synth.cancel();
+			this.isPaused = false;
+			this.currentUtterance = null;
+			this.queue = [];
+		}
+
 		// Limpiar el texto de LaTeX y caracteres especiales
 		const cleanText = this.cleanText(text);
 		

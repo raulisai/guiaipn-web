@@ -224,7 +224,18 @@ class SyncService {
 			utterance.onerror = (error) => {
 				this.currentUtterance = null;
 				const errorType = error?.error;
-				const isRecoverable = this.voiceEnabled && !this.isPaused && attempt < 2 && (errorType === 'interrupted' || errorType === 'canceled');
+
+				if (this.isPaused && (errorType === 'interrupted' || errorType === 'canceled')) {
+					console.warn('⚠️ Voz interrumpida durante pausa; se reanudará al continuar', {
+						step: checkpoint.step,
+						error: errorType
+					});
+					checkpoint.voiceCompleted = false;
+					resolve();
+					return;
+				}
+
+				const isRecoverable = this.voiceEnabled && attempt < 2 && (errorType === 'interrupted' || errorType === 'canceled');
 				if (isRecoverable) {
 					const retryDelay = 250;
 					console.warn(`⚠️ Voz interrumpida (intentando reintentar #${attempt + 1})`, {
@@ -350,6 +361,16 @@ class SyncService {
 		// Reanudar voz si estaba hablando
 		if (this.voiceEnabled && speechService.synth) {
 			speechService.synth.resume();
+
+			// Si no hay nada reproduciéndose (porque se canceló al pausar), reintentar voz actual
+			setTimeout(() => {
+				if (!this.voiceEnabled || this.isPaused) return;
+				if (speechService.isSpeaking && speechService.isSpeaking()) return;
+				const checkpoint = this.checkpoints[this.currentStepIndex];
+				if (checkpoint && !checkpoint.voiceCompleted) {
+					this.tryReplayCurrentStepVoice();
+				}
+			}, 150);
 		}
 	}
 
