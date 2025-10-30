@@ -26,6 +26,7 @@
 	let hasStarted = $state(false);
 	let hasClearedBeforeStart = $state(false);
 	let lastQuestionHash = $state(null);
+	let autoFeedbackShown = $state(false);
 
 	let isExplanationCollapsed = $state(false);
 
@@ -61,11 +62,23 @@
 	// Datos de la pregunta desde el controlador
 	const questionData = $derived(controller.getQuestionData());
 
+	const explanationFinished = $derived(
+		hasStarted &&
+		$explanationStore.buffer.isComplete &&
+		!$explanationStore.isExplaining &&
+		!$explanationStore.render.isRendering &&
+		renderProgress >= 99
+	);
+
 	$effect(() => {
 		const currentHash = $explanationStore.questionHash;
 		if (currentHash && currentHash !== lastQuestionHash) {
 			lastQuestionHash = currentHash;
 			hasClearedBeforeStart = false;
+			autoFeedbackShown = false;
+			showFeedbackModal = false;
+			feedbackRating = null;
+			feedbackComment = '';
 		}
 	});
 
@@ -73,6 +86,13 @@
 		if (!hasStarted && !hasClearedBeforeStart && $explanationStore.buffer.isComplete) {
 			explanationStore.clearRenderedContent();
 			hasClearedBeforeStart = true;
+		}
+	});
+
+	$effect(() => {
+		if (explanationFinished && !autoFeedbackShown && !showFeedbackModal) {
+			showFeedbackModal = true;
+			autoFeedbackShown = true;
 		}
 	});
 
