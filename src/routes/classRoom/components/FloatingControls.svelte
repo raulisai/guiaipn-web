@@ -5,20 +5,25 @@
 	import { socketService } from '$lib/api/socket';
 	import { speechService } from '$lib/services/speechService';
 	import { syncService } from '$lib/services/syncService';
+	import { clarificationService } from '$lib/services';
 
 	const props = $props();
 
-let onStop = $state(null);
-let onToggleVoice = $state(null);
-let onPauseToggle = $state(null);
-let voiceEnabled = $state(false);
+	let onStop = $state(null);
+	let onToggleVoice = $state(null);
+	let onPauseToggle = $state(null);
+	let onInterrupt = $state(null);
+	let voiceEnabled = $state(false);
+	let isExplaining = $state(false);
 
-$effect(() => {
-	onStop = props.onStop ?? null;
-	onToggleVoice = props.onToggleVoice ?? null;
-	onPauseToggle = props.onPauseToggle ?? null;
-	voiceEnabled = props.voiceEnabled ?? false;
-});
+	$effect(() => {
+		onStop = props.onStop ?? null;
+		onToggleVoice = props.onToggleVoice ?? null;
+		onPauseToggle = props.onPauseToggle ?? null;
+		onInterrupt = props.onInterrupt ?? null;
+		voiceEnabled = props.voiceEnabled ?? false;
+		isExplaining = props.isExplaining ?? false;
+	});
 	let showChatInput = $state(false);
 	let showVoiceInput = $state(false);
 	let chatMessage = $state('');
@@ -258,28 +263,89 @@ $effect(() => {
 
 	function handleSendMessage(autoTriggered = false) {
 		const chatText = chatMessage.trim();
-		const message = showVoiceInput ? bubbleMessage : chatText;
+		const voiceText = showVoiceInput ? bubbleMessage.trim() : '';
+		const message = showVoiceInput ? voiceText : chatText;
 		if (!message) {
 			return;
 		}
 
-		if (showVoiceInput) {
-			if (socketService.isSocketConnected()) {
-				socketService.emitAskQuestion(message, {
-					source: 'voice',
-					stepNumber: $explanationStore.currentStep
-				});
+		const storeSnapshot = get(explanationStore);
+		const hasExplanation = storeSnapshot.buffer?.steps?.length > 0;
+		const isInterruption = hasExplanation && storeSnapshot.isPaused;
+
+		console.log('🎯 Decisión:', {
+			hasExplanation,
+			isPaused: storeSnapshot.isPaused,
+			isInterruption
+		});
+
+		if (socketService.isSocketConnected()) {
+			if (isInterruption) {
+					const originalQuestionRaw =
+				explanationStore.getOriginalQuestion?.() ??
+				storeSnapshot.currentQuestion?.pregunta ??
+				storeSnapshot.currentQuestion?.original_question ??
+				(typeof storeSnapshot.currentQuestion === 'string'
+					? storeSnapshot.currentQuestion
+					: null);
+
+			const originalQuestion =
+				typeof originalQuestionRaw === 'string' && originalQuestionRaw.trim().length > 0
+					? originalQuestionRaw.trim()
+					: null;
+
+			const currentStep =
+				typeof storeSnapshot.currentStep === 'number' && storeSnapshot.currentStep > 0
+					? storeSnapshot.currentStep
+					: undefined;
+
+			const topicRaw =
+				storeSnapshot.currentQuestion?.materia ??
+				storeSnapshot.currentQuestion?.topic ??
+				storeSnapshot.currentQuestion?.subject ??
+				null;
+
+			const topic =
+				typeof topicRaw === 'string' && topicRaw.trim().length > 0
+					? topicRaw.trim()
+					: 'Explicación actual';
+
+			const currentContext = {};
+			if (originalQuestion) {
+				currentContext.original_question = originalQuestion;
 			}
-		} else {
-			if (socketService.isSocketConnected()) {
+			if (typeof currentStep === 'number') {
+				currentContext.current_step = currentStep;
+			}
+			if (topic) {
+				currentContext.topic = topic;
+			}
+
+			const sessionId = storeSnapshot.explanationSessionId ?? socketService.getSessionId?.();
+
+			console.log('✋ INTERRUPCIÓN DETECTADA', {
+				question: message,
+				context: currentContext,
+				sessionId
+			});
+
+				clarificationService.prepareInterruption(message, currentContext);
+				socketService.emitInterruptExplanation(message, currentContext, 'brief', sessionId);
+			} else {
+				// PREGUNTA NORMAL: Nueva explicación completa con buffer
+				console.log('❓ PREGUNTA NORMAL - Enviando a ask_question');
+				console.log('📝 Pregunta:', message);
 				socketService.emitAskQuestion(message, {
-					source: 'chat',
-					stepNumber: $explanationStore.currentStep
+					source: showVoiceInput ? 'voice' : 'chat',
+					stepNumber: storeSnapshot.currentStep
 				});
+				clarificationService.reset?.();
 			}
 		}
+
 		chatMessage = '';
 		voiceTranscript = '';
+		bubbleMessage = '';
 		showChatInput = false;
 		showVoiceInput = false;
 		clearAutoSendTimer();
@@ -311,6 +377,17 @@ $effect(() => {
 	function handleBubbleInput(event) {
 		const target = event.target;
 		voiceTranscript = (target.innerText || '').trim();
+	}
+
+	function handleInterrupt() {
+		// Pausar la explicación
+		handlePause({ ensurePaused: true, preserveInputs: false });
+		
+		// Abrir input de chat para hacer la pregunta de interrupción
+		showChatInput = true;
+		showVoiceInput = false;
+		stopVoiceCapture();
+		clearAutoSendTimer();
 	}
 
 </script>
@@ -383,10 +460,17 @@ $effect(() => {
 			{/if}
 		</button>
 
-		<button class="control-icon" aria-label="Ajustes">
+		<button 
+			class="control-icon interrupt-btn" 
+			onclick={handleInterrupt}
+			disabled={!isExplaining}
+			aria-label="No entiendo esto"
+			title="Interrumpir para hacer una pregunta rápida"
+		>
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="3"></circle>
-				<path d="M12 1v6m0 6v6m-9-9h6m6 0h6"></path>
+				<circle cx="12" cy="12" r="10"></circle>
+				<line x1="12" y1="8" x2="12" y2="12"></line>
+				<line x1="12" y1="16" x2="12.01" y2="16"></line>
 			</svg>
 		</button>
 
@@ -524,6 +608,22 @@ $effect(() => {
 		border-color: rgba(239, 68, 68, 0.4);
 		color: #f87171;
 		box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
+	}
+
+	.control-icon.interrupt-btn:not(:disabled) {
+		background: rgba(251, 191, 36, 0.15);
+		border-color: rgba(251, 191, 36, 0.3);
+		color: #fbbf24;
+	}
+
+	.control-icon.interrupt-btn:hover:not(:disabled) {
+		background: rgba(251, 191, 36, 0.25);
+		border-color: rgba(251, 191, 36, 0.5);
+		box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+	}
+
+	.control-icon.interrupt-btn:hover:not(:disabled)::before {
+		background: linear-gradient(45deg, rgba(251, 191, 36, 0.4), rgba(252, 211, 77, 0.4));
 	}
 
 	.question-bubble {

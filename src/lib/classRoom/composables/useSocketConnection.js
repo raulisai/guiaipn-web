@@ -5,7 +5,7 @@
 
 import { socketService } from '$lib/api/socket';
 import { explanationStore } from '$lib/stores';
-import { supabase } from '$lib/services';
+import { supabase, clarificationService } from '$lib/services';
 import { speechService } from '$lib/services/speechService';
 
 /**
@@ -116,6 +116,11 @@ export function useSocketConnection() {
 		socketService.onExplanationComplete((data) => {
 			explanationStore.completeExplanation(data);
 			console.log('✅ Buffer completo, listo para iniciar');
+		});
+
+		// Listener de mensajes de aclaración breve
+		socketService.onClarificationMessage?.((payload) => {
+			clarificationService.handleMessage(payload);
 		});
 
 		// Listener de errores

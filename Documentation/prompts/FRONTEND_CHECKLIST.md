@@ -163,9 +163,9 @@
 
 ### Componentes de Feedback
 - [ ] Botones 👍👎 para feedback
-- [ ] Modal de feedback detallado
-- [ ] Botón "Hacer pregunta adicional"
-- [ ] Botón "No entiendo esto" (interrupción)
+- [x] Modal de feedback detallado
+- [ ] Botón al final de explicación "Hacer pregunta adicional"
+- [ ] Botón voz and message "No entiendo esto" (interrupción)
 
 ### Loading States
 - [ ] Skeleton loaders

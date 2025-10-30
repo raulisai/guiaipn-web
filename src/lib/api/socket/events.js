@@ -38,7 +38,9 @@ export const SERVER_EVENTS = {
 	CONTENT_CHUNK: 'content_chunk',
 	CANVAS_COMMAND: 'canvas_command',
 	STEP_COMPLETE: 'step_complete',
-	EXPLANATION_COMPLETE: 'explanation_complete'
+	EXPLANATION_COMPLETE: 'explanation_complete',
+	EXPLANATION_PAUSED: 'explanation_paused',
+	CLARIFICATION_MESSAGE: 'clarification_message'
 };
 
 // ==========================================

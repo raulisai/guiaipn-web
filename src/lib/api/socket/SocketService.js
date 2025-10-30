@@ -222,6 +222,22 @@ class SocketService {
 				this.socket.on('explanation_complete', listener);
 				this.listeners.set('explanation_complete', listener);
 			},
+			'explanation_paused': (cb) => {
+				const listener = (data) => {
+					console.log('⏸️ Explicación pausada por servidor:', data);
+					cb(data);
+				};
+				this.socket.on('explanation_paused', listener);
+				this.listeners.set('explanation_paused', listener);
+			},
+			'clarification_message': (cb) => {
+				const listener = (data) => {
+					console.log('💬 Clarification message recibido:', data);
+					cb(data);
+				};
+				this.socket.on('clarification_message', listener);
+				this.listeners.set('clarification_message', listener);
+			},
 			'error': (cb) => {
 				const listener = (error) => {
 					console.error('🚫 Error del servidor:', error);
@@ -469,10 +485,13 @@ class SocketService {
 	}
 
 	/**
-	 * Interrumpe la explicación para hacer una aclaración
-	 * @param {string} question - Pregunta de interrupción
+	 * Interrumpe la explicación para hacer una aclaración breve
+	 * @param {string} clarificationQuestion - Pregunta de aclaración
+	 * @param {Object} currentContext - Contexto actual { original_question, current_step, topic }
+	 * @param {('brief'|'detailed')} responseMode - Modo de respuesta (por defecto 'brief')
+	 * @param {string|null} sessionId - Session ID de la explicación (opcional)
 	 */
-	emitInterruptExplanation(question) {
+	emitInterruptExplanation(clarificationQuestion, currentContext = {}, responseMode = 'brief', sessionId = null) {
 		if (!this.isSocketConnected()) {
 			console.error('❌ Socket no conectado');
 			return;
@@ -483,11 +502,45 @@ class SocketService {
 			return;
 		}
 
-		console.log('✋ Interrumpiendo explicación:', question);
-		this.socket.emit('interrupt_explanation', {
+		if (!clarificationQuestion || typeof clarificationQuestion !== 'string') {
+			console.warn('⚠️ clarification_question inválida, omitiendo emisión');
+			return;
+		}
+
+		const payload = {
 			token: this.token,
-			question
-		});
+			clarification_question: clarificationQuestion,
+			current_context: {
+				original_question: currentContext?.original_question ?? null,
+				current_step: currentContext?.current_step ?? null,
+				topic: currentContext?.topic ?? null
+			},
+			response_mode: responseMode
+		};
+
+		if (sessionId) {
+			payload.session_id = sessionId;
+		}
+
+		console.log('✋ Interrumpiendo explicación con payload:', payload);
+		this.socket.emit('interrupt_explanation', payload);
+	}
+
+	/**
+	 * Escucha cuando la explicación queda pausada desde el servidor
+	 * @param {Function} callback - Función a ejecutar
+	 */
+	onExplanationPaused(callback) {
+		this.externalListeners.set('explanation_paused', callback);
+
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('⏸️ Explicación pausada (listener directo):', data);
+				callback(data);
+			};
+			this.socket.on('explanation_paused', listener);
+			this.listeners.set('explanation_paused', listener);
+		}
 	}
 
 	// ==========================================
@@ -640,6 +693,23 @@ class SocketService {
 			};
 			this.socket.on('explanation_complete', listener);
 			this.listeners.set('explanation_complete', listener);
+		}
+	}
+
+	/**
+	 * Escucha mensajes de aclaración breve
+	 * @param {Function} callback - Función a ejecutar con el payload breve
+	 */
+	onClarificationMessage(callback) {
+		this.externalListeners.set('clarification_message', callback);
+
+		if (this.socket) {
+			const listener = (data) => {
+				console.log('💬 Clarification message recibido:', data);
+				callback(data);
+			};
+			this.socket.on('clarification_message', listener);
+			this.listeners.set('clarification_message', listener);
 		}
 	}
 

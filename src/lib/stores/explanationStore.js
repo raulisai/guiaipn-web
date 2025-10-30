@@ -11,6 +11,7 @@ function createExplanationStore() {
 		// Estado de conexión
 		isConnected: false,
 		sessionId: null,
+		explanationSessionId: null,
 		connectionError: null,
 
 		// Estado de la explicación actual
@@ -88,6 +89,13 @@ function createExplanationStore() {
 			}));
 		},
 
+		setExplanationSessionId(sessionId) {
+			update((state) => ({
+				...state,
+				explanationSessionId: sessionId ?? null
+			}));
+		},
+
 		/**
 		 * Marca la conexión como desconectada
 		 */
@@ -132,42 +140,68 @@ function createExplanationStore() {
 		 * @param {Object} data - Datos de inicio
 		 */
 		startExplanation(data) {
-			update((state) => ({
-				...state,
-				isExplaining: true,
-				isLoading: false,
-				isPaused: false,
-				waitingMessage: null,
-				totalSteps: data.total_steps,
-				currentStep: 0,
-				estimatedDuration: data.estimated_duration,
-				questionHash: data.question_hash,
-				steps: [],
-				canvasCommands: [],
-				componentCommands: [],
-				buffer: {
+			update((state) => {
+				const normalizedCurrentQuestion = (() => {
+					if (!data.original_question) {
+						if (state.currentQuestion && typeof state.currentQuestion === 'string') {
+							return { pregunta: state.currentQuestion };
+						}
+						return state.currentQuestion;
+					}
+
+					if (state.currentQuestion && typeof state.currentQuestion === 'object') {
+						return {
+							...state.currentQuestion,
+							original_question: data.original_question,
+							pregunta: state.currentQuestion.pregunta || data.original_question
+						};
+					}
+
+					return {
+						pregunta: data.original_question,
+						original_question: data.original_question
+					};
+				})();
+
+				return {
+					...state,
+					isExplaining: true,
+					isLoading: false,
+					isPaused: false,
+					waitingMessage: null,
+					totalSteps: data.total_steps,
+					currentStep: 0,
+					estimatedDuration: data.estimated_duration,
+					questionHash: data.question_hash,
+					explanationSessionId: data.session_id ?? state.explanationSessionId,
+					currentQuestion: normalizedCurrentQuestion,
 					steps: [],
 					canvasCommands: [],
 					componentCommands: [],
-					isComplete: false
-				},
-				stepProgress: {
-					stepNumber: 0,
-					percentage: 0,
-					charIndex: 0,
-					totalChars: 0,
-					canvasTriggered: false
-				},
-				render: {
-					currentStepIndex: 0,
-					currentCharIndex: 0,
-					currentCanvasIndex: 0,
-					currentComponentIndex: 0,
-					isRendering: false,
-					renderSpeed: state.render.renderSpeed
-				},
-				error: null
-			}));
+					buffer: {
+						steps: [],
+						canvasCommands: [],
+						componentCommands: [],
+						isComplete: false
+					},
+					stepProgress: {
+						stepNumber: 0,
+						percentage: 0,
+						charIndex: 0,
+						totalChars: 0,
+						canvasTriggered: false
+					},
+					render: {
+						currentStepIndex: 0,
+						currentCharIndex: 0,
+						currentCanvasIndex: 0,
+						currentComponentIndex: 0,
+						isRendering: false,
+						renderSpeed: state.render.renderSpeed
+					},
+					error: null
+				};
+			});
 		},
 
 		/**
@@ -338,6 +372,15 @@ function createExplanationStore() {
 			}));
 		},
 
+		applyExplanationPaused(payload = {}) {
+			update((state) => ({
+				...state,
+				isPaused: true,
+				explanationSessionId: payload.session_id ?? state.explanationSessionId,
+				pauseContext: payload.pause_position ?? state.pauseContext
+			}));
+		},
+
 		/**
 		 * Reanuda la explicación
 		 */
@@ -394,6 +437,22 @@ function createExplanationStore() {
 				...state,
 				currentQuestion: question
 			}));
+		},
+
+		/**
+		 * Obtiene el texto de la pregunta original (para contexto de aclaraciones)
+		 */
+		getOriginalQuestion() {
+			let originalQuestion = null;
+			const unsubscribe = subscribe((state) => {
+				if (state.currentQuestion?.pregunta) {
+					originalQuestion = state.currentQuestion.pregunta;
+				} else if (typeof state.currentQuestion === 'string') {
+					originalQuestion = state.currentQuestion;
+				}
+			});
+			unsubscribe?.();
+			return originalQuestion;
 		},
 
 		/**
@@ -703,6 +762,7 @@ function createExplanationStore() {
 			set({
 				isConnected: false,
 				sessionId: null,
+				explanationSessionId: null,
 				connectionError: null,
 				isExplaining: false,
 				isPaused: false,
