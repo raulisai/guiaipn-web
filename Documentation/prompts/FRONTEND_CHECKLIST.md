@@ -174,21 +174,21 @@
 - [ ] Progress bar
 
 ### Error States
-- [ ] Mensaje de error genérico
-- [ ] Mensaje de error de conexión
-- [ ] Mensaje de error de autenticación
-- [ ] Botón de reintentar
+- [x] Mensaje de error genérico
+- [x] Mensaje de error de conexión
+- [x] Mensaje de error de autenticación
+- [x] Botón de reintentar
 
 ---
 
 ## 🎯 Fase 7: Funcionalidades Avanzadas
 
 ### Preguntas de Examen
-- [ ] Componente de selección de materia
-- [ ] Componente de pregunta múltiple opción
-- [ ] Validación de respuesta
-- [ ] Mostrar resultado (correcto/incorrecto)
-- [ ] Botón "Ver explicación"
+- [x] Componente de selección de materia
+- [x] Componente de pregunta múltiple opción
+- [x] Validación de respuesta
+- [x] Mostrar resultado (correcto/incorrecto)
+- [x] Botón "Ver explicación"
 
 ### Follow-up Questions
 - [ ] Input para pregunta adicional
@@ -197,15 +197,15 @@
 - [ ] Botón "Terminar" vs "Más preguntas"
 
 ### Interrupciones
-- [ ] Botón "No entiendo X"
-- [ ] Modal de aclaración
-- [ ] Pausar explicación principal
-- [ ] Reanudar después de aclaración
-- [ ] Opciones: continuar o nueva pregunta
+- [x] Botón "No entiendo X"
+- [x] Modal de aclaración
+- [x] Pausar explicación principal
+- [x] Reanudar después de aclaración
+- [x] Opciones: continuar o nueva pregunta
 
 ### Canvas Visualizations
-- [ ] Canvas HTML5
-- [ ] Ejecutor de comandos de dibujo
+- [x] Canvas HTML5
+- [x] Ejecutor de comandos de dibujo
 - [ ] Comandos implementados:
   - [ ] `draw_axis` - Ejes coordenados
   - [ ] `plot_function` - Graficar función

@@ -10,8 +10,7 @@
                 Explora tus <span class="text-amber-300">Materias</span>
             </h1>
             <p class="text-xl text-white/80 text-center max-w-3xl mb-8">
-                Prepárate para el examen del IPN con nuestro sistema de aprendizaje potenciado con IA.
-                Domina cada materia de forma divertida e interactiva.
+                Prepárate para el examenes de matemáticas, español, física y química con nuestro sistema de aprendizaje potenciado con IA.x
             </p>
             <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-amber-300 rounded-full"></div>
         </section>
@@ -39,7 +38,7 @@
                                 <span class="bg-blue-600/30 text-blue-100 text-xs py-1 px-3 rounded-full">Cálculo</span>
                             </div>
                             <a href="/" class="block w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
-                                Comenzar aprendizaje
+                                Iniciar examen
                             </a>
                         </div>
                     </div>
@@ -62,7 +61,7 @@
                                 <span class="bg-purple-600/30 text-purple-100 text-xs py-1 px-3 rounded-full">Redacción</span>
                             </div>
                             <a href="/" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
-                                Comenzar aprendizaje
+                                Iniciar examen
                             </a>
                         </div>
                     </div>
@@ -85,7 +84,7 @@
                                 <span class="bg-green-600/30 text-green-100 text-xs py-1 px-3 rounded-full">Óptica</span>
                             </div>
                             <a href="/" class="block w-full py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
-                                Comenzar aprendizaje
+                                Iniciar examen
                             </a>
                         </div>
                     </div>
@@ -108,7 +107,7 @@
                                 <span class="bg-red-600/30 text-red-100 text-xs py-1 px-3 rounded-full">Analítica</span>
                             </div>
                             <a href="/" class="block w-full py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
-                                Comenzar aprendizaje
+                                Iniciar examen
                             </a>
                         </div>
                     </div>
@@ -131,7 +130,7 @@
                                 <span class="bg-yellow-600/30 text-yellow-100 text-xs py-1 px-3 rounded-full">Contemporánea</span>
                             </div>
                             <a href="/" class="block w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-center rounded-xl font-bold transition-all transform group-hover:scale-105 shadow-lg">
-                                Comenzar aprendizaje
+                                Iniciar examen
                             </a>
                         </div>
 
@@ -140,25 +139,7 @@
             </div>
         </section>
 
-        <!-- CTA Section -->
-        <section class="py-16 text-white">
-            <div class="container mx-auto px-4 max-w-4xl">
-                <div class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-3xl p-10 border border-white/10 backdrop-blur-sm shadow-2xl">
-                    <h2 class="text-4xl font-bold mb-4 text-center">¿Listo para dominar todas las materias?</h2>
-                    <p class="text-xl text-white/80 mb-8 text-center">
-                        Obtén acceso ilimitado a todas las materias y comienza tu preparación para el examen del IPN con nuestra IA personalizada.
-                    </p>
-                    <div class="flex justify-center">
-                        <a href="./examen.html" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Comenzar ahora
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+   
         <style>
 
           @media (max-width: 768px) {
