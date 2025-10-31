@@ -17,7 +17,7 @@
     let { children } = $props();
     
     // Rutas protegidas que requieren autenticación
-    const protectedRoutes = ['/progreso', '/materias'];
+    const protectedRoutes = ['/home', '/materias'];
     
     // Rutas públicas que no deben redirigir (testing, auth, etc.)
     const publicRoutes = ['/test-socket', '/cuenta', '/auth', '/examen'];
@@ -162,25 +162,29 @@
                     </div>
                 {/if}
                 
-                <a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">Inicio</a>
+                
                 
                 <!-- Mostrar enlaces protegidos solo si está autenticado -->
                 {#if $user}
-                    <a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Materias
+                <a href="/home" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+                        Home
+                    </a>    
+                <a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+                        Examen por Materias
                     </a>
-                    <a href="/progreso" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Mi Progreso
-                    </a>
+                    
+                {:else}
+                <a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">Inicio</a>
+                <a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+                    Exámen test
+                </a>
                 {/if}
                 
-                <a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                    Exámenes
-                </a>
+                
                 
                 {#if $user}
                     <a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Configuración
+                        Cuenta
                     </a>
                     <button 
                         onclick={handleLogout}
