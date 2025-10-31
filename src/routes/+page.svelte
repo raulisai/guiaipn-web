@@ -8,7 +8,8 @@
 
 // Solo importa aquí, NO en archivos .js del lado del servidor
 let stagewiseToolbar;
-onMount(async () => {
+onMount(async () => {  
+
   if (import.meta.env.DEV) {
 	const { initToolbar } = await import('@stagewise/toolbar');
 	const stagewiseConfig = {
@@ -38,23 +39,23 @@ onMount(async () => {
 	
 	
 	// Variables para la primera sección
-	let visible = false;
-	let heroVisible = false;
-	let buttonVisible = false;
-	let imageVisible = false;
-	let currentUser = null;
+	let visible = $state(false);
+	let heroVisible = $state(false);
+	let buttonVisible = $state(false);
+	let imageVisible = $state(false);
+	let currentUser = $state(null);
 	
 	// Variables para la sección "Cómo funciona"
-	let titleVisible = false;
-	let step1Visible = false;
-	let step2Visible = false;
-	let step3Visible = false;
-	let ctaVisible = false;
+	let titleVisible = $state(false);
+	let step1Visible = $state(false);
+	let step2Visible = $state(false);
+	let step3Visible = $state(false);
+	let ctaVisible = $state(false);
 	
 	// Variables para la sección "Mi Progreso"
-	let progressTitleVisible = false;
-	let progressDashboardVisible = false;
-	let progressCtaVisible = false;
+	let progressTitleVisible = $state(false);
+	let progressDashboardVisible = $state(false);
+	let progressCtaVisible = $state(false);
 	
 	// Función de utilidad para detectar cuando un elemento es visible en el viewport
 	function inView(node, options = {}) {
@@ -88,6 +89,14 @@ onMount(async () => {
 		};
 	}
 	
+	// Redirigir a /home si el usuario está autenticado (reactivo)
+	$effect(() => {
+		if ($user) {
+			console.log('Usuario autenticado, redirigiendo a /home');
+			goto('/home');
+		}
+	});
+
 	onMount(() => {
 		// Secuencia de animaciones para la primera sección
 		setTimeout(() => {

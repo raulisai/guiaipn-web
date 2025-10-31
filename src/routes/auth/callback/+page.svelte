@@ -61,7 +61,7 @@
             }
             
             // Redirigir a la página principal después de 1.5 segundos
-            setTimeout(() => goto('/'), 1500);
+            setTimeout(() => goto('/home'), 1500);
         } catch (error) {
             console.error('Error inesperado:', error);
             status = 'Error inesperado';

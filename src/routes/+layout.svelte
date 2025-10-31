@@ -99,7 +99,7 @@
     onmouseleave={handleMouseLeave}
 >
     <div class="container mx-auto flex justify-between items-center px-4">
-        <a href="/" class="flex items-center">
+        <a href="/home" class="flex items-center">
             <img
                 src="logoipnburrito.png"
                 alt="Logo de la guia del IPN"

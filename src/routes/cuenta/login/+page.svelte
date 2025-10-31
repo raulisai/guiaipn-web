@@ -23,7 +23,7 @@
         // Verificar si ya hay una sesión activa
         supabase.auth.getSession().then(({ data }) => {
             if (data.session) {
-                goto('/');
+                goto('/home');
             }
         });
     });
@@ -37,7 +37,7 @@
             if (isLoginMode) {
                 // Inicio de sesión con email/contraseña
                 await signInWithEmail(email, password);
-                goto('/');
+                goto('/home');
             } else {
                 // Registro con email/contraseña
                 if (!name) {
