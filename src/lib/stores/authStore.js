@@ -2,6 +2,9 @@ import { writable } from 'svelte/store';
 import { supabase } from '$lib/services';
 import { browser } from '$app/environment';
 import { authAPI } from '$lib/api';
+import { PUBLIC_SOCKET_URL } from '$env/static/public';
+
+const BACKEND_URL = PUBLIC_SOCKET_URL;
 
 // Crear la store con el valor inicial null (se actualizará después con el estado de la sesión)
 export const user = writable(null);
@@ -204,4 +207,91 @@ export const getUserProfile = async () => {
         console.error('Error al obtener perfil:', error);
         throw error;
     }
+};
+
+/**
+ * Obtiene el token JWT actual del usuario
+ * @returns {Promise<string|null>}
+ */
+export const getToken = async () => {
+    try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error || !session) {
+            return null;
+        }
+
+        return session.access_token;
+    } catch (error) {
+        console.error('Error al obtener token:', error);
+        return null;
+    }
+};
+
+/**
+ * Función helper para hacer peticiones autenticadas con el token JWT
+ * Maneja automáticamente el token, headers y CORS
+ * 
+ * @param {string} url - URL completa o endpoint relativo (ej: '/payments/checkout-session')
+ * @param {RequestInit} options - Opciones de fetch (method, body, headers, etc.)
+ * @param {string} [tokenOverride] - Token opcional para override (si no se pasa, se obtiene automáticamente)
+ * @returns {Promise<Response>}
+ * 
+ * @example
+ * // Uso básico con endpoint relativo
+ * const response = await authenticatedFetch('/payments/checkout-session', {
+ *   method: 'POST',
+ *   body: JSON.stringify({ plan: 'premium' })
+ * });
+ * 
+ * @example
+ * // Uso con URL completa
+ * const response = await authenticatedFetch('http://localhost:5000/api/v1/payments/checkout-session', {
+ *   method: 'POST',
+ *   body: JSON.stringify({ plan: 'premium' })
+ * });
+ */
+export const authenticatedFetch = async (url, options = {}, tokenOverride = null) => {
+    // Obtener el token (usar override si se proporciona, sino obtener de la sesión)
+    const token = tokenOverride || await getToken();
+    
+    if (!token) {
+        throw new Error('No hay token de autenticación. Por favor, inicia sesión.');
+    }
+
+    // Determinar la URL completa
+    // Si la URL ya tiene http/https, usarla tal cual
+    // Si es relativa (empieza con /), agregar el BACKEND_URL
+    const fullUrl = url.startsWith('http') 
+        ? url 
+        : `${BACKEND_URL}/api/v1${url}`;
+
+    // Combinar headers existentes con el Authorization header
+    const headers = new Headers(options.headers);
+    headers.set('Authorization', `Bearer ${token}`);
+    
+    // Agregar headers estándar requeridos por el backend
+    if (!headers.has('accept')) {
+        headers.set('accept', '*/*');
+    }
+    if (!headers.has('accept-language')) {
+        headers.set('accept-language', 'es-419,es;q=0.5');
+    }
+    
+    // Agregar origin si estamos en el navegador
+    if (browser && !headers.has('origin')) {
+        headers.set('origin', window.location.origin);
+    }
+    
+    // Solo agregar Content-Type si no está ya definido y hay body
+    if (!headers.has('Content-Type') && options.body) {
+        headers.set('Content-Type', 'application/json');
+    }
+
+    // Realizar la petición
+    return fetch(fullUrl, {
+        ...options,
+        headers,
+        credentials: 'omit', // No enviar cookies (usamos JWT)
+    });
 };
