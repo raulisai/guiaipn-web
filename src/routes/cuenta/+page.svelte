@@ -9,6 +9,8 @@
     let examsUsed = $state(3);
     let examsLimit = $state(5);
     let loadingCheckout = $state(false);
+    let showConfirmModal = $state(false);
+    let selectedPlan = $state(null);
 
     // Mock stats - TODO: obtener del backend
     const stats = {
@@ -16,6 +18,34 @@
         passedExams: 8,
         averageScore: 75,
         streak: 5
+    };
+
+    // Información de los planes
+    const plansInfo = {
+        standard: {
+            name: 'Plan Estándar',
+            price: '$99',
+            icon: '⚡',
+            features: [
+                'Exámenes ilimitados',
+                'Estadísticas avanzadas',
+                'Material premium',
+                'Soporte prioritario'
+            ],
+            color: 'blue'
+        },
+        premium: {
+            name: 'Plan Premium',
+            price: '$199',
+            icon: '👑',
+            features: [
+                'Todo lo del Plan Estándar',
+                'Asesorías 1 a 1',
+                'Contenido exclusivo',
+                'Acceso anticipado a nuevas funciones'
+            ],
+            color: 'purple'
+        }
     };
 
     onMount(() => {
@@ -32,6 +62,23 @@
     function handleLogout() {
         logout();
         goto('/');
+    }
+
+    function openConfirmModal(plan) {
+        selectedPlan = plan;
+        showConfirmModal = true;
+    }
+
+    function closeConfirmModal() {
+        showConfirmModal = false;
+        selectedPlan = null;
+    }
+
+    async function confirmAndUpgrade() {
+        if (!selectedPlan) return;
+        
+        showConfirmModal = false;
+        await handleUpgrade(selectedPlan);
     }
 
     async function handleUpgrade(plan) {
@@ -237,7 +284,7 @@
                             </button>
                         {:else}
                             <button 
-                                onclick={() => handleUpgrade('standard')}
+                                onclick={() => openConfirmModal('standard')}
                                 disabled={loadingCheckout}
                                 class="w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -275,7 +322,7 @@
                             </button>
                         {:else}
                             <button 
-                                onclick={() => handleUpgrade('premium')}
+                                onclick={() => openConfirmModal('premium')}
                                 disabled={loadingCheckout}
                                 class="w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl text-sm font-semibold transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -294,6 +341,94 @@
                 >
                     Cerrar sesión
                 </button>
+            </div>
+        </div>
+    {/if}
+
+    <!-- Modal de Confirmación -->
+    {#if showConfirmModal && selectedPlan}
+        <div 
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            in:fade={{ duration: 200 }}
+            onclick={closeConfirmModal}
+        >
+            <div 
+                class="bg-gradient-to-b from-[#030e27] to-black/95 rounded-3xl p-6 md:p-8 border border-white/10 shadow-2xl max-w-md w-full"
+                in:scale={{ duration: 300, start: 0.9 }}
+                onclick={(e) => e.stopPropagation()}
+            >
+                <!-- Header -->
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-3">{plansInfo[selectedPlan].icon}</div>
+                    <h3 class="text-2xl font-bold text-white/90 mb-2">
+                        Confirmar Suscripción
+                    </h3>
+                    <p class="text-white/60 text-sm">
+                        Estás a punto de suscribirte al {plansInfo[selectedPlan].name}
+                    </p>
+                </div>
+
+                <!-- Detalles del Plan -->
+                <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-5 mb-6 border border-white/10">
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
+                        <span class="text-white/70 text-sm">Plan seleccionado</span>
+                        <span class="text-white/90 font-semibold">{plansInfo[selectedPlan].name}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
+                        <span class="text-white/70 text-sm">Precio</span>
+                        <span class="text-2xl font-bold text-white/90">
+                            {plansInfo[selectedPlan].price}<span class="text-sm font-normal text-white/50">/mes</span>
+                        </span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-white/70 text-xs font-semibold mb-2">Incluye:</p>
+                        {#each plansInfo[selectedPlan].features as feature}
+                            <div class="flex items-center gap-2 text-white/70 text-sm">
+                                <span class="text-green-400">✓</span>
+                                <span>{feature}</span>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-6">
+                    <div class="flex items-start gap-2">
+                        <span class="text-blue-400 text-lg">ℹ️</span>
+                        <div class="flex-1">
+                            <p class="text-white/80 text-xs leading-relaxed">
+                                Serás redirigido a Stripe para completar el pago de forma segura. 
+                                Puedes cancelar tu suscripción en cualquier momento.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex gap-3">
+                    <button 
+                        onclick={closeConfirmModal}
+                        disabled={loadingCheckout}
+                        class="flex-1 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white rounded-xl font-medium transition-all disabled:opacity-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        onclick={confirmAndUpgrade}
+                        disabled={loadingCheckout}
+                        class="flex-1 py-3 bg-gradient-to-r {plansInfo[selectedPlan].color === 'blue' ? 'from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600' : 'from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'} text-white rounded-xl font-semibold transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                        {#if loadingCheckout}
+                            <div class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            <span>Procesando...</span>
+                        {:else}
+                            <span>Continuar al Pago</span>
+                            <span>→</span>
+                        {/if}
+                    </button>
+                </div>
             </div>
         </div>
     {/if}
