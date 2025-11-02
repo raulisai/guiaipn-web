@@ -4,7 +4,11 @@ import { SupabaseClient, Session } from '@supabase/supabase-js';
 
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			message?: string;
+			code?: string;
+			id?: string;
+		}
 		interface Locals {
 			supabase: SupabaseClient;
 			supabaseServerClient: SupabaseClient;

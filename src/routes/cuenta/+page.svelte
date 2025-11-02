@@ -50,7 +50,7 @@
 
     onMount(() => {
         if (!$user) {
-            goto('/cuenta/login');
+           //goto('/cuenta/login');
             return;
         }
         

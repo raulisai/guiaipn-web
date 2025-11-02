@@ -53,7 +53,9 @@ export async function handle({ event, resolve }) {
         // Verificar si el usuario está autenticado
         if (!session) {
             // Redireccionar al login si no está autenticado
-            throw redirect(303, '/cuenta/login');
+
+            console.log('No autenticado, redirigiendo a login');
+            //throw redirect(303, '/cuenta/login');
         }
     }
     
