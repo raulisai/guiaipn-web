@@ -47,17 +47,18 @@
             color: 'purple'
         }
     };
+       
+	onMount(() => {
+		// Verificar autenticación
+		if (!$user) {
+			setTimeout(() => {
+				goto('/cuenta/login');
+			}, 100);
+		}else{
+			visible = true;
+		}
+	});
 
-    onMount(() => {
-        if (!$user) {
-           //goto('/cuenta/login');
-            return;
-        }
-        
-        setTimeout(() => {
-            visible = true;
-        }, 100);
-    });
 
     function handleLogout() {
         logout();

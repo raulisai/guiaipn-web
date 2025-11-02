@@ -99,10 +99,10 @@
     onmouseleave={handleMouseLeave}
 >
     <div class="container mx-auto flex justify-between items-center px-4">
-        <a href="/home" class="flex items-center">
+        <a href={!$user ? '/' : '/home'} class="flex items-center">
             <img
                 src="logoipnburrito.png"
-                alt="Logo de la guia del IPN"
+                alt="Logo de un burro que representa la guia del IPN"
                 class={`transition-all duration-300 ease-in-out
                             ${scrolled && !isHovered ? 'w-[90px]' : 'w-[110px]'}
                             ${isHovered ? 'scale-115' : 'scale-90'}`}

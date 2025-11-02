@@ -6,8 +6,59 @@ import { PUBLIC_SOCKET_URL } from '$env/static/public';
 
 const BACKEND_URL = PUBLIC_SOCKET_URL;
 
-// Crear la store con el valor inicial null (se actualizará después con el estado de la sesión)
-export const user = writable(null);
+const USER_STORAGE_KEY = 'auth_user';
+
+const persistUser = (value) => {
+    if (!browser) return;
+
+    if (value) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(value));
+    } else {
+        localStorage.removeItem(USER_STORAGE_KEY);
+    }
+};
+
+const readStoredUser = () => {
+    if (!browser) return null;
+
+    const storedValue = localStorage.getItem(USER_STORAGE_KEY);
+    if (!storedValue) return null;
+
+    try {
+        return JSON.parse(storedValue);
+    } catch (error) {
+        console.warn('No se pudo parsear el usuario almacenado, limpiando valor corrupto.', error);
+        localStorage.removeItem(USER_STORAGE_KEY);
+        return null;
+    }
+};
+
+const createUserStore = () => {
+    const initialValue = readStoredUser();
+    const { subscribe, set: originalSet, update: originalUpdate } = writable(initialValue);
+
+    return {
+        subscribe,
+        set: (value) => {
+            persistUser(value);
+            originalSet(value);
+        },
+        update: (updater) => {
+            originalUpdate((current) => {
+                const nextValue = updater(current);
+                persistUser(nextValue);
+                return nextValue;
+            });
+        },
+        reset: () => {
+            persistUser(null);
+            originalSet(null);
+        }
+    };
+};
+
+// Crear la store con el valor inicial recuperado desde localStorage (si existe)
+export const user = createUserStore();
 
 // Inicializa la sesión al cargar el archivo
 if (browser) {
@@ -15,6 +66,8 @@ if (browser) {
     supabase.auth.getSession().then(({ data }) => {
         if (data && data.session) {
             user.set(data.session.user);
+        } else {
+            user.reset();
         }
     });
 
@@ -23,7 +76,7 @@ if (browser) {
         if (session) {
             user.set(session.user);
         } else {
-            user.set(null);
+            user.reset();
         }
     });
 }

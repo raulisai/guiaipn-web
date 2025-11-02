@@ -1,10 +1,21 @@
 <script>
     import { ProtectedRoute } from '$lib/components';
+    import { onMount } from 'svelte';
+    import { user } from '$lib/stores/authStore';
     import { goto } from '$app/navigation';
     
     let selectedSubject = $state(null);
     let selectedQuestions = $state(10);
     let showConfig = $state(false);
+
+    onMount(() => {
+		// Verificar autenticación
+		if (!$user) {
+			setTimeout(() => {
+				goto('/cuenta/login');
+			}, 100);
+		}
+	});
     
     const subjects = [
         {
