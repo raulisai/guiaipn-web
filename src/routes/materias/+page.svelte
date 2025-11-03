@@ -5,7 +5,7 @@
     import { goto } from '$app/navigation';
     
     let selectedSubject = $state(null);
-    let selectedQuestions = $state(10);
+    let selectedQuestions = $state(20);
     let showConfig = $state(false);
 
     onMount(() => {
@@ -80,7 +80,7 @@
         }
     ];
     
-    const questionOptions = [5, 10, 15, 20];
+    const questionOptions = [10, 20, 40];
     
     function selectSubject(subject) {
         selectedSubject = subject;
@@ -88,15 +88,20 @@
     }
     
     function startExam() {
-        if (selectedSubject) {
-            goto(`/examen?materia=${selectedSubject.id}&preguntas=${selectedQuestions}`);
-        }
+        if (!selectedSubject) return;
+
+        const params = new URLSearchParams({
+            subject: selectedSubject.id,
+            questions: selectedQuestions.toString()
+        });
+
+        goto(`/examen?${params.toString()}`);
     }
     
     function goBack() {
         showConfig = false;
         selectedSubject = null;
-        selectedQuestions = 10;
+        selectedQuestions = 20;
     }
 </script>
 
