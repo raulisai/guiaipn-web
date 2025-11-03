@@ -366,25 +366,7 @@
 	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen container-mobile py-4 sm:py-6">
 		<div class="w-full max-w-4xl space-y-4 sm:space-y-6">
 			
-			{#if loadingQuestions}
-				<!-- Loading State -->
-				<div class="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-					<div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-					<p class="text-lg text-gray-300">Cargando preguntas desde el servidor...</p>
-				</div>
-			{/if}
-
-			{#if warningMessage}
-				<div class="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4 mb-2">
-					<p class="text-yellow-200 text-sm">⚠️ {warningMessage}</p>
-				</div>
-			{/if}
-
-			<div class="bg-white/5 border border-white/10 rounded-lg p-4 text-xs text-gray-300 flex flex-wrap gap-4">
-				<div><span class="text-white/80 font-semibold">Materia:</span> {subjectDisplayName}</div>
-				<div><span class="text-white/80 font-semibold">Preguntas solicitadas:</span> {questionCount}</div>
-				<div><span class="text-white/80 font-semibold">Fuente:</span> {usingLocalQuestions ? 'Locales' : 'API'}</div>
-			</div>
+			
 			
 			{#if !loadingQuestions}
 				<!-- Question Card - Mobile optimized -->
@@ -394,7 +376,7 @@
 				>
 					<!-- Question content and image -->
 					<QuestionDisplay {toggleOptionalImage} {toggleSolution}  />
-					<div class="flex-1 min-w-[65%] animate-mobile-fade" class:animate-fade-out={animateProgressOut}>
+					<div class="flex-1 min-w-[65%] animate-mobile-fade -mt-28" class:animate-fade-out={animateProgressOut}>
 						<ExamProgress
 							currentQuestion={$examStore.currentQuestion}
 							totalQuestions={$examStore.totalQuestions}
