@@ -93,6 +93,19 @@ const createExamStore = () => {
       ...state,
       currentQuestion: state.currentQuestion + 1
     })),
+
+    // Actualizar el total de preguntas
+    setTotalQuestions: (total: number) => update(state => ({
+      ...state,
+      totalQuestions: Math.max(1, total)
+    })),
+
+    // Limpiar preguntas obtenidas de la API
+    clearAPIQuestions: () => update(state => ({
+      ...state,
+      apiQuestions: [],
+      questionsLoaded: false
+    })),
     
     // Actualizar reactivo completo
     setReactivo: (reactivo: Reactivo) => update(state => ({

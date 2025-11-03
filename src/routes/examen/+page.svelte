@@ -11,9 +11,32 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
+	export let data: {
+		subject: string;
+		questionCount: number;
+		useLocal: boolean;
+	};
+
+	const { subject, questionCount, useLocal } = data;
+	const SUBJECT_DETAILS = {
+		matematicas: { display: 'Matemáticas', localKeywords: ['algebra', 'matematicas'] },
+		fisica: { display: 'Física', localKeywords: ['fisica'] },
+		quimica: { display: 'Química', localKeywords: ['quimica'] },
+		biologia: { display: 'Biología', localKeywords: ['biologia'] },
+		historia: { display: 'Historia', localKeywords: ['historia'] },
+		geografia: { display: 'Geografía', localKeywords: ['geografia'] },
+		literatura: { display: 'Literatura', localKeywords: ['literatura'] },
+		ingles: { display: 'Inglés', localKeywords: ['ingles'] }
+	} as const;
+	const subjectKey = subject && subject in SUBJECT_DETAILS ? (subject as keyof typeof SUBJECT_DETAILS) : null;
+	const subjectDetails = subjectKey ? SUBJECT_DETAILS[subjectKey] : undefined;
+	const subjectDisplayName = subjectDetails?.display ?? (subject ? subject.charAt(0).toUpperCase() + subject.slice(1) : 'General');
+
 	let respuesta;
 	let loadingQuestions = true;
-	let errorLoadingQuestions = false;
+	let warningMessage = '';
+	let localQuestionPool = reactivos;
+	let usingLocalQuestions = false;
 
 	// Animation state variables
 	let isNavigating = false;
@@ -24,43 +47,89 @@
 	let mainContentFading = false;
 
 	onMount(async () => {
+		examStore.setTotalQuestions(questionCount);
 		await loadQuestionsFromAPI();
-		if (!errorLoadingQuestions) {
-			getQuestionRandom();
-		}
+		getQuestionRandom();
 	});
+
+	function prepareLocalQuestionPool() {
+		examStore.clearAPIQuestions();
+		usingLocalQuestions = true;
+		let filtered = reactivos;
+		const normalizedSubject = subject?.trim().toLowerCase() ?? '';
+		const keywordList = subjectDetails?.localKeywords ?? (normalizedSubject ? [normalizedSubject] : []);
+
+		if (keywordList.length > 0) {
+			filtered = reactivos.filter((item) => {
+				const base = `${item.id} ${item.pregunta ?? ''}`.toLowerCase();
+				return keywordList.some((keyword) => base.includes(keyword));
+			});
+		}
+
+		if (!filtered.length) {
+			filtered = reactivos;
+			if (normalizedSubject) {
+				warningMessage = `No se encontraron preguntas locales para ${subjectDisplayName}. Usaremos una mezcla general.`;
+			}
+		}
+
+		localQuestionPool = filtered.slice(0, Math.min(questionCount, filtered.length));
+		if (!localQuestionPool.length) {
+			localQuestionPool = filtered;
+		}
+
+		if (localQuestionPool.length < questionCount) {
+			warningMessage = warningMessage || `Solo hay ${localQuestionPool.length} preguntas locales disponibles para ${subjectDisplayName}.`;
+		}
+
+		examStore.setTotalQuestions(localQuestionPool.length || questionCount);
+	}
 
 	// Cargar preguntas desde la API
 	async function loadQuestionsFromAPI() {
 		try {
 			loadingQuestions = true;
-			
+			usingLocalQuestions = false;
+			warningMessage = '';
+
+			if (useLocal) {
+				warningMessage = 'Usando preguntas locales (modo sin conexión).';
+				prepareLocalQuestionPool();
+				return;
+			}
+
 			// Obtener token de autenticación
 			const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 			
 			if (sessionError || !session) {
 				console.warn('⚠️ No hay sesión activa, usando preguntas locales');
-				errorLoadingQuestions = true;
+				warningMessage = 'No hay sesión activa. Usaremos preguntas locales.';
+				prepareLocalQuestionPool();
 				return;
 			}
 
 			const token = session.access_token;
-			
-			// Llamar a la API para obtener 20 preguntas
-			const response = await questionsAPI.getQuestions(token, 1, 20);
-			
+			const trimmedSubject = subject?.trim() ?? '';
+			const response = await questionsAPI.getQuestions(token, 1, questionCount, trimmedSubject);
+
 			if (response && response.questions && response.questions.length > 0) {
 				console.log('✅ Preguntas cargadas desde la API:', response.questions.length);
-				console.log(response.questions);
-				examStore.loadAPIQuestions(response.questions);
-				errorLoadingQuestions = false;
+				const questions = response.questions.slice(0, questionCount);
+				examStore.loadAPIQuestions(questions);
+				examStore.setTotalQuestions(questions.length);
+				usingLocalQuestions = false;
+				if (questions.length < questionCount) {
+					warningMessage = `El servidor devolvió ${questions.length} preguntas para ${subjectDisplayName}.`;
+				}
 			} else {
 				console.warn('⚠️ No se obtuvieron preguntas de la API, usando preguntas locales');
-				errorLoadingQuestions = true;
+				warningMessage = 'No se pudieron obtener preguntas del servidor. Usaremos preguntas locales.';
+				prepareLocalQuestionPool();
 			}
 		} catch (error) {
 			console.error('❌ Error al cargar preguntas desde la API:', error);
-			errorLoadingQuestions = true;
+			warningMessage = 'Ocurrió un error al conectar con el servidor. Usaremos preguntas locales.';
+			prepareLocalQuestionPool();
 		} finally {
 			loadingQuestions = false;
 		}
@@ -151,7 +220,7 @@
 		}
 
 		// Use API questions if loaded, otherwise fallback to local reactivos
-		if ($examStore.questionsLoaded && $examStore.apiQuestions.length > 0) {
+		if (!usingLocalQuestions && $examStore.questionsLoaded && $examStore.apiQuestions.length > 0) {
 			// Use question from API by current index
 			const questionIndex = $examStore.currentQuestion - 1;
 			const apiQuestion = $examStore.apiQuestions[questionIndex];
@@ -193,7 +262,8 @@
 			examStore.setReactivo(updatedReactivo);
 		} else {
 			// Fallback to local reactivos
-			if (!reactivos.length) {
+			const pool = usingLocalQuestions ? localQuestionPool : reactivos;
+			if (!pool.length) {
 				console.error('Reactivos data is empty.');
 				const updatedReactivo = { ...$examStore.reactivo };
 				updatedReactivo.pregunta = 'Error al cargar la pregunta.';
@@ -201,12 +271,19 @@
 				return;
 			}
 
-			// Select random question from local data
-			const idRandom = Math.floor(Math.random() * reactivos.length);
-			const selectedReactivo = reactivos[idRandom];
+			// Select question from local data
+			let selectedReactivo;
+			let selectedIndex = 0;
+			if (usingLocalQuestions) {
+				selectedIndex = Math.min($examStore.currentQuestion - 1, pool.length - 1);
+				selectedReactivo = pool[selectedIndex];
+			} else {
+				selectedIndex = Math.floor(Math.random() * pool.length);
+				selectedReactivo = pool[selectedIndex];
+			}
 
 			if (!selectedReactivo) {
-				console.error(`Reactivo with index ${idRandom} not found.`);
+				console.error(`Reactivo with index ${selectedIndex} not found.`);
 				const updatedReactivo = { ...$examStore.reactivo };
 				updatedReactivo.pregunta = 'Error al cargar la pregunta.';
 				examStore.setReactivo(updatedReactivo);
@@ -295,14 +372,19 @@
 					<div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
 					<p class="text-lg text-gray-300">Cargando preguntas desde el servidor...</p>
 				</div>
-			{:else if errorLoadingQuestions}
-				<!-- Error State - Using Local Questions -->
-				<div class="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4 mb-4">
-					<p class="text-yellow-300 text-sm">
-						⚠️ No se pudieron cargar las preguntas desde el servidor. Usando preguntas locales.
-					</p>
+			{/if}
+
+			{#if warningMessage}
+				<div class="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4 mb-2">
+					<p class="text-yellow-200 text-sm">⚠️ {warningMessage}</p>
 				</div>
 			{/if}
+
+			<div class="bg-white/5 border border-white/10 rounded-lg p-4 text-xs text-gray-300 flex flex-wrap gap-4">
+				<div><span class="text-white/80 font-semibold">Materia:</span> {subjectDisplayName}</div>
+				<div><span class="text-white/80 font-semibold">Preguntas solicitadas:</span> {questionCount}</div>
+				<div><span class="text-white/80 font-semibold">Fuente:</span> {usingLocalQuestions ? 'Locales' : 'API'}</div>
+			</div>
 			
 			{#if !loadingQuestions}
 				<!-- Question Card - Mobile optimized -->

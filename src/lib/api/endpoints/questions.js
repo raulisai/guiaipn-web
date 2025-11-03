@@ -57,8 +57,17 @@ export const questionsAPI = {
 	 * @param {number} page - Número de página (default: 1)
 	 * @param {number} limit - Límite de preguntas (default: 20)
 	 */
-	getQuestions: async (token, page = 1, limit = 20) => {
-		return request(`/questions/?page=${page}&limit=${limit}`, {
+	getQuestions: async (token, page = 1, limit = 20, subject = '') => {
+		const params = new URLSearchParams({
+			page: String(page),
+			limit: String(limit)
+		});
+
+		if (subject) {
+			params.append('subject', subject);
+		}
+
+		return request(`/questions/?${params.toString()}`, {
 			method: 'GET',
 			headers: {
 				'Authorization': `Bearer ${token}`
