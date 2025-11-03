@@ -9,6 +9,7 @@
 	import RecommendationCarousel from './components/RecommendationCarousel.svelte';
 	
 	let selectedQuestions = $state(10);
+	let selectedSubject = $state(''); // '' = examen general
 	let carouselIndex = $state(0);
 	
 	// Mock data - TODO: obtener del backend
@@ -18,7 +19,18 @@
 	
 	function startExam() {
 		examStore.reset();
-		goto('/examen');
+		
+		// Construir URL con parámetros
+		const params = new URLSearchParams();
+		
+		if (selectedSubject) {
+			params.set('subject', selectedSubject);
+		}
+		
+		params.set('questions', selectedQuestions.toString());
+		
+		const url = `/examen?${params.toString()}`;
+		goto(url);
 	}
 	
 	onMount(() => {
@@ -36,21 +48,7 @@
 	<div class="particles-container absolute inset-0 overflow-hidden opacity-40"></div>
 	
 	<div class="container mx-auto relative z-10 max-w-7xl w-full">
-		<!-- Sección superior: Pentágono + Card de Examen -->
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
-			<!-- Pentágono de materias -->
-			<div>
-				<SubjectsPentagon />
-			</div>
-			
-			<!-- Card de examen -->
-			<div>
-				<ExamCard 
-					bind:selectedQuestions
-					onStartExam={startExam}
-				/>
-			</div>
-		</div>
+		
 		
 		<!-- Estadísticas flotantes -->
 		<div class="mb-6">
@@ -60,6 +58,26 @@
 				{failedExams}
 			/>
 		</div>
+		
+		
+		
+		<!-- Sección superior: Pentágono + Card de Examen -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+			<!-- Pentágono de materias -->
+			<div>
+				<SubjectsPentagon bind:selectedSubject />
+			</div>
+			
+			<!-- Card de examen -->
+			<div>
+				<ExamCard 
+					bind:selectedQuestions
+					{selectedSubject}
+					onStartExam={startExam}
+				/>
+			</div>
+		</div>
+		
 		
 		<!-- Carrusel de recomendaciones -->
 		<div>
