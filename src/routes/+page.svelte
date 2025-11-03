@@ -1,55 +1,51 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
-	import { elasticOut, backOut } from 'svelte/easing';
+	import { elasticOut, backOut, quintOut } from 'svelte/easing';
 	import { user } from '$lib/stores/authStore';
 	import { goto } from '$app/navigation';
 	import Footer from '$lib/components/footer.svelte';
 
-	
-	
-	// Variables para la primera sección
+	// Variables de estado
 	let visible = $state(false);
 	let heroVisible = $state(false);
 	let buttonVisible = $state(false);
-	let imageVisible = $state(false);
 	let currentUser = $state(null);
 	
-	// Variables para la sección "Cómo funciona"
-	let titleVisible = $state(false);
-	let step1Visible = $state(false);
-	let step2Visible = $state(false);
-	let step3Visible = $state(false);
+	// Variables para secciones con scroll
+	let section1Visible = $state(false);
+	let section2Visible = $state(false);
+	let section3Visible = $state(false);
+	let section4Visible = $state(false);
+	let section5Visible = $state(false);
 	let ctaVisible = $state(false);
 	
-	// Variables para la sección "Mi Progreso"
-	let progressTitleVisible = $state(false);
-	let progressDashboardVisible = $state(false);
-	let progressCtaVisible = $state(false);
+	// Carrusel de imágenes para sección 4
+	let currentImageIndex = $state(0);
+	const carouselImages = [
+		{ src: '/history-IA.png', alt: 'Historial con IA' },
+		{ src: '/lufy-animate.png', alt: 'Asistente Lufy' }
+	];
 	
 	// Función de utilidad para detectar cuando un elemento es visible en el viewport
 	function inView(node, options = {}) {
-		const { rootMargin = '0px', threshold = 0 } = options;
+		const { rootMargin = '0px', threshold = 0.2 } = options;
 		
 		const handleIntersection = (entries) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					// Aquí identificamos qué elemento es basado en un atributo de datos personalizado
 					const sectionId = node.dataset.section;
-					if (sectionId === 'title') titleVisible = true;
-					if (sectionId === 'step1') step1Visible = true;
-					if (sectionId === 'step2') step2Visible = true;
-					if (sectionId === 'step3') step3Visible = true;
+					if (sectionId === 'section1') section1Visible = true;
+					if (sectionId === 'section2') section2Visible = true;
+					if (sectionId === 'section3') section3Visible = true;
+					if (sectionId === 'section4') section4Visible = true;
+					if (sectionId === 'section5') section5Visible = true;
 					if (sectionId === 'cta') ctaVisible = true;
-					if (sectionId === 'progress-title') progressTitleVisible = true;
-					if (sectionId === 'progress-dashboard') progressDashboardVisible = true;
-					if (sectionId === 'progress-cta') progressCtaVisible = true;
 				}
 			});
 		};
 		
 		const observer = new IntersectionObserver(handleIntersection, { rootMargin, threshold });
-		
 		observer.observe(node);
 		
 		return {
@@ -59,280 +55,442 @@
 		};
 	}
 	
-	// Redirigir a /home si el usuario está autenticado (reactivo)
+	// Redirigir a /home si el usuario está autenticado
 	$effect(() => {
 		if ($user) {
-			console.log('Usuario autenticado, redirigiendo a /home');
 			goto('/home');
 		}
 	});
 
 	onMount(() => {
-		// Secuencia de animaciones para la primera sección
 		setTimeout(() => {
 			visible = true;
 			setTimeout(() => heroVisible = true, 200);
-			setTimeout(() => buttonVisible = true, 800);
-			setTimeout(() => imageVisible = true, 400);
+			setTimeout(() => buttonVisible = true, 600);
 		}, 300);
 
-		// Obtener el usuario actual
 		const unsubscribe = user.subscribe((value) => {
 			currentUser = value;
 		});
+		
+		// Carrusel automático cada 4 segundos
+		const carouselInterval = setInterval(() => {
+			currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+		}, 4000);
 
-		return () => unsubscribe();
+		return () => {
+			unsubscribe();
+			clearInterval(carouselInterval);
+		};
 	});
-
-	function handleCTAClick() {
-		if (currentUser) {
-			goto('/materias');
-		} else {
-			goto('/cuenta/login');
-		}
-	}
 </script>
 
-<section
-	class="min-w-full min-h-screen flex flex-col md:flex-row items-center justify-center py-4 px-8 sm:pb-6 overflow-x-hidden relative bg-gradient-to-b from-[#030e27]/90 to-black/90"
->
-	<!-- Partículas animadas de fondo -->
-	<div class="particles-container absolute inset-0 overflow-hidden opacity-40"></div>
-	
-	<!-- Left section with text and button -->
-	<div
-		class="md:w-1/2 flex flex-col items-center justify-center text-center px-6 md:text-left mb-8 md:mb-0 z-10"
-	>
-		{#if visible}
-			{#if currentUser}
-				<div 
-					in:fade={{ duration: 500 }}
-					class="mb-4 p-4 bg-blue-950/30 backdrop-blur-sm rounded-lg border border-blue-800/50"
-				>
-					<h2 class="text-xl text-white font-medium">¡Bienvenido de nuevo!</h2>
-					<p class="text-cyan-400">
-						{currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]}
-					</p>
-				</div>
-			{/if}
-
-			<h1 
-				in:fly={{ y: -50, duration: 1000, easing: elasticOut }}
-				class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg"
-			>
-				Ingresa al 
-				{#if heroVisible}
-					<span
-						in:scale={{ duration: 800, easing: backOut, start: 0.3 }}
-						class="text-red-950 block md:inline-block text-6xl md:text-8xl lg:text-9xl mt-2 glow-text">IPN</span
-					>
-				{/if}
-			</h1>
-			
-			<h3 
-				in:fade={{ delay: 600, duration: 800 }}
-				class="mt-4 text-center text-white p-3 backdrop-blur-sm rounded-lg bg-black/10 border border-white/5"
-			>
-				¿Quieres ingresar al IPN pero no sabes cómo? <span class="text-red-400">¡Nosotros te ayudamos!</span> Preparate para el examen
-				de admisión desde la comodidad de tu casa.
-			</h3>
-		{/if}
-
-		{#if buttonVisible}
-			<button
-				in:scale={{ duration: 500, delay: 100 }}
-				class="mt-6 w-auto text-center text-white bg-gradient-to-r from-red-950 to-red-900 rounded-lg border-2 border-white/30 backdrop-blur-sm pulse-animation shadow-glow"
-			>
-				<a
-					href="/examen"
-					class="px-6 py-3 hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-				>
-					<p class="font-bold text-base">Comenzar a estudiar con AI</p>
-					<!-- Mini robot icon animado -->
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 robot-icon"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						stroke-width="2"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M9 3v2m6-2v2M9 19h6m-6 4h6m-6-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-						/>
-						<rect
-							x="5"
-							y="9"
-							width="14"
-							height="10"
-							rx="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<line x1="8" y1="15" x2="10" y2="15" />
-						<line x1="14" y1="15" x2="16" y2="15" />
-					</svg>
-				</a>
-			</button>
-		{/if}
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a0118] via-[#1a0b2e] to-[#16213e]">
+	<!-- Animated background -->
+	<div class="absolute inset-0 overflow-hidden">
+		<div class="stars"></div>
+		<div class="gradient-orb orb-1"></div>
+		<div class="gradient-orb orb-2"></div>
 	</div>
-	
-	<!--  Right section with image -->
-	{#if imageVisible}
-		<div
-			in:fly={{ x: 100, duration: 800, easing: elasticOut }}
-			class="content_guiaIPN mt-6 md:mt-4 text-center w-full md:w-1/2 flex justify-center items-center px-4 z-10"
-		>
-			<img 
-				src="/logoipnGuia.png" 
-				alt="Logo de la guia del IPN" 
-				class="max-w-l h-auto hover-float"
-			/>
+
+	<div class="container mx-auto px-6 py-20 relative z-10">
+		<div class="flex flex-col md:flex-row items-center justify-between gap-12">
+			<!-- Text Content -->
+			<div class="flex-1 text-center md:text-left">
+				{#if visible}
+					<h1 
+						in:fly={{ y: 30, duration: 800, easing: quintOut }}
+						class="text-5xl md:text-7xl font-bold text-white mb-6"
+					>
+						Ingresa al
+						{#if heroVisible}
+							<span 
+								in:scale={{ duration: 600, delay: 200 }}
+								class="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mt-2"
+							>
+								IPN
+							</span>
+						{/if}
+					</h1>
+					
+					<p 
+						in:fade={{ delay: 400, duration: 600 }}
+						class="text-lg md:text-xl text-white/70 mb-8 max-w-2xl"
+					>
+						Prepárate para el examen de admisión con 
+						<span class="text-cyan-400 font-semibold">inteligencia artificial</span> 
+						que se adapta a tu ritmo de aprendizaje
+					</p>
+
+					{#if buttonVisible}
+						<a
+							href="/examen"
+							in:scale={{ duration: 400, delay: 600 }}
+							class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 
+							rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 
+							transition-all duration-300 hover:scale-105 group"
+						>
+							<span>Comenzar ahora</span>
+							<svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+							</svg>
+						</a>
+					{/if}
+				{/if}
+			</div>
+
+			<!-- Image -->
+			<div class="flex-1 flex justify-center">
+				{#if heroVisible}
+					<img 
+						in:fly={{ x: 50, duration: 800, delay: 300 }}
+						src="/in-ipn.png" 
+						alt="IPN" 
+						class="w-full max-w-md floating"
+					/>
+				{/if}
+			</div>
 		</div>
-	{/if}
+	</div>
 </section>
 
-<!-- Sección de "Cómo funciona" con animaciones de scroll -->
-<section
-	class="w-full py-24 bg-gradient-to-b from-[#030e27] via-[#030e28]/70 to-black/60 backdrop-blur-2xl relative section-how"
+<!-- Section 1: Exámenes con IA (Left Image, Right Text) -->
+<section 
+	use:inView 
+	data-section="section1"
+	class="relative py-24 bg-gradient-to-b from-[#16213e] to-[#0a0118] overflow-hidden"
 >
-	<!-- Elementos decorativos flotantes -->
-	<div class="floating-element floating-1"></div>
-	<div class="floating-element floating-2"></div>
-	<div class="floating-element floating-3"></div>
-		<div class="container mx-auto px-6 relative z-10">
-		<div class="section-title-container" use:inView={{ rootMargin: '-150px' }} data-section="title">
-			{#if titleVisible}
-				<h2 
-					in:fly={{ y: 50, duration: 800, easing: elasticOut }}
-					class="text-5xl font-bold text-white text-center mb-8 glow-text-subtle"
-				>
-					¿Cómo funciona?
-				</h2>
-				<p 
-					in:fade={{ delay: 200, duration: 800 }}
-					class="text-white/80 text-center max-w-3xl mx-auto mb-16 text-lg"
-				>
-					Nuestra plataforma está diseñada para ayudarte a prepararte de manera efectiva para el examen 
-					de admisión del IPN con la ayuda de <span class="text-red-400">inteligencia artificial personalizada</span>.
-				</p>
-			{/if}
-		</div>
-		
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">			<!-- Paso 1 -->
-			<div
-				use:inView={{ rootMargin: '-100px' }} 
-				data-section="step1"
-				class="card-container"
-			>
-				{#if step1Visible}
-					<div
-						in:fly={{ y: 50, x: -20, duration: 800, delay: 100 }}
-						class="bg-blue-card backdrop-blur-2xl rounded-xl p-8 shadow-lg shadow-blue-900/20 
-						transform hover:scale-105 transition-all duration-500 border border-cyan hover:border-red-300/50
-						card-hover"
-					>
-						<div
-							class="bg-gradient-to-r from-red-950 to-red-800 rounded-full w-16 h-16 flex items-center 
-							justify-center mx-auto mb-6 shadow-md number-icon"
-						>
-							<span class="text-white text-2xl font-bold">1</span>
-						</div>
-						<h3 class="text-2xl font-bold text-white text-center mb-4">Regístrate</h3>
-						<p class="text-white/80 text-center mb-4">
-							Crea una cuenta gratuita para acceder a todos los recursos de preparación para el examen
-							del IPN. El proceso toma menos de un minuto.
-						</p>
-						<div class="flex justify-center mt-4">
-							<a href="/registro" class="text-red-400 hover:text-red-300 font-medium button-arrow">
-								Crear cuenta <span class="arrow">→</span>
-							</a>
-						</div>
+	<div class="container mx-auto px-6">
+		<div class="flex flex-col md:flex-row items-center gap-16">
+			<!-- Image Left -->
+			<div class="flex-1">
+				{#if section1Visible}
+					<div in:fly={{ x: -50, duration: 800, easing: quintOut }}>
+						<img 
+							src="/examen.png" 
+							alt="Examen con IA" 
+							class="rounded-2xl shadow-2xl shadow-cyan-500/20 border border-cyan-500/20"
+						/>
 					</div>
 				{/if}
-			</div>			<!-- Paso 2 -->
-			<div
-				use:inView={{ rootMargin: '-100px' }} 
-				data-section="step2"
-				class="card-container"
-			>
-				{#if step2Visible}
-					<div
-						in:fly={{ y: 50, duration: 800, delay: 300 }}
-						class="bg-blue-card backdrop-blur-sm rounded-xl p-8 shadow-lg shadow-blue-900/20 
-						transform hover:scale-105 transition-all duration-500 border border-cyan hover:border-red-300/50
-						card-hover" 
-					>
-						<div
-							class="bg-gradient-to-r from-red-950 to-red-800 rounded-full w-16 h-16 flex items-center 
-							justify-center mx-auto mb-6 shadow-md number-icon"
-						>
-							<span class="text-white text-2xl font-bold">2</span>
+			</div>
+
+			<!-- Text Right -->
+			<div class="flex-1">
+				{#if section1Visible}
+					<div in:fly={{ x: 50, duration: 800, delay: 200, easing: quintOut }}>
+						<div class="inline-block px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full mb-6">
+							<span class="text-cyan-400 text-sm font-semibold">🤖 Powered by AI</span>
 						</div>
-						<h3 class="text-2xl font-bold text-white text-center mb-4">Estudia con IA</h3>
-						<p class="text-white/80 text-center mb-4">
-							Nuestro sistema de IA analiza tu progreso y te ofrece material personalizado para 
-							fortalecer tus áreas de oportunidad en todas las materias.
+						
+						<h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+							Exámenes inteligentes que se adaptan a ti
+						</h2>
+						
+						<p class="text-white/70 text-lg mb-6">
+							Nuestra IA analiza tus respuestas en tiempo real y ajusta la dificultad de las preguntas 
+							para maximizar tu aprendizaje. Cada examen es único y personalizado.
 						</p>
-						<div class="flex justify-center mt-4">
-							<a href="/examen" class="text-red-400 hover:text-red-300 font-medium button-arrow">
-								Comenzar ahora <span class="arrow">→</span>
-							</a>
-						</div>
-					</div>
-				{/if}
-			</div>			<!-- Paso 3 -->
-			<div
-				use:inView={{ rootMargin: '-100px' }} 
-				data-section="step3"
-				class="card-container"
-			>
-				{#if step3Visible}
-					<div
-						in:fly={{ y: 50, x: 20, duration: 800, delay: 500 }}
-						class="bg-blue-card backdrop-blur-sm rounded-xl p-8 shadow-lg shadow-blue-900/20 
-						transform hover:scale-105 transition-all duration-500 border border-cyan hover:border-red-300/50
-						card-hover"
-					>
-						<div
-							class="bg-gradient-to-r from-red-950 to-red-800 rounded-full w-16 h-16 flex items-center 
-							justify-center mx-auto mb-6 shadow-md number-icon"
-						>
-							<span class="text-white text-2xl font-bold">3</span>
-						</div>
-						<h3 class="text-2xl font-bold text-white text-center mb-4">¡Aprueba!</h3>
-						<p class="text-white/80 text-center mb-4">
-							Presentate al examen con confianza después de practicar con nuestros exámenes simulados 
-							y contenido adaptado a tus necesidades.
-						</p>
-						<div class="flex justify-center mt-4">
-							<a href="/testimonios" class="text-red-400 hover:text-red-300 font-medium button-arrow">
-								Ver resultados <span class="arrow">→</span>
-							</a>
-						</div>
+
+						<ul class="space-y-4">
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Preguntas adaptativas según tu nivel</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Retroalimentación instantánea</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Simulación del examen real del IPN</span>
+							</li>
+						</ul>
 					</div>
 				{/if}
 			</div>
 		</div>
-				<div 
-			use:inView={{ rootMargin: '-100px' }}
-			data-section="cta"
-			class="mt-16 text-center"
-		>
-			{#if ctaVisible}
-				<a 
-					in:scale={{ duration: 600, delay: 200 }}
-					href="/como-funciona" 
-					class="inline-block px-8 py-3 bg-gradient-to-r from-red-950 to-red-800 rounded-lg text-white 
-					font-bold hover:from-red-800 hover:to-red-700 transition-all duration-300 shadow-xl
-					hover:shadow-red-900/30 hover:scale-105 cta-button"
-				>
-					Conoce más detalles
-				</a>
-			{/if}
+	</div>
+</section>
+
+<!-- Section 2: Explicaciones con IA (Right Image, Left Text) -->
+<section 
+	use:inView 
+	data-section="section2"
+	class="relative py-24 bg-gradient-to-b from-[#0a0118] to-[#1a0b2e] overflow-hidden"
+>
+	<div class="gradient-orb orb-3"></div>
+	
+	<div class="container mx-auto px-6">
+		<div class="flex flex-col md:flex-row-reverse items-center gap-16">
+			<!-- Image Right -->
+			<div class="flex-1">
+				{#if section2Visible}
+					<div in:fly={{ x: 50, duration: 800, easing: quintOut }}>
+						<img 
+							src="/pizarron.png" 
+							alt="Explicaciones con IA" 
+							class="rounded-2xl shadow-2xl shadow-purple-500/20 border border-purple-500/20"
+						/>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Text Left -->
+			<div class="flex-1">
+				{#if section2Visible}
+					<div in:fly={{ x: -50, duration: 800, delay: 200, easing: quintOut }}>
+						<div class="inline-block px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-full mb-6">
+							<span class="text-purple-400 text-sm font-semibold">✨ IA Explicativa</span>
+						</div>
+						
+						<h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+							Explicaciones paso a paso con visualizaciones
+						</h2>
+						
+						<p class="text-white/70 text-lg mb-6">
+							Cuando fallas una pregunta, nuestra IA te explica el concepto de forma clara y visual. 
+							Como tener un profesor personal disponible 24/7.
+						</p>
+
+						<ul class="space-y-4">
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Pizarrón interactivo con gráficas y ecuaciones</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Explicaciones con voz y texto sincronizado</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Haz preguntas de seguimiento en tiempo real</span>
+							</li>
+						</ul>
+					</div>
+				{/if}
+			</div>
 		</div>
+	</div>
+</section>
+
+<!-- Section 3: Progreso personalizado (Left Image, Right Text) -->
+<section 
+	use:inView 
+	data-section="section3"
+	class="relative py-24 bg-gradient-to-b from-[#1a0b2e] to-[#16213e] overflow-hidden"
+>
+	<div class="container mx-auto px-6">
+		<div class="flex flex-col md:flex-row items-center gap-16">
+			<!-- Image Left -->
+			<div class="flex-1">
+				{#if section3Visible}
+					<div in:fly={{ x: -50, duration: 800, easing: quintOut }}>
+						<img 
+							src="/home.png" 
+							alt="Dashboard de progreso" 
+							class="rounded-2xl shadow-2xl shadow-cyan-500/20 border border-cyan-500/20"
+						/>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Text Right -->
+			<div class="flex-1">
+				{#if section3Visible}
+					<div in:fly={{ x: 50, duration: 800, delay: 200, easing: quintOut }}>
+						<div class="inline-block px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full mb-6">
+							<span class="text-cyan-400 text-sm font-semibold">📊 Analytics</span>
+						</div>
+						
+						<h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+							Visualiza tu progreso en tiempo real
+						</h2>
+						
+						<p class="text-white/70 text-lg mb-6">
+							Dashboard personalizado que muestra tu desempeño por materia, identifica áreas de mejora 
+							y te recomienda qué estudiar a continuación.
+						</p>
+
+						<ul class="space-y-4">
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Gráficas de desempeño por materia</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Recomendaciones personalizadas de estudio</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Historial completo de exámenes</span>
+							</li>
+						</ul>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Section 4: Asistente IA (Right Image, Left Text) -->
+<section 
+	use:inView 
+	data-section="section4"
+	class="relative py-24 bg-gradient-to-b from-[#16213e] to-[#0a0118] overflow-hidden"
+>
+	<div class="gradient-orb orb-4"></div>
+	
+	<div class="container mx-auto px-6">
+		<div class="flex flex-col md:flex-row-reverse items-center gap-16">
+			<!-- Image Right - Carrusel -->
+			<div class="flex-1 relative">
+				{#if section4Visible}
+					<div in:fly={{ x: 50, duration: 800, easing: quintOut }} class="relative">
+						<!-- Carrusel de imágenes -->
+						<div class="relative overflow-hidden rounded-2xl">
+							{#each carouselImages as image, index}
+								<img 
+									src={image.src}
+									alt={image.alt}
+									class="rounded-2xl shadow-2xl shadow-purple-500/20 border border-purple-500/20 transition-all duration-700 ease-in-out"
+									class:opacity-100={currentImageIndex === index}
+									class:opacity-0={currentImageIndex !== index}
+									class:absolute={currentImageIndex !== index}
+									class:inset-0={currentImageIndex !== index}
+								/>
+							{/each}
+						</div>
+						
+						<!-- Indicadores del carrusel -->
+						<div class="flex justify-center gap-2 mt-6">
+							{#each carouselImages as _, index}
+								<button
+									onclick={() => currentImageIndex = index}
+									class="w-2 h-2 rounded-full transition-all duration-300 {currentImageIndex === index ? 'bg-purple-400 w-8' : 'bg-purple-400/30'}"
+									aria-label={`Ir a imagen ${index + 1}`}
+								></button>
+							{/each}
+						</div>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Text Left -->
+			<div class="flex-1">
+				{#if section4Visible}
+					<div in:fly={{ x: -50, duration: 800, delay: 200, easing: quintOut }}>
+						<div class="inline-block px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-full mb-6">
+							<span class="text-purple-400 text-sm font-semibold">🎓 Asistente Virtual</span>
+						</div>
+						
+						<h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+							Tu profesor personal de IA
+						</h2>
+						
+						<p class="text-white/70 text-lg mb-6">
+							Un asistente inteligente que te guía en cada paso del camino, responde tus dudas 
+							y te motiva a seguir aprendiendo.
+						</p>
+
+						<ul class="space-y-4">
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Disponible 24/7 para resolver tus dudas</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Explicaciones adaptadas a tu estilo de aprendizaje</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+									<svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+									</svg>
+								</div>
+								<span class="text-white/80">Motivación y consejos personalizados</span>
+							</li>
+						</ul>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- CTA Final -->
+<section 
+	use:inView 
+	data-section="cta"
+	class="relative py-24 bg-gradient-to-b from-[#0a0118] to-[#16213e] overflow-hidden"
+>
+	<div class="container mx-auto px-6 text-center">
+		{#if ctaVisible}
+			<div in:fly={{ y: 30, duration: 800, easing: quintOut }}>
+				<h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+					¿Listo para ingresar al IPN?
+				</h2>
+				<p class="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
+					Únete a miles de estudiantes que ya están preparándose con nuestra plataforma impulsada por IA
+				</p>
+				<a
+					href="/cuenta/login"
+					class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 
+					rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 
+					transition-all duration-300 hover:scale-105"
+				>
+					<span>Comenzar gratis</span>
+					<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+					</svg>
+				</a>
+			</div>
+		{/if}
 	</div>
 </section>
 
@@ -340,236 +498,109 @@
 
 
 <style>
-	/* Estilos básicos */
-	.border-cyan {
-		border: #3a4c50 0.5px solid;
+	/* Animación de estrellas de fondo */
+	.stars {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-image: 
+			radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
+			radial-gradient(2px 2px at 60px 70px, rgba(255, 255, 255, 0.2), transparent),
+			radial-gradient(1px 1px at 50px 50px, rgba(255, 255, 255, 0.4), transparent),
+			radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
+			radial-gradient(2px 2px at 90px 10px, rgba(255, 255, 255, 0.2), transparent);
+		background-size: 200px 200px;
+		background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 150px 50px;
+		animation: twinkle 3s ease-in-out infinite;
 	}
 
-	.bg-blue-card {
-		background: #0b1a32a3;
-	}
-	
-	/* Efectos de texto */
-	.glow-text {
-		text-shadow: 0 0 10px rgba(239, 68, 68, 0.5), 0 0 15px rgba(239, 68, 68, 0.3);
-		animation: colorPulse 4s infinite alternate;
-	}
-	
-	.glow-text-subtle {
-		text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-	}
-	
-	/* Animaciones para las tarjetas */
-	.card-hover {
-		position: relative;
-		overflow: hidden;
-	}
-	
-	.card-hover::before {
-		content: '';
+	/* Orbes de gradiente flotantes */
+	.gradient-orb {
 		position: absolute;
-		top: -50%;
-		left: -50%;
-		width: 200%;
-		height: 200%;
-		background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-		opacity: 0;
-		transform: scale(0.5);
-		transform-origin: center;
-		transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+		border-radius: 50%;
+		filter: blur(80px);
+		opacity: 0.3;
+		animation: float 20s ease-in-out infinite;
 		pointer-events: none;
-		z-index: 0;
 	}
-	
-	.card-hover:hover::before {
-		opacity: 1;
-		transform: scale(1);
+
+	.orb-1 {
+		width: 500px;
+		height: 500px;
+		background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%);
+		top: -10%;
+		left: -10%;
+		animation-delay: 0s;
 	}
-	
-	.number-icon {
-		transition: all 0.3s ease;
+
+	.orb-2 {
+		width: 400px;
+		height: 400px;
+		background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+		bottom: -10%;
+		right: -10%;
+		animation-delay: 5s;
 	}
-	
-	.card-hover:hover .number-icon {
-		transform: scale(1.1) rotate(5deg);
-		box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+
+	.orb-3 {
+		width: 350px;
+		height: 350px;
+		background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+		top: 20%;
+		right: 10%;
+		animation-delay: 3s;
 	}
-	
-	/* Animación del botón y flecha */
-	.button-arrow {
-		position: relative;
-		transition: all 0.3s ease;
+
+	.orb-4 {
+		width: 450px;
+		height: 450px;
+		background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+		bottom: 30%;
+		left: 5%;
+		animation-delay: 7s;
 	}
-	
-	.button-arrow .arrow {
-		display: inline-block;
-		transition: transform 0.3s ease;
-	}
-	
-	.button-arrow:hover .arrow {
-		transform: translateX(6px);
-	}
-	
-	/* Animación para el icono del robot */
-	.robot-icon {
-		transition: all 0.3s ease;
-	}
-	
-	button:hover .robot-icon {
-		transform: scale(1.2);
-		animation: robotWiggle 1s infinite;
-	}
-	
-	/* Animación para el botón principal */
-	.shadow-glow {
-		box-shadow: 0 0 15px rgba(153, 27, 27, 0.4);
-	}
-	
-	.pulse-animation {
-		animation: pulse 2s infinite;
-	}
-	
-	/* Animación para la imagen flotante */
-	.hover-float {
+
+	/* Animación flotante suave */
+	.floating {
 		animation: floating 6s ease-in-out infinite;
 	}
-	
-	/* Elementos decorativos flotantes */
-	.floating-element {
-		position: absolute;
-		background: radial-gradient(circle, rgba(153, 27, 27, 0.2) 0%, rgba(153, 27, 27, 0) 70%);
-		border-radius: 50%;
-		pointer-events: none;
+
+	/* Animaciones */
+	@keyframes twinkle {
+		0%, 100% { opacity: 0.3; }
+		50% { opacity: 0.6; }
 	}
-	
-	.floating-1 {
-		width: 300px;
-		height: 300px;
-		top: 10%;
-		left: 5%;
-		animation: floating 15s ease-in-out infinite, glow 6s infinite alternate;
-	}
-	
-	.floating-2 {
-		width: 200px;
-		height: 200px;
-		bottom: 20%;
-		right: 10%;
-		animation: floating 12s ease-in-out 1s infinite, glow 8s infinite 1s alternate;
-	}
-	
-	.floating-3 {
-		width: 150px;
-		height: 150px;
-		top: 50%;
-		right: 25%;
-		animation: floating 10s ease-in-out 2s infinite, glow 5s infinite 2s alternate;
-	}
-	
-	/* Partículas de fondo */
-	.particles-container {
-		background-image: 
-			radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-			radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-		background-size: 30px 30px, 15px 15px;
-		animation: particleMove 60s linear infinite;
-	}
-	
-	/* CTA Button */
-	.cta-button {
-		position: relative;
-		overflow: hidden;
-	}
-	
-	.cta-button::after {
-		content: '';
-		position: absolute;
-		top: -50%;
-		left: -50%;
-		width: 200%;
-		height: 200%;
-		background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-		transition: all 0.6s ease-in-out;
-		transform: rotate(45deg) translateY(-100%);
-	}
-	
-	.cta-button:hover::after {
-		transform: rotate(45deg) translateY(100%);
-	}
-	
-	/* Animación para la sección Cómo funciona */
-	.section-how {
-		position: relative;
-		overflow: hidden;
-	}
-	
-	@keyframes progressFill {
-		0% { stroke-dashoffset: 377; }
-		100% { stroke-dashoffset: 94; }
-	}
-	
-	/* Definiciones de animaciones */
-	@keyframes colorPulse {
-		0% { 
-			color: #450a0a; 
-			text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+
+	@keyframes float {
+		0%, 100% {
+			transform: translate(0, 0) scale(1);
 		}
-		50% { 
-			color: #7f1d1d; 
-			text-shadow: 0 0 15px rgba(239, 68, 68, 0.5), 0 0 25px rgba(239, 68, 68, 0.3);
+		33% {
+			transform: translate(30px, -30px) scale(1.1);
 		}
-		100% { 
-			color: #450a0a; 
-			text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+		66% {
+			transform: translate(-20px, 20px) scale(0.9);
 		}
 	}
-	
-	@keyframes robotWiggle {
-		0%, 100% { transform: rotate(0deg); }
-		25% { transform: rotate(-5deg); }
-		75% { transform: rotate(5deg); }
-	}
-	
-	@keyframes pulse {
-		0% { box-shadow: 0 0 0 0 rgba(153, 27, 27, 0.7); }
-		70% { box-shadow: 0 0 0 10px rgba(153, 27, 27, 0); }
-		100% { box-shadow: 0 0 0 0 rgba(153, 27, 27, 0); }
-	}
-	
+
 	@keyframes floating {
-		0% { transform: translateY(0) rotate(0deg); }
-		50% { transform: translateY(-15px) rotate(2deg); }
-		100% { transform: translateY(0) rotate(0deg); }
-	}
-	
-	@keyframes glow {
-		0% { opacity: 0.4; }
-		100% { opacity: 0.8; }
-	}
-	
-	@keyframes particleMove {
-		0% { background-position: 0 0, 0 0; }
-		100% { background-position: 1000px 1000px, 500px 500px; }
-	}
-	
-	/* Media queries */	@media (max-width: 430px) {
-		section {
-			
-			gap: 1px;
+		0%, 100% {
+			transform: translateY(0px);
 		}
-		
-		.floating-element {
-			opacity: 0.5;
-			scale: 0.7;
+		50% {
+			transform: translateY(-20px);
 		}
 	}
-	
-	.content_guiaIPN {
-		margin-top: -100;
-		margin-bottom: 50px;
-	}
-	@keyframes progressFill {
-		0% { stroke-dashoffset: 377; }
-		100% { stroke-dashoffset: 94; }
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.gradient-orb {
+			filter: blur(60px);
+		}
+
+		.orb-1, .orb-2, .orb-3, .orb-4 {
+			width: 300px;
+			height: 300px;
+		}
 	}
 </style>
