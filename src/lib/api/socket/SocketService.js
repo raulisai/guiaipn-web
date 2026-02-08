@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 import { browser } from '$app/environment';
 
 // URL del servidor Socket.IO (desde variables de entorno)
-const SOCKET_URL = import.meta.env.PUBLIC_SOCKET_URL || 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.PUBLIC_SOCKET_URL || 'http://192.168.1.65:5000/';
 
 // Configuración de reconexión
 const RECONNECTION_CONFIG = {
@@ -345,7 +345,7 @@ class SocketService {
 		}
 
 		console.log('📤 Enviando pregunta:', question);
-		
+
 		const payload = {
 			token: this.token,
 			question,
@@ -567,7 +567,7 @@ class SocketService {
 	 */
 	onWaitingPhrase(callback) {
 		this.externalListeners.set('waiting_phrase', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log('⏳ Frase de espera:', data.message);
@@ -584,7 +584,7 @@ class SocketService {
 	 */
 	onExplanationStart(callback) {
 		this.externalListeners.set('explanation_start', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log('🎬 Explicación iniciada:', data);
@@ -601,7 +601,7 @@ class SocketService {
 	 */
 	onStepStart(callback) {
 		this.externalListeners.set('step_start', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log(`📝 Paso ${data.step_number} iniciado:`, data.title);
@@ -618,7 +618,7 @@ class SocketService {
 	 */
 	onContentChunk(callback) {
 		this.externalListeners.set('content_chunk', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				callback(data);
@@ -634,7 +634,7 @@ class SocketService {
 	 */
 	onCanvasCommand(callback) {
 		this.externalListeners.set('canvas_command', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log('🎨 Comando de canvas:', data.command);
@@ -651,7 +651,7 @@ class SocketService {
 	 */
 	onComponentCommand(callback) {
 		this.externalListeners.set('component_command', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log('🧩 Comando de componente:', data.command);
@@ -668,7 +668,7 @@ class SocketService {
 	 */
 	onStepComplete(callback) {
 		this.externalListeners.set('step_complete', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log(`✅ Paso ${data.step_number} completado`);
@@ -685,7 +685,7 @@ class SocketService {
 	 */
 	onExplanationComplete(callback) {
 		this.externalListeners.set('explanation_complete', callback);
-		
+
 		if (this.socket) {
 			const listener = (data) => {
 				console.log('🎉 Explicación completada:', data);
@@ -719,7 +719,7 @@ class SocketService {
 	 */
 	onError(callback) {
 		this.externalListeners.set('error', callback);
-		
+
 		if (this.socket) {
 			const listener = (error) => {
 				console.error('🚫 Error del servidor:', error);

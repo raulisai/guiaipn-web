@@ -64,10 +64,10 @@
 
 	const explanationFinished = $derived(
 		hasStarted &&
-		$explanationStore.buffer.isComplete &&
-		!$explanationStore.isExplaining &&
-		!$explanationStore.render.isRendering &&
-		renderProgress >= 99
+			$explanationStore.buffer.isComplete &&
+			!$explanationStore.isExplaining &&
+			!$explanationStore.render.isRendering &&
+			renderProgress >= 99
 	);
 
 	$effect(() => {
@@ -186,38 +186,72 @@
 		<!-- Pregunta original compacta -->
 		{#if questionData}
 			<!-- Header compacto con indicador de progreso -->
-			<div class="flex-shrink-0">
-				<div class="flex flex-col items-center justify-center">
-					<div class="">
-						<h1 class="text-2xl font-bold text-indigo-400">Question</h1>
-					</div>
-					<div class="flex items-center gap-3 -mt-10">
+			<div class="flex-shrink-0 w-full max-w-4xl mx-auto">
+				<div class="flex flex-col items-center justify-center gap-6 py-2">
+					<!-- Título y Botón Volver -->
+					<div class="w-full flex items-center justify-between relative">
 						<button
 							onclick={handleGoBack}
-							class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm"
+							class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm backdrop-blur-sm shadow-sm"
 						>
 							← Volver
 						</button>
+
+						<h1
+							class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 absolute left-1/2 -translate-x-1/2"
+						>
+							Question
+						</h1>
+
+						<div class="w-[88px]"></div>
+						<!-- Spacer to balance header -->
+					</div>
+
+					<!-- Pregunta Principal -->
+					<div class="w-full flex justify-center px-4">
 						{#if questionData.lengMathPregunta}
-							<MathComponent content={questionData.pregunta} isBlock={false} />
+							<div
+								class="bg-slate-900/50 px-6 py-4 rounded-xl border border-slate-700/50 backdrop-blur-sm max-w-full overflow-x-auto shadow-inner"
+							>
+								<MathComponent content={questionData.pregunta} isBlock={false} />
+							</div>
 						{:else}
-							<p class="text-yellow-300 text-2xl italic">{questionData.pregunta}</p>
+							<p
+								class="text-yellow-300 text-xl md:text-2xl italic text-center leading-relaxed drop-shadow-sm max-w-3xl"
+							>
+								{questionData.pregunta}
+							</p>
 						{/if}
 					</div>
+
+					<!-- Indicador de Progreso de Renderizado -->
 					{#if $explanationStore.render.isRendering && renderProgress < 100}
 						<div class="progress-indicator">
 							<div class="progress-bar" style="width: {renderProgress}%"></div>
 							<span class="progress-text">{renderProgress}%</span>
 						</div>
 					{/if}
-					<div class="flex gap-3 text-xs max-w-[600px] -mt-5">
-						<div class="flex-1 px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-lg">
-							<span class="text-red-400 font-medium">Tu:</span>
-							<span class="text-gray-300 ml-1">{questionData.respuestaUsuario}</span>
+
+					<!-- Respuestas Usuario vs Correcta -->
+					<div class="grid grid-cols-2 gap-4 w-full max-w-[600px]">
+						<div
+							class="flex flex-col items-center p-3 bg-red-500/10 border border-red-500/20 rounded-xl backdrop-blur-sm transition-all hover:bg-red-500/15"
+						>
+							<span class="text-xs uppercase tracking-wider text-red-400 font-semibold mb-1"
+								>Tu Respuesta</span
+							>
+							<span class="text-gray-200 font-medium text-center"
+								>{questionData.respuestaUsuario}</span
+							>
 						</div>
-						<div class="flex-1 px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-							<span class="text-green-400 font-medium">Correcta:</span>
-							<span class="text-gray-300 ml-1 text-xs sm:text-sm truncate"
+						<div
+							class="flex flex-col items-center p-3 bg-green-500/10 border border-green-500/20 rounded-xl backdrop-blur-sm transition-all hover:bg-green-500/15"
+						>
+							<span class="text-xs uppercase tracking-wider text-green-400 font-semibold mb-1"
+								>Correcta</span
+							>
+							<span
+								class="text-gray-200 font-medium text-center text-sm sm:text-base truncate max-w-full"
 								>{questionData.respuestaCorrecta}</span
 							>
 						</div>
@@ -236,13 +270,13 @@
 				onGoBack={handleGoBack}
 			/>
 		{:else if $explanationStore.isLoading || (!$explanationStore.buffer.isComplete && !hasStarted)}
-    <!-- Mostrar loading mientras se carga el buffer completo -->
-    <LoadingState
-        bufferSteps={$explanationStore.buffer.steps.length}
-        totalSteps={$explanationStore.totalSteps}
-        isBuffering={$explanationStore.buffer.steps.length > 0}
-    />
-{:else if $explanationStore.buffer.isComplete && !hasStarted}
+			<!-- Mostrar loading mientras se carga el buffer completo -->
+			<LoadingState
+				bufferSteps={$explanationStore.buffer.steps.length}
+				totalSteps={$explanationStore.totalSteps}
+				isBuffering={$explanationStore.buffer.steps.length > 0}
+			/>
+		{:else if $explanationStore.buffer.isComplete && !hasStarted}
 			<!-- Botón de PLAY para iniciar (solo cuando el buffer está completo) -->
 			<div class="flex-1 flex items-center justify-center">
 				<button onclick={handlePlay} class="play-button">
@@ -264,11 +298,16 @@
 				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
 					<!-- Pizarrón (expande cuando explicación está colapsada) -->
 					<div
-						class="flex flex-col min-h-0 transition-all duration-300"
+						class="flex flex-col min-h-0 transition-all duration-500 ease-in-out relative z-10"
 						class:flex-1={isExplanationCollapsed}
 						class:lg:flex-[3]={!isExplanationCollapsed}
+						class:protagonist={isExplanationCollapsed}
 					>
-						<div class="flex-1 overflow-auto">
+						<div
+							class="flex-1 overflow-auto rounded-xl transition-all duration-500"
+							class:shadow-2xl={isExplanationCollapsed}
+							class:shadow-indigo-500_10={isExplanationCollapsed}
+						>
 							<Pizarron
 								commands={currentCanvasCommands}
 								currentStep={$explanationStore.currentStep}
@@ -279,9 +318,7 @@
 
 					<!-- Componentes dinámicos -->
 					{#if currentPanelComponentCommands.length > 0}
-						<div
-							class="panel-component-stream h-full"
-						>
+						<div class="panel-component-stream h-full">
 							{#each currentPanelComponentCommands as componentCommand, idx (idx)}
 								<ComponentCommandRenderer
 									command={componentCommand}
@@ -696,5 +733,13 @@
 			width: 1rem;
 			height: 1rem;
 		}
+	}
+
+	.protagonist {
+		z-index: 20;
+	}
+
+	.shadow-indigo-500_10 {
+		box-shadow: 0 0 50px rgba(99, 102, 241, 0.15);
 	}
 </style>
