@@ -241,7 +241,7 @@
 								>Tu Respuesta</span
 							>
 							<span class="text-gray-200 font-medium text-center"
-								>{questionData.respuestaUsuario}</span
+								><MathComponent content={questionData.respuestaUsuario} isBlock={false} /></span
 							>
 						</div>
 						<div
@@ -252,7 +252,8 @@
 							>
 							<span
 								class="text-gray-200 font-medium text-center text-sm sm:text-base truncate max-w-full"
-								>{questionData.respuestaCorrecta}</span
+							>
+								<MathComponent content={questionData.respuestaCorrecta} isBlock={false} /></span
 							>
 						</div>
 					</div>
