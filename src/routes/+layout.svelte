@@ -1,256 +1,261 @@
 <script>
-    // Esto se ejecuta en el lado del cliente (browser)
-    import '../app.css';
-    import { supabase } from '$lib/services';
-    import { onMount } from 'svelte';
-    import { user, logout } from '$lib/stores/authStore';
-    import { page } from '$app/stores';;
-    import { goto, invalidate } from '$app/navigation';
+	// Esto se ejecuta en el lado del cliente (browser)
+	import '../app.css';
+	import { supabase } from '$lib/services';
+	import { onMount } from 'svelte';
+	import { user, logout } from '$lib/stores/authStore';
+	import { page } from '$app/stores';
+	import { goto, invalidate } from '$app/navigation';
 
-   
+	let menuBtn;
+	let activo = $state(false);
+	let scrolled = $state(false);
+	let isHovered = $state(false);
+	let isCheckingAuth = $state(true);
+	let { children } = $props();
 
-    let menuBtn;
-    let activo = $state(false);
-    let scrolled = $state(false);
-    let isHovered = $state(false);
-    let isCheckingAuth = $state(true);
-    let { children } = $props();
-    
-    // Rutas protegidas que requieren autenticación
-    const protectedRoutes = ['/home', '/materias', '/classRoom'];
-    
-    // Rutas públicas que no deben redirigir (testing, auth, etc.)
-    const publicRoutes = ['/test-socket', '/cuenta', '/auth', '/examen'];
-    
-    // Verificar si la ruta actual requiere autenticación
-    let isProtectedRoute = $derived(
-        protectedRoutes.some(route => $page.url.pathname.startsWith(route)) &&
-        !publicRoutes.some(route => $page.url.pathname.startsWith(route))
-    );
-    
-    $effect(() => {
-        if (isProtectedRoute && !$user && !isCheckingAuth) {
-            // Redirigir al login si intenta acceder a una ruta protegida sin estar autenticado
-            goto('/cuenta/login');
-        }
-    });
+	// Rutas protegidas que requieren autenticación
+	const protectedRoutes = ['/home', '/materias', '/classRoom'];
 
-    function toogleMenu() {
-        activo = !activo;
-    }
+	// Rutas públicas que no deben redirigir (testing, auth, etc.)
+	const publicRoutes = ['/test-socket', '/cuenta', '/auth', '/examen'];
 
-    function handleMouseEnter() {
-        isHovered = true;
-    }
+	// Verificar si la ruta actual requiere autenticación
+	let isProtectedRoute = $derived(
+		protectedRoutes.some((route) => $page.url.pathname.startsWith(route)) &&
+			!publicRoutes.some((route) => $page.url.pathname.startsWith(route))
+	);
 
-    function handleMouseLeave() {
-        isHovered = false;
-    }
-    
-    function handleLogout() {
-        logout();
-        goto('/');
-        activo = false;
-    }
+	$effect(() => {
+		if (isProtectedRoute && !$user && !isCheckingAuth) {
+			// Redirigir al login si intenta acceder a una ruta protegida sin estar autenticado
+			goto('/cuenta/login');
+		}
+	});
 
-    onMount(() => {
-        // Marcar que ya terminó de verificar autenticación inicial
-        isCheckingAuth = false;
-        
-        // Handle click outside menu
-        function handleClickOutside(event) {
-            if (menuBtn && !menuBtn.contains(event.target)) {
-                activo = false;
-            }
-        }
+	function toogleMenu() {
+		activo = !activo;
+	}
 
-        // Handle scroll to shrink nav
-        function handleScroll() {
-            scrolled = window.scrollY > 30;
-        }
+	function handleMouseEnter() {
+		isHovered = true;
+	}
 
-        document.addEventListener('click', handleClickOutside);
-        window.addEventListener('scroll', handleScroll);
+	function handleMouseLeave() {
+		isHovered = false;
+	}
 
-        // Escuchar cambios en la autenticación de Supabase
-        const {
-            data: { subscription }
-        } = supabase.auth.onAuthStateChange(() => {
-            // Cuando el estado de autenticación cambia, invalidamos los datos de layout
-            // para que SvelteKit actualice las rutas según sea necesario
-            invalidate('supabase:auth');
-        });
+	function handleLogout() {
+		logout();
+		goto('/');
+		activo = false;
+	}
 
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-            window.removeEventListener('scroll', handleScroll);
-            subscription.unsubscribe();
-        };
-    });
+	onMount(() => {
+		// Marcar que ya terminó de verificar autenticación inicial
+		isCheckingAuth = false;
+
+		// Handle click outside menu
+		function handleClickOutside(event) {
+			if (menuBtn && !menuBtn.contains(event.target)) {
+				activo = false;
+			}
+		}
+
+		// Handle scroll to shrink nav
+		function handleScroll() {
+			scrolled = window.scrollY > 30;
+		}
+
+		document.addEventListener('click', handleClickOutside);
+		window.addEventListener('scroll', handleScroll);
+
+		// Escuchar cambios en la autenticación de Supabase
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange(() => {
+			// Cuando el estado de autenticación cambia, invalidamos los datos de layout
+			// para que SvelteKit actualice las rutas según sea necesario
+			invalidate('supabase:auth');
+		});
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+			window.removeEventListener('scroll', handleScroll);
+			subscription.unsubscribe();
+		};
+	});
 </script>
 
 <!-- Menú flotante mejorado con efecto de scroll y hover -->
 <!-- svelte-ignore a11y_no_redundant_roles -->
 <nav
-    role="banner"
-    class={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out
+	role="banner"
+	class={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out
                 ${scrolled ? 'py-2 bg-black/80 shadow-lg' : 'py-4 bg-transparent'}`}
-    onmouseenter={handleMouseEnter}
-    onmouseleave={handleMouseLeave}
+	onmouseenter={handleMouseEnter}
+	onmouseleave={handleMouseLeave}
 >
-    <div class="container mx-auto flex justify-between items-center px-4">
-        <a href={!$user ? '/' : '/home'} class="flex items-center">
-            <img
-                src="/logoipnburrito.png"
-                alt="Logo de un burro que representa la guia del IPN"
-                class={`transition-all duration-300 ease-in-out
+	<div class="container mx-auto flex justify-between items-center px-4">
+		<a href={!$user ? '/' : '/home'} class="flex items-center">
+			<img
+				src="/logoipnburrito.png"
+				alt="Logo de un burro que representa la guia del IPN"
+				class={`transition-all duration-300 ease-in-out
                             ${scrolled && !isHovered ? 'w-[90px]' : 'w-[110px]'}
                             ${isHovered ? 'scale-115' : 'scale-90'}`}
-                loading="lazy"
-                width="150"
-                height="40"
-            />
-        </a>
+				loading="lazy"
+				width="150"
+				height="40"
+			/>
+		</a>
 
-        <div class="relative">
-            <button
-                id="menuBtn"
-                bind:this={menuBtn}
-                onclick={toogleMenu}
-                aria-labelledby="menuBtn"
-                aria-haspopup="true"
-                class={`rounded-full backdrop-blur-md transition-all duration-300 text-white border border-white/10 
+		<div class="relative">
+			<button
+				id="menuBtn"
+				bind:this={menuBtn}
+				onclick={toogleMenu}
+				aria-labelledby="menuBtn"
+				aria-haspopup="true"
+				class={`rounded-full backdrop-blur-md transition-all duration-300 text-white border border-white/10 
                            flex items-center justify-center group relative overflow-hidden 
                            ${scrolled && !isHovered ? 'w-8 h-8 p-2' : 'w-10 h-10 p-2.5'} 
                            ${isHovered ? 'bg-white/20 shadow-lg shadow-white/20' : 'bg-white/10 shadow-md'}`}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    class={`transform transition-all duration-300 ${isHovered ? 'scale-110' : 'scale-100'}`}
-                >
-                    <line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round"></line>
-                    <line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round"></line>
-                    <line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round"></line>
-                </svg>
-                <div
-                    class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					class={`transform transition-all duration-300 ${isHovered ? 'scale-110' : 'scale-100'}`}
+				>
+					<line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round"></line>
+					<line x1="4" y1="16" x2="20" y2="16" stroke-width="2" stroke-linecap="round"></line>
+					<line x1="9" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round"></line>
+				</svg>
+				<div
+					class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/10
                                 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                ></div>
-            </button>			
-            <div
-                class={`absolute right-0 mt-2 w-64 backdrop-blur-md border border-white/10
+				></div>
+			</button>
+			<div
+				class={`absolute right-0 mt-2 w-64 backdrop-blur-md border border-white/10
                             rounded-lg shadow-lg py-2 transition-all duration-300
                             ${scrolled ? 'bg-black/50' : 'bg-white/20'}
                             ${activo ? 'menu-visible' : 'menu-hidden'}`}
-            >
-                {#if $user}
-                    <div class="px-4 py-3 border-b border-white/10">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-800 to-red-950 flex items-center justify-center text-white font-bold">
-                                {$user.name?.charAt(0).toUpperCase() || 'U'}
-                            </div>
-                            <div>
-                                <p class="text-white font-medium">{$user.name}</p>
-                                <p class="text-white/60 text-sm">{$user.email}</p>
-                            </div>
-                        </div>
-                    </div>
-                {/if}
-                
-                
-                
-                <!-- Mostrar enlaces protegidos solo si está autenticado -->
-                {#if $user}
-                <a href="/home" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Home
-                    </a>    
-                <a href="/materias" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Examen por Materias
-                    </a>
-                    
-                {:else}
-                <a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">Inicio</a>
-                <a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                    Exámen test
-                </a>
-                {/if}
-                
-                
-                
-                {#if $user}
-                    <a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Cuenta
-                    </a>
-                    <button 
-                        onclick={handleLogout}
-                        class="w-full text-left px-4 py-2 text-red-400 hover:bg-white/10 transition-colors"
-                    >
-                        Cerrar Sesión
-                    </button>
-                {:else}
-                    <a href="/cuenta/login" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
-                        Iniciar Sesión
-                    </a>
-                {/if}
-            </div>
-        </div>
-    </div>
+			>
+				{#if $user}
+					<div class="px-4 py-3 border-b border-white/10">
+						<div class="flex items-center gap-3">
+							<div
+								class="w-10 h-10 rounded-full bg-gradient-to-r from-red-800 to-red-950 flex items-center justify-center text-white font-bold"
+							>
+								{$user.name?.charAt(0).toUpperCase() || 'U'}
+							</div>
+							<div>
+								<p class="text-white font-medium">{$user.name}</p>
+								<p class="text-white/60 text-sm">{$user.email}</p>
+							</div>
+						</div>
+					</div>
+				{/if}
+
+				<!-- Mostrar enlaces protegidos solo si está autenticado -->
+				{#if $user}
+					<a href="/home" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Home
+					</a>
+					<a
+						href="/materias"
+						class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
+					>
+						Examen por Materias
+					</a>
+				{:else}
+					<a href="/" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
+						>Inicio</a
+					>
+					<a href="/examen" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Exámen test
+					</a>
+				{/if}
+
+				{#if $user}
+					<a href="/cuenta" class="block px-4 py-2 text-white hover:bg-white/10 transition-colors">
+						Cuenta
+					</a>
+					<button
+						onclick={handleLogout}
+						class="w-full text-left px-4 py-2 text-red-400 hover:bg-white/10 transition-colors"
+					>
+						Cerrar Sesión
+					</button>
+				{:else}
+					<a
+						href="/cuenta/login"
+						class="block px-4 py-2 text-white hover:bg-white/10 transition-colors"
+					>
+						Iniciar Sesión
+					</a>
+				{/if}
+			</div>
+		</div>
+	</div>
 </nav>
 
 <!-- Mejorar legibilidad en móviles -->
-<main class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#030e27]/90 to-black/90">
-    {#if isProtectedRoute && isCheckingAuth}
-        <!-- Loading state para rutas protegidas -->
-        <div class="flex justify-center items-center min-h-screen">
-            <div class="text-center text-white">
-                <div class="inline-block w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-lg">Verificando acceso...</p>
-            </div>
-        </div>
-    {:else}
-        {@render children()}
-    {/if}
+<main
+	class="prose prose-invert max-w-none md:prose-lg bg-gradient-to-b from-[#171717] to-[#171717]"
+>
+	{#if isProtectedRoute && isCheckingAuth}
+		<!-- Loading state para rutas protegidas -->
+		<div class="flex justify-center items-center min-h-screen">
+			<div class="text-center text-white">
+				<div
+					class="inline-block w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"
+				></div>
+				<p class="text-lg">Verificando acceso...</p>
+			</div>
+		</div>
+	{:else}
+		{@render children()}
+	{/if}
 </main>
 
-
-
 <style>
-    .menu-hidden {
-        display: none;
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    .menu-visible {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
-    @media (max-width: 768px) {
-        .menu-hidden {
-            display: none;
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        .menu-visible {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Estilos para contenido de usuario en nav */
-    .user-avatar {
-        background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
-        transition: all 0.3s ease;
-    }
-    
-    .user-avatar:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 15px rgba(255, 100, 100, 0.2);
-    }
+	.menu-hidden {
+		display: none;
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	.menu-visible {
+		display: block;
+		opacity: 1;
+		transform: translateY(0);
+	}
+	@media (max-width: 768px) {
+		.menu-hidden {
+			display: none;
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		.menu-visible {
+			display: block;
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Estilos para contenido de usuario en nav */
+	.user-avatar {
+		background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+		transition: all 0.3s ease;
+	}
+
+	.user-avatar:hover {
+		transform: scale(1.05);
+		box-shadow: 0 0 15px rgba(255, 100, 100, 0.2);
+	}
 </style>

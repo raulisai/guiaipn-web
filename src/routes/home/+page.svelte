@@ -83,7 +83,7 @@
 </script>
 
 <section
-	class="min-h-[100dvh] w-full flex flex-col items-center justify-center py-6 md:py-12 px-4 relative bg-[#030e27] overflow-hidden"
+	class="min-h-[100dvh] w-full flex flex-col items-center justify-center py-6 md:py-12 px-4 relative bg-[#171717] overflow-hidden"
 >
 	<!-- Background Effects -->
 	<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
