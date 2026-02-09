@@ -329,7 +329,7 @@
 								>Tu Respuesta</span
 							>
 							<span class="text-gray-200 font-bold text-center text-sm"
-								>{questionData.respuestaUsuario}</span
+								><MathComponent content={questionData.respuestaUsuario} isBlock={false} /></span
 							>
 						</div>
 						<div
@@ -339,7 +339,7 @@
 								>Correcta</span
 							>
 							<span class="text-gray-200 font-bold text-center text-sm truncate max-w-full"
-								>{questionData.respuestaCorrecta}</span
+								><MathComponent content={questionData.respuestaCorrecta} isBlock={false} /></span
 							>
 						</div>
 					</div>
