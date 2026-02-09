@@ -41,14 +41,14 @@ export async function handle({ event, resolve }) {
     event.locals.session = session;
 
     // Verificar rutas protegidas
-    const protectedPaths = ['/materias', '/progreso', '/cuenta'];
-    const isProtectedPath = protectedPaths.some(path => 
+    const protectedPaths = ['/home', '/materias', '/progreso', '/cuenta', '/classRoom'];
+    const isProtectedPath = protectedPaths.some(path =>
         event.url.pathname === path || event.url.pathname.startsWith(`${path}/`)
     );
-    
+
     // Login path should always be accessible
     const isLoginPath = event.url.pathname === '/cuenta/login';
-    
+
     if (isProtectedPath && !isLoginPath) {
         // Verificar si el usuario está autenticado
         if (!session) {
@@ -58,7 +58,7 @@ export async function handle({ event, resolve }) {
             //throw redirect(303, '/cuenta/login');
         }
     }
-    
+
     // Resolver la request
     const response = await resolve(event, {
         transformPageChunk: ({ html }) => html
@@ -73,7 +73,7 @@ export async function handle({ event, resolve }) {
 export function handleError({ error, event }) {
     const errorId = crypto.randomUUID();
     console.error(`Error ID ${errorId}:`, error);
-    
+
     // IMPORTANT: Return a plain serializable object to be used on the error page
     // SvelteKit expects a POJO here; returning an Error instance causes DevalueError
     return {

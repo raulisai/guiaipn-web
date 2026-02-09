@@ -19,6 +19,7 @@ type Reactivo = {
 type AnswerData = {
   isCorrect: boolean;
   reactivoId: string;
+  userAnswer: string;
 };
 
 // Definición del tipo para pregunta de la API
@@ -87,7 +88,7 @@ const createExamStore = () => {
 
   return {
     subscribe,
-    
+
     // Incrementar pregunta actual
     nextQuestion: () => update(state => ({
       ...state,
@@ -106,32 +107,33 @@ const createExamStore = () => {
       apiQuestions: [],
       questionsLoaded: false
     })),
-    
+
     // Actualizar reactivo completo
     setReactivo: (reactivo: Reactivo) => update(state => ({
       ...state,
       reactivo
     })),
-    
+
     // Marcar examen como finalizado
     finishExam: () => update(state => ({
       ...state,
       finish: true
     })),
-      // Guardar respuesta
-    saveAnswer: (questionNumber: number, isCorrect: boolean) => update(state => {
+    // Guardar respuesta
+    saveAnswer: (questionNumber: number, isCorrect: boolean, userAnswer: string = '') => update(state => {
       const newAnswers = { ...state.answers };
       const newAnswersDetailed = { ...state.answersDetailed };
-      
+
       // Mantener compatibilidad con el formato anterior
       newAnswers[questionNumber] = isCorrect ? 'true' : 'false';
-      
+
       // Nuevo formato con datos detallados
       newAnswersDetailed[questionNumber] = {
         isCorrect: isCorrect,
-        reactivoId: state.reactivo.id
+        reactivoId: state.reactivo.id,
+        userAnswer: userAnswer
       };
-      
+
       // Guardar el ID del reactivo en localStorage para poder acceder desde el modal
       if (typeof window !== 'undefined') {
         try {
@@ -140,32 +142,32 @@ const createExamStore = () => {
           console.warn('Unable to access localStorage:', e);
         }
       }
-      
+
       return {
         ...state,
         answers: newAnswers,
         answersDetailed: newAnswersDetailed
       };
     }),
-    
+
     // Actualizar materia
     updateMateria: (materia: string) => update(state => ({
       ...state,
       materiaQuestion: materia
     })),
-    
+
     // Toggle mostrar imagen opcional
     toggleOptionalImage: () => update(state => ({
       ...state,
       showOptionalImage: !state.showOptionalImage
     })),
-    
+
     // Toggle mostrar solución
     toggleSolution: () => update(state => ({
       ...state,
       showSolution: !state.showSolution
     })),
-    
+
     // Cargar preguntas desde la API
     loadAPIQuestions: (questions: APIQuestion[]) => update(state => ({
       ...state,
@@ -173,7 +175,7 @@ const createExamStore = () => {
       questionsLoaded: true,
       totalQuestions: questions.length
     })),
-    
+
     // Obtener pregunta por índice
     getQuestionByIndex: (index: number) => {
       let question: APIQuestion | null = null;
@@ -185,7 +187,7 @@ const createExamStore = () => {
       });
       return question;
     },
-    
+
     // Resetear el estado
     reset: () => set(initialState)
   };

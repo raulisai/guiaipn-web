@@ -1,32 +1,26 @@
 <script lang="ts">
 	/**
-	 * GenerationIAResponse - Question Explanation Page
+	 * GenerationIAResponse - Question Explanation Page (Blackboard Edition)
 	 *
 	 * This component provides a full-page explanation for an exam question.
-	 * It's structured with several modular components:
-	 * - QuestionSection: Displays the original question and answers
-	 * - ExplanationSection: Shows the explanation for the correct answer
-	 * - TipsSection: Provides helpful tips for solving similar problems
-	 * - StepsSection: Lists step-by-step solution process
-	 * - AdditionalSection: Shows formulas and example problems
-	 * - LoadingAnimation: Displays while fetching the explanation
-	 *
-	 * Data flows:
-	 * 1. Receives data via URL parameters or localStorage backup
-	 * 2. Fetches explanation from API
-	 * 3. Manages transitions when navigating to/from the page
+	 * It uses a "Blackboard" metaphor to present information clearly.
 	 */
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import ExplanationSection from './components/ExplanationSection.svelte';
 	import { fade, fly, scale, slide } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+
+	// Components
+	import ExplanationSection from './components/ExplanationSection.svelte';
 	import QuestionSection from './components/QuestionSection.svelte';
 	import LoadingAnimation from './components/LoadingAnimation.svelte';
-
 	import StepsSection from './components/StepsSection.svelte';
 	import AdditionalSection from './components/AdditionalSection.svelte';
+	import BlackboardContainer from './components/BlackboardContainer.svelte';
+
+	// Services
+	import { speechService } from '$lib/services/speechService';
 
 	// Get data from URL params or localStorage
 	let id = $state('');
@@ -40,17 +34,54 @@
 
 	let isLoading = $state(true);
 	let explication = $state(null);
-	let videoUrl = $state('https://www.youtube.com/embed/dQw4w9WgXcQ'); // Example video URL, replace with actual URL
+	let videoUrl = $state('https://www.youtube.com/embed/dQw4w9WgXcQ');
 
 	// Animation states
 	let showPage = $state(false);
 	let showVideo = $state(false);
 
+	// TTS State
+	let isSpeaking = $state(false);
+	let voicesLoaded = $state(false);
+
 	// Functions for showing/hiding the video
 	function toggleVideo() {
 		showVideo = !showVideo;
 	}
-	onMount(() => {
+
+	function speakText(text) {
+		if (!text) return;
+		speechService.stop(); // Stop any previous speech
+		speechService.speak(text, {
+			rate: 1.0,
+			pitch: 1.0,
+			onStart: () => (isSpeaking = true),
+			onEnd: () => (isSpeaking = false),
+			onError: () => (isSpeaking = false)
+		});
+		isSpeaking = true;
+	}
+
+	function toggleSpeech() {
+		if (isSpeaking) {
+			speechService.stop();
+			isSpeaking = false;
+		} else {
+			// Construct the text to read
+			let textToRead = 'Pregunta: ' + pregunta + '. ';
+
+			if (explication) {
+				textToRead += 'Explicación: ' + explication.explicacionRespuesta + '. ';
+				// Optionally add steps or tips
+			}
+			speakText(textToRead);
+		}
+	}
+
+	onMount(async () => {
+		// Initialize Voice
+		speechService.setEnabled(true);
+
 		// Function to handle initialization
 		async function initializeData() {
 			// Get data from URL query params
@@ -83,14 +114,15 @@
 				goto('/examen');
 				return;
 			}
-			
-			
-			// Set video URL based on topic - this would be replaced with real logic
-			// to determine appropriate videos based on the question content
-			if (pregunta.toLowerCase().includes('matemáticas') || pregunta.toLowerCase().includes('ecuación')) {
-				videoUrl = 'https://www.youtube.com/embed/JW9MoYxSm1w'; // Math example
+
+			// Video URL Logic
+			if (
+				pregunta.toLowerCase().includes('matemáticas') ||
+				pregunta.toLowerCase().includes('ecuación')
+			) {
+				videoUrl = 'https://www.youtube.com/embed/JW9MoYxSm1w';
 			} else if (pregunta.toLowerCase().includes('física')) {
-				videoUrl = 'https://www.youtube.com/embed/fJ0laC2FksA'; // Physics example
+				videoUrl = 'https://www.youtube.com/embed/fJ0laC2FksA';
 			}
 
 			// Show page with animation
@@ -101,17 +133,22 @@
 			try {
 				// Fetch explanation from API
 				explication = await enviarRespuesta(pregunta, respuestaCorrecta);
+
+				// Auto-start speech when explanation loads (optional, maybe better to let user trigger it)
+				// speakText("Aquí tienes la explicación para la pregunta.");
 			} catch (error) {
 				console.error('Error al obtener la explicación:', error);
 			} finally {
 				isLoading = false;
 			}
 		}
-		
-		// Call the initialization function
+
 		initializeData();
-		
-		
+	});
+
+	onDestroy(() => {
+		// CRITICAL: Stop speech when leaving the page
+		speechService.stop();
 	});
 
 	async function enviarRespuesta(question, respuesta) {
@@ -126,7 +163,7 @@
 					respuesta: respuesta,
 					isCorrect: iscorrect,
 					pregunta: question,
-					type: tipo,
+					type: tipo
 				})
 			});
 
@@ -141,183 +178,150 @@
 			console.error('There was a problem with the fetch operation:', error);
 		}
 	}
+
 	function goBack() {
+		speechService.stop(); // Ensure stop on back click
+
 		// Set flag to indicate we're returning from explanation page
 		localStorage.setItem('return_from_explanation', 'true');
 
 		// Simple fade-out animation for the whole page
-		const pageElement = document.querySelector('.animate-fadeIn') as HTMLElement;
+		const pageElement = document.querySelector('.blackboard-container') as HTMLElement;
 		if (pageElement) {
 			pageElement.style.opacity = '0';
-			pageElement.style.transform = 'translateY(15px)'; // Optional: slight upward movement
+			pageElement.style.transform = 'translateY(15px)';
 			pageElement.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
 
 			setTimeout(() => {
 				goto('/examen');
-			}, 300); // Match transition duration
+			}, 300);
 		} else {
-			goto('/examen'); // Fallback if element not found
+			goto('/examen');
 		}
 	}
 </script>
 
 {#if showPage}
-	<div class="text-gray-200 overflow-hidden">
-		<!-- Cyberpunk grid lines overlay -->
-		<div class="fixed inset-0 z-0 cyberpunk-grid pointer-events-none"></div>
-		
-		<!-- Glowing orbs for decoration (pointer-events-none to not interfere with user interaction) -->
-		<div class="fixed top-20 right-20 glow-orb blue-orb pointer-events-none"></div>
-		<div class="fixed bottom-40 left-20 glow-orb purple-orb pointer-events-none"></div>
-		
-		<!-- Main content container -->
-		<div
-			class="relative z-10 flex flex-col items-center justify-start min-h-screen p-4 sm:p-6 md:p-8 md:mt-16 mt-12"
-			in:fade={{ duration: 600, delay: 200 }}
-		>
-			<div class="w-full max-w-5xl space-y-6">
-				<!-- Cyberpunk container -->
-				<div class="relative">
-					<!-- Header with back button -->
-					<div class="flex justify-between items-center mt-20 mb-4">
-						<button
-							onclick={goBack}
-							class="cyber-btn bg-transparent text-cyan-400 hover:text-cyan-300 transition-all duration-300 text-xl h-12 w-12 flex items-center justify-center rounded-md border border-cyan-700/50 shadow-lg shadow-cyan-900/30 transform hover:scale-105 hover:shadow-cyan-500/30 hover:-translate-y-1 cyber-glow"
-							aria-label="Volver al examen"
-							in:fly={{ y: 20, duration: 400 }}
-						>
-							<span class="transform transition-transform">←</span>
-						</button>
-						
-						<button 
-							onclick={toggleVideo}
-							class="cyber-btn bg-transparent text-cyan-400 hover:text-cyan-300 transition-all duration-300 text-sm px-4 h-10 flex items-center justify-center rounded-md border border-cyan-700/50 shadow-lg shadow-cyan-900/30 transform hover:scale-105 hover:shadow-cyan-500/30"
-							in:fly={{ y: 20, duration: 400, delay: 100 }}
-						>
-							{showVideo ? 'Ocultar Video' : 'Ver Video Explicativo'}
-						</button>
-					</div>
+	<!-- Background Wrapper -->
+	<div
+		class="fixed inset-0 bg-gray-900 flex items-center justify-center p-2 sm:p-4 overflow-hidden"
+	>
+		<!-- Main Blackboard Container -->
+		<BlackboardContainer title="Análisis del Problema">
+			<!-- Toolbar (Back, Voice, Video) -->
+			<div class="flex flex-wrap items-center justify-between gap-2 mb-4 w-full">
+				<button
+					onclick={goBack}
+					class="flex items-center gap-2 px-4 py-2 bg-gray-700/50 hover:bg-gray-600/50 text-gray-200 rounded-lg transition-all border border-gray-600 hover:border-gray-400 group"
+				>
+					<span class="transform group-hover:-translate-x-1 transition-transform">←</span>
+					<span>Volver</span>
+				</button>
 
-					<!-- Question and answers container -->
-					<div class="mb-8" in:fly={{ y: 30, duration: 500, delay: 300 }}>
-						<QuestionSection {pregunta} {respuestaUsuario} {respuestaCorrecta} lengMath={lengMathPregunta} lengMathOpciones={lengMathOpciones} />
-					</div>
-				</div>
-
-				<!-- Video section (conditionally shown) -->
-				{#if showVideo}
-					<div 
-						class="cyber-panel w-full aspect-video mb-6"
-						transition:slide={{ duration: 400, easing: cubicOut }}
+				<div class="flex gap-2">
+					<button
+						onclick={toggleSpeech}
+						class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all border {isSpeaking
+							? 'bg-amber-600/50 border-amber-500 text-amber-100'
+							: 'bg-gray-700/50 border-gray-600 text-gray-200 hover:bg-gray-600/50'}"
 					>
-						<div class="cyber-panel-header flex justify-between items-center">
-							<span class="text-cyan-300 font-bold text-sm">Video explicativo</span>
-							<div class="flex space-x-2">
-								<div class="w-3 h-3 rounded-full bg-red-500"></div>
-								<div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-								<div class="w-3 h-3 rounded-full bg-green-500"></div>
-							</div>
-						</div>
-						<div class="p-1 bg-black/30 backdrop-blur-sm">
-							<iframe 
-								width="100%" 
-								height="100%" 
-								src={videoUrl}
-								title="Video explicativo" 
-								frameborder="0" 
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-								allowfullscreen
-								class="aspect-video"
-							></iframe>
-						</div>
-					</div>
-				{/if}
+						<span>{isSpeaking ? '🔊 Detener' : '🔈 Escuchar'}</span>
+					</button>
 
-				<div class="space-y-8">
-					{#if isLoading}
-						<LoadingAnimation />
-					{:else if explication}
-						<!-- Responsive content with Svelte animations -->
-						<div class="grid grid-cols-1 gap-8">
-							<!-- Explanation Section -->
-							<div 
-								class="cyber-panel explanation-panel"
-								in:fly={{ y: 40, duration: 600, delay: 400 }}
-							>
-								<div class="cyber-panel-header">
-									<span class="text-cyan-300 font-bold">Explicación</span>
-									<div class="cyber-dots">
-										<div class="cyber-dot"></div>
-										<div class="cyber-dot"></div>
-										<div class="cyber-dot"></div>
-									</div>
-								</div>
-								<div class="cyber-panel-content">
-									<ExplanationSection
-										explanation={explication.explicacionRespuesta}
-										tips={explication.Tip}
-										lengMath={lengMathPregunta}
-									/>
-								</div>
-							</div>
-
-							<!-- Steps Section with animated reveal -->
-							<div 
-								class="cyber-panel steps-panel"
-								in:fly={{ y: 40, duration: 600, delay: 600 }}
-							>
-								<div class="cyber-panel-header">
-									<span class="text-cyan-300 font-bold">Procedimiento</span>
-									
-								</div>
-								<div class="cyber-panel-content">
-									<StepsSection steps={explication.pasosParaResolverElProblema} lengMath={lengMathPregunta} />
-								</div>
-							</div>
-
-							<!-- Formulas Section with glowing effect -->
-							<div 
-								class="cyber-panel formulas-panel" 
-								in:fly={{ y: 40, duration: 600, delay: 800 }}
-							>
-								<div class="cyber-panel-header">
-									<span class="text-yellow-300 font-bold">Fórmulas / Conceptos</span>
-									
-								</div>
-								<div class="cyber-panel-content">
-									<AdditionalSection
-										content={explication.conceptosORecordatorios}
-										lengMath={lengMathPregunta}
-										
-									/>
-								</div>
-							</div>
-						</div>
-					{:else}
-						<div
-							class="cyber-panel error-panel"
-							in:scale={{duration: 400, delay: 300, start: 0.8, opacity: 0}}
-						>
-							<div class="cyber-panel-header bg-red-900/60">
-								<span class="text-red-300 font-bold">ERROR</span>
-								<div class="cyber-data-label text-red-400">CONNECTION.FAILED</div>
-							</div>
-							<div class="cyber-panel-content text-center py-8">
-								<div class="text-red-400 mb-2 text-lg">⚠ Sistema no disponible</div>
-								<div class="text-gray-300">
-									No se pudo cargar la explicación. Intenta de nuevo más tarde.
-								</div>
-							</div>
-						</div>
-					{/if}
+					<button
+						onclick={toggleVideo}
+						class="flex items-center gap-2 px-4 py-2 bg-blue-900/30 hover:bg-blue-800/40 text-blue-200 rounded-lg transition-all border border-blue-800/50 hover:border-blue-500"
+					>
+						<span>{showVideo ? 'Ocultar Video' : 'Ver Video'}</span>
+					</button>
 				</div>
 			</div>
-		</div>
+
+			<!-- Video Overlay (if shown) -->
+			{#if showVideo}
+				<div
+					class="w-full aspect-video bg-black/50 rounded-lg overflow-hidden border border-gray-600 shadow-xl mb-6 relative"
+					transition:slide={{ duration: 300 }}
+				>
+					<iframe
+						width="100%"
+						height="100%"
+						src={videoUrl}
+						title="Video explicativo"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen
+						class="aspect-video"
+					></iframe>
+				</div>
+			{/if}
+
+			<!-- Content Grid -->
+			<div class="space-y-8 w-full pb-12">
+				<!-- Question Section -->
+				<div class="question-wrapper" in:fly={{ y: 20, duration: 400, delay: 100 }}>
+					<QuestionSection
+						{pregunta}
+						{respuestaUsuario}
+						{respuestaCorrecta}
+						lengMath={lengMathPregunta}
+						{lengMathOpciones}
+					/>
+				</div>
+
+				{#if isLoading}
+					<div class="py-12 flex justify-center">
+						<LoadingAnimation />
+					</div>
+				{:else if explication}
+					<!-- Explanation Section -->
+					<div in:fly={{ y: 20, duration: 400, delay: 300 }}>
+						<h3
+							class="text-amber-400/80 font-serif text-lg mb-2 border-b border-amber-700/30 pb-1 w-fit"
+						>
+							Explicación Paso a Paso
+						</h3>
+						<ExplanationSection
+							explanation={explication.explicacionRespuesta}
+							tips={explication.Tip}
+							lengMath={lengMathPregunta}
+						/>
+					</div>
+
+					<!-- Steps Section -->
+					<div in:fly={{ y: 20, duration: 400, delay: 500 }}>
+						<StepsSection
+							steps={explication.pasosParaResolverElProblema}
+							lengMath={lengMathPregunta}
+						/>
+					</div>
+
+					<!-- Additional Info -->
+					<div in:fly={{ y: 20, duration: 400, delay: 700 }}>
+						<AdditionalSection
+							content={explication.conceptosORecordatorios}
+							lengMath={lengMathPregunta}
+						/>
+					</div>
+				{:else}
+					<div
+						class="p-8 text-center text-red-400 border border-red-900/30 rounded-lg bg-red-900/10"
+					>
+						<p>No se pudo cargar la explicación.</p>
+						<button
+							onclick={() => window.location.reload()}
+							class="mt-4 text-sm underline hover:text-red-300">Intentar de nuevo</button
+						>
+					</div>
+				{/if}
+			</div>
+		</BlackboardContainer>
 	</div>
 {/if}
 
 <style>
-
-	
-
+	/* Scroll bar styling for the page if needed, though BlackboardContainer handles most */
+	:global(body) {
+		background-color: #111827;
+	}
 </style>

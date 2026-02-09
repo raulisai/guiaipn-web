@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\raul_\Documents\code\guiaipn-web\src\routes\examen\+page.svelte -->
 <script lang="ts">
 	import { reactivos } from '$lib/data';
 	import { examStore } from '$lib/stores/examStore';
@@ -28,9 +27,12 @@
 		literatura: { display: 'Literatura', localKeywords: ['literatura'] },
 		ingles: { display: 'Inglés', localKeywords: ['ingles'] }
 	} as const;
-	const subjectKey = subject && subject in SUBJECT_DETAILS ? (subject as keyof typeof SUBJECT_DETAILS) : null;
+	const subjectKey =
+		subject && subject in SUBJECT_DETAILS ? (subject as keyof typeof SUBJECT_DETAILS) : null;
 	const subjectDetails = subjectKey ? SUBJECT_DETAILS[subjectKey] : undefined;
-	const subjectDisplayName = subjectDetails?.display ?? (subject ? subject.charAt(0).toUpperCase() + subject.slice(1) : 'General');
+	const subjectDisplayName =
+		subjectDetails?.display ??
+		(subject ? subject.charAt(0).toUpperCase() + subject.slice(1) : 'General');
 
 	let respuesta;
 	let loadingQuestions = true;
@@ -57,7 +59,8 @@
 		usingLocalQuestions = true;
 		let filtered = reactivos;
 		const normalizedSubject = subject?.trim().toLowerCase() ?? '';
-		const keywordList = subjectDetails?.localKeywords ?? (normalizedSubject ? [normalizedSubject] : []);
+		const keywordList =
+			subjectDetails?.localKeywords ?? (normalizedSubject ? [normalizedSubject] : []);
 
 		if (keywordList.length > 0) {
 			filtered = reactivos.filter((item) => {
@@ -79,7 +82,9 @@
 		}
 
 		if (localQuestionPool.length < questionCount) {
-			warningMessage = warningMessage || `Solo hay ${localQuestionPool.length} preguntas locales disponibles para ${subjectDisplayName}.`;
+			warningMessage =
+				warningMessage ||
+				`Solo hay ${localQuestionPool.length} preguntas locales disponibles para ${subjectDisplayName}.`;
 		}
 
 		examStore.setTotalQuestions(localQuestionPool.length || questionCount);
@@ -99,8 +104,11 @@
 			}
 
 			// Obtener token de autenticación
-			const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-			
+			const {
+				data: { session },
+				error: sessionError
+			} = await supabase.auth.getSession();
+
 			if (sessionError || !session) {
 				console.warn('⚠️ No hay sesión activa, usando preguntas locales');
 				warningMessage = 'No hay sesión activa. Usaremos preguntas locales.';
@@ -123,7 +131,8 @@
 				}
 			} else {
 				console.warn('⚠️ No se obtuvieron preguntas de la API, usando preguntas locales');
-				warningMessage = 'No se pudieron obtener preguntas del servidor. Usaremos preguntas locales.';
+				warningMessage =
+					'No se pudieron obtener preguntas del servidor. Usaremos preguntas locales.';
 				prepareLocalQuestionPool();
 			}
 		} catch (error) {
@@ -143,20 +152,26 @@
 		// Prevent multiple navigation attempts
 		if (isNavigating) return;
 		isNavigating = true;
-		
+
 		console.log($examStore.reactivo);
 		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
 		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
-		
+
 		// Save current question data to localStorage for possible recovery
 		localStorage.setItem('current_question_id', $examStore.reactivo.id);
 		localStorage.setItem('current_question_text', $examStore.reactivo.pregunta);
 		localStorage.setItem('current_user_answer', opcionSeleccionada.value);
 		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
 		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
-		localStorage.setItem('current_is_math_pregunta', ($examStore.reactivo.lengMathPregunta || false).toString());
-		localStorage.setItem('current_is_math_opciones', ($examStore.reactivo.lengMathOpciones || false).toString());
-		
+		localStorage.setItem(
+			'current_is_math_pregunta',
+			($examStore.reactivo.lengMathPregunta || false).toString()
+		);
+		localStorage.setItem(
+			'current_is_math_opciones',
+			($examStore.reactivo.lengMathOpciones || false).toString()
+		);
+
 		// Create URL with query parameters for classroom
 		const queryParams = new URLSearchParams({
 			id: $examStore.reactivo.id,
@@ -168,20 +183,20 @@
 			lengMathOpciones: ($examStore.reactivo.lengMathOpciones || false).toString()
 		});
 		console.log(queryParams.toString());
-		
+
 		// Trigger animations using Svelte reactivity
 		animateQuestionLeft = true;
 		animateAnswersRight = true;
 		animateProgressOut = true;
 		animateChartOut = true;
 		mainContentFading = true;
-		
+
 		// Wait for animations to complete before navigation
 		setTimeout(() => {
 			// Navigate to classroom page with parameters
 			goto(`/classRoom?${queryParams.toString()}`);
 		}, 900);
-	}	// When user returns from explanation page, we need to clean up and continue the exam
+	} // When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
 		// Reset UI state
 		if ($examStore.showOptionalImage) {
@@ -200,7 +215,7 @@
 			localStorage.removeItem('current_correct_answer');
 			localStorage.removeItem('current_is_correct');
 			localStorage.removeItem('current_is_math');
-			
+
 			// Add a subtle entrance animation when returning from explanation
 			const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
 			if (mainContent) {
@@ -224,7 +239,7 @@
 			// Use question from API by current index
 			const questionIndex = $examStore.currentQuestion - 1;
 			const apiQuestion = $examStore.apiQuestions[questionIndex];
-			
+
 			if (!apiQuestion) {
 				console.error(`API Question with index ${questionIndex} not found.`);
 				const updatedReactivo = { ...$examStore.reactivo };
@@ -232,17 +247,17 @@
 				examStore.setReactivo(updatedReactivo);
 				return;
 			}
-			
+
 			// Extract subject from API question
 			const materia = apiQuestion.subject || 'Desconocida';
 			examStore.updateMateria(materia);
-			
+
 			// Format options from API
 			const formattedOptions = Object.entries(apiQuestion.options).map(([key, value]) => ({
 				key,
 				value: String(value)
 			}));
-			
+
 			// Update the reactivo in the store with API data
 			const updatedReactivo = {
 				id: apiQuestion.id,
@@ -258,7 +273,7 @@
 				lengMathPregunta: apiQuestion.leng_math_pregunta,
 				lengMathOpciones: apiQuestion.leng_math_opciones
 			};
-			
+
 			examStore.setReactivo(updatedReactivo);
 		} else {
 			// Fallback to local reactivos
@@ -291,7 +306,8 @@
 			}
 
 			// Update reactivo state with selected question data
-			const { id, resuesta, pregunta, opciones, imgActive, lengMathPregunta, lengMathOpciones } = selectedReactivo;
+			const { id, resuesta, pregunta, opciones, imgActive, lengMathPregunta, lengMathOpciones } =
+				selectedReactivo;
 
 			// Extract materia from id
 			const materia = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
@@ -339,14 +355,14 @@
 			examStore.setReactivo(updatedReactivo);
 
 			// Guardar respuesta correcta
-			examStore.saveAnswer($examStore.currentQuestion, true);
+			examStore.saveAnswer($examStore.currentQuestion, true, resp);
 		} else {
 			// Actualizar estado para marcar como incorrecta
 			const updatedReactivo = { ...$examStore.reactivo, iscorrectQuestion: false };
 			examStore.setReactivo(updatedReactivo);
 
 			// Guardar respuesta incorrecta
-			examStore.saveAnswer($examStore.currentQuestion, false);
+			examStore.saveAnswer($examStore.currentQuestion, false, resp);
 
 			if ($examStore.showSolution) {
 				// Navigate to explanation page
@@ -361,13 +377,17 @@
 </script>
 
 <!-- Add a wrapper for positioning bubbles -->
-<div class="text-gray-100 overflow-hidden" class:opacity-30={mainContentFading} class:transition-all={mainContentFading} class:duration-500={mainContentFading}>
+<div
+	class="text-gray-100 overflow-hidden"
+	class:opacity-30={mainContentFading}
+	class:transition-all={mainContentFading}
+	class:duration-500={mainContentFading}
+>
 	<!-- Main content container - Mobile optimized -->
-	<div class="relative z-10 flex flex-col items-center justify-center min-h-screen container-mobile py-4 sm:py-6">
+	<div
+		class="relative z-10 flex flex-col items-center justify-center min-h-screen container-mobile py-4 sm:py-6"
+	>
 		<div class="w-full max-w-4xl space-y-4 sm:space-y-6">
-			
-			
-			
 			{#if !loadingQuestions}
 				<!-- Question Card - Mobile optimized -->
 				<section
@@ -375,8 +395,11 @@
 					class:animate-slide-left={animateQuestionLeft}
 				>
 					<!-- Question content and image -->
-					<QuestionDisplay {toggleOptionalImage} {toggleSolution}  />
-					<div class="flex-1 min-w-[65%] animate-mobile-fade -mt-28" class:animate-fade-out={animateProgressOut}>
+					<QuestionDisplay {toggleOptionalImage} {toggleSolution} />
+					<div
+						class="flex-1 min-w-[65%] animate-mobile-fade -mt-28"
+						class:animate-fade-out={animateProgressOut}
+					>
 						<ExamProgress
 							currentQuestion={$examStore.currentQuestion}
 							totalQuestions={$examStore.totalQuestions}
@@ -384,7 +407,7 @@
 						/>
 					</div>
 				</section>
-				
+
 				<!-- Answer options component - Mobile optimized -->
 				<div class="animate-mobile-slide" class:animate-slide-right={animateAnswersRight}>
 					<AnswerOptions {selectOption} />
@@ -399,42 +422,70 @@
 </div>
 
 <style>
-    /* New animations for transitions */
+	/* New animations for transitions */
 	@keyframes slideLeft {
-		0% { transform: translateX(0); opacity: 1; }
-		100% { transform: translateX(-100px); opacity: 0; }
+		0% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(-100px);
+			opacity: 0;
+		}
 	}
-	
+
 	@keyframes slideRight {
-		0% { transform: translateX(0); opacity: 1; }
-		100% { transform: translateX(100px); opacity: 0; }
+		0% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(100px);
+			opacity: 0;
+		}
 	}
-	
+
 	@keyframes fadeOut {
-		0% { opacity: 1; }
-		100% { opacity: 0; }
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
 	}
-	
+
 	.animate-slide-left {
 		animation: slideLeft 0.5s ease-out forwards;
 	}
-	
+
 	.animate-slide-right {
 		animation: slideRight 0.5s ease-out forwards;
 	}
-	
+
 	.animate-fade-out {
 		animation: fadeOut 0.4s ease-out forwards;
 	}
-	
+
 	/* Add entrance animations for when returning from explanation */
 	@keyframes slideInLeft {
-		0% { transform: translateX(-100px); opacity: 0; }
-		100% { transform: translateX(0); opacity: 1; }
+		0% {
+			transform: translateX(-100px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0);
+			opacity: 1;
+		}
 	}
-	
+
 	@keyframes slideInRight {
-		0% { transform: translateX(100px); opacity: 0; }
-		100% { transform: translateX(0); opacity: 1; }
+		0% {
+			transform: translateX(100px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0);
+			opacity: 1;
+		}
 	}
 </style>

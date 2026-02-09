@@ -6,31 +6,29 @@
 		lengMath: boolean;
 		lengMathOpciones: boolean;
 	}>();
-	
+
 	import MathForm from '../../componentes/Math.svelte';
 	import { slide } from 'svelte/transition'; // Import slide transition
 	import { onMount } from 'svelte'; // Import onMount lifecycle function
-	
 
-   let isMinimized: boolean = $state(false); // State for minimizing
+	let isMinimized: boolean = $state(false); // State for minimizing
 
 	function toggleMinimize() {
 		isMinimized = !isMinimized;
 	}
-
 
 	onMount(() => {
 		setTimeout(() => {
 			isMinimized = true;
 		}, 5000);
 	});
-	
-
 </script>
 
 <!-- Single container with animation - Mobile optimized -->
 <div
-	class="bg-gray-800/10 p-2 sm:p-3 rounded border-l-2 border-gray-600/50 space-y-2 sm:space-y-3 animate-fade-in transition-all duration-300 ease-in-out {isMinimized ? 'pb-2' : 'pb-3'}"
+	class="bg-black/20 p-2 sm:p-3 rounded border-l-2 border-white/20 space-y-2 sm:space-y-3 animate-fade-in transition-all duration-300 ease-in-out {isMinimized
+		? 'pb-2'
+		: 'pb-3'}"
 >
 	<!-- Question Section Header with Toggle - Mobile optimized -->
 	<div class="flex justify-between items-center">
@@ -46,7 +44,7 @@
 			aria-label={isMinimized ? 'Expandir pregunta' : 'Minimizar pregunta'}
 		>
 			<!-- Enhanced Chevron with Animation - Mobile optimized -->
-			<span 
+			<span
 				class="transition-all duration-300 inline-block {isMinimized ? 'rotate-180' : ''} 
 					   animate-pulse-subtle text-base sm:text-lg font-bold"
 			>
@@ -68,7 +66,10 @@
 
 	<!-- Conditionally Rendered Answers Section with Transition - Mobile optimized -->
 	{#if !isMinimized}
-		<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2 pt-2 sm:pt-1" transition:slide|local={{ duration: 300 }}>
+		<div
+			class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2 pt-2 sm:pt-1"
+			transition:slide|local={{ duration: 300 }}
+		>
 			<!-- User Answer -->
 			<div class="answer-section">
 				<p class="text-gray-400 text-xs font-medium mb-1.5 sm:mb-1 uppercase flex items-center">
@@ -120,91 +121,96 @@
 	.animate-pulse-subtle {
 		animation: pulse-subtle 2s infinite;
 	}
-	
-	@keyframes pulse-subtle {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.7; }
-	}
-    /* Fade-in animation */
-    .animate-fade-in {
-        opacity: 0;
-        animation: fadeIn 0.5s ease-out forwards;
-    }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(5px); /* Optional: slight upward movement */
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+	@keyframes pulse-subtle {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.7;
+		}
+	}
+	/* Fade-in animation */
+	.animate-fade-in {
+		opacity: 0;
+		animation: fadeIn 0.5s ease-out forwards;
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(5px); /* Optional: slight upward movement */
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 
 	/* Apply horizontal scroll for long questions regardless of screen size */
-    .long-question {
-        overflow-x: auto; /* Enable horizontal scroll */
-        padding-bottom: 6px; /* Slightly reduced padding */
-        scrollbar-width: thin;
-        scrollbar-color: rgba(107, 114, 128, 0.4) transparent; /* Lighter scrollbar */
-    }
+	.long-question {
+		overflow-x: auto; /* Enable horizontal scroll */
+		padding-bottom: 6px; /* Slightly reduced padding */
+		scrollbar-width: thin;
+		scrollbar-color: rgba(107, 114, 128, 0.4) transparent; /* Lighter scrollbar */
+	}
 
-    .long-question::-webkit-scrollbar {
-        height: 2px; /* Thinner scrollbar */
-    }
+	.long-question::-webkit-scrollbar {
+		height: 2px; /* Thinner scrollbar */
+	}
 
-    .long-question::-webkit-scrollbar-track {
-        background: transparent;
-    }
+	.long-question::-webkit-scrollbar-track {
+		background: transparent;
+	}
 
-    .long-question::-webkit-scrollbar-thumb {
-        background-color: rgba(107, 114, 128, 0.4); /* Lighter scrollbar thumb */
-        border-radius: 10px;
-        border: 1px solid transparent;
-    }
-    
-    /* Mobile-specific optimizations */
-    @media (max-width: 640px) {
-        .question-text-content {
-            font-size: 0.8125rem;
-            line-height: 1.6;
-        }
-        
-        .animate-pulse-subtle {
-            animation-duration: 3s; /* Slower animation on mobile to reduce distraction */
-        }
-        
-        /* Better touch targets for toggle button */
-        button {
-            min-width: 40px;
-            min-height: 40px;
-        }
-        
-        /* Improved spacing for mobile */
-        .answer-section {
-            padding: 0.5rem;
-            background: rgba(17, 24, 39, 0.3);
-            border-radius: 0.375rem;
-            border: 1px solid rgba(75, 85, 99, 0.2);
-        }
-    }
-    
-    /* Very small screens */
-    @media (max-width: 360px) {
-        .question-text-content {
-            font-size: 0.75rem;
-        }
-        
-        .answer-section {
-            padding: 0.375rem;
-        }
-    }
-    
-    /* Landscape mode adjustments */
-    @media (max-width: 896px) and (orientation: landscape) {
-        .answer-section {
-            padding: 0.375rem;
-        }
-    }
+	.long-question::-webkit-scrollbar-thumb {
+		background-color: rgba(107, 114, 128, 0.4); /* Lighter scrollbar thumb */
+		border-radius: 10px;
+		border: 1px solid transparent;
+	}
+
+	/* Mobile-specific optimizations */
+	@media (max-width: 640px) {
+		.question-text-content {
+			font-size: 0.8125rem;
+			line-height: 1.6;
+		}
+
+		.animate-pulse-subtle {
+			animation-duration: 3s; /* Slower animation on mobile to reduce distraction */
+		}
+
+		/* Better touch targets for toggle button */
+		button {
+			min-width: 40px;
+			min-height: 40px;
+		}
+
+		/* Improved spacing for mobile */
+		.answer-section {
+			padding: 0.5rem;
+			background: rgba(17, 24, 39, 0.3);
+			border-radius: 0.375rem;
+			border: 1px solid rgba(75, 85, 99, 0.2);
+		}
+	}
+
+	/* Very small screens */
+	@media (max-width: 360px) {
+		.question-text-content {
+			font-size: 0.75rem;
+		}
+
+		.answer-section {
+			padding: 0.375rem;
+		}
+	}
+
+	/* Landscape mode adjustments */
+	@media (max-width: 896px) and (orientation: landscape) {
+		.answer-section {
+			padding: 0.375rem;
+		}
+	}
 </style>

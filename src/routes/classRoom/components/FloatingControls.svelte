@@ -58,15 +58,9 @@
 			timestamp: Date.now(),
 			stepNumber: safeStep,
 			charIndex:
-				stepProgress?.charIndex ??
-				renderState?.currentCharIndex ??
-				pauseContext?.charIndex ??
-				0,
+				stepProgress?.charIndex ?? renderState?.currentCharIndex ?? pauseContext?.charIndex ?? 0,
 			totalChars:
-				stepProgress?.totalChars ??
-				displayStep?.content?.length ??
-				pauseContext?.totalChars ??
-				0
+				stepProgress?.totalChars ?? displayStep?.content?.length ?? pauseContext?.totalChars ?? 0
 		};
 	}
 
@@ -139,7 +133,8 @@
 		stopVoiceCapture();
 
 		const globalWindow = /** @type {any} */ (window);
-		const SpeechRecognitionCtor = globalWindow.SpeechRecognition ?? globalWindow.webkitSpeechRecognition;
+		const SpeechRecognitionCtor =
+			globalWindow.SpeechRecognition ?? globalWindow.webkitSpeechRecognition;
 		if (!SpeechRecognitionCtor) {
 			voiceTranscript = '';
 			isRecording = false;
@@ -281,53 +276,53 @@
 
 		if (socketService.isSocketConnected()) {
 			if (isInterruption) {
-					const originalQuestionRaw =
-				explanationStore.getOriginalQuestion?.() ??
-				storeSnapshot.currentQuestion?.pregunta ??
-				storeSnapshot.currentQuestion?.original_question ??
-				(typeof storeSnapshot.currentQuestion === 'string'
-					? storeSnapshot.currentQuestion
-					: null);
+				const originalQuestionRaw =
+					explanationStore.getOriginalQuestion?.() ??
+					storeSnapshot.currentQuestion?.pregunta ??
+					storeSnapshot.currentQuestion?.original_question ??
+					(typeof storeSnapshot.currentQuestion === 'string'
+						? storeSnapshot.currentQuestion
+						: null);
 
-			const originalQuestion =
-				typeof originalQuestionRaw === 'string' && originalQuestionRaw.trim().length > 0
-					? originalQuestionRaw.trim()
-					: null;
+				const originalQuestion =
+					typeof originalQuestionRaw === 'string' && originalQuestionRaw.trim().length > 0
+						? originalQuestionRaw.trim()
+						: null;
 
-			const currentStep =
-				typeof storeSnapshot.currentStep === 'number' && storeSnapshot.currentStep > 0
-					? storeSnapshot.currentStep
-					: undefined;
+				const currentStep =
+					typeof storeSnapshot.currentStep === 'number' && storeSnapshot.currentStep > 0
+						? storeSnapshot.currentStep
+						: undefined;
 
-			const topicRaw =
-				storeSnapshot.currentQuestion?.materia ??
-				storeSnapshot.currentQuestion?.topic ??
-				storeSnapshot.currentQuestion?.subject ??
-				null;
+				const topicRaw =
+					storeSnapshot.currentQuestion?.materia ??
+					storeSnapshot.currentQuestion?.topic ??
+					storeSnapshot.currentQuestion?.subject ??
+					null;
 
-			const topic =
-				typeof topicRaw === 'string' && topicRaw.trim().length > 0
-					? topicRaw.trim()
-					: 'Explicación actual';
+				const topic =
+					typeof topicRaw === 'string' && topicRaw.trim().length > 0
+						? topicRaw.trim()
+						: 'Explicación actual';
 
-			const currentContext = {};
-			if (originalQuestion) {
-				currentContext.original_question = originalQuestion;
-			}
-			if (typeof currentStep === 'number') {
-				currentContext.current_step = currentStep;
-			}
-			if (topic) {
-				currentContext.topic = topic;
-			}
+				const currentContext = {};
+				if (originalQuestion) {
+					currentContext.original_question = originalQuestion;
+				}
+				if (typeof currentStep === 'number') {
+					currentContext.current_step = currentStep;
+				}
+				if (topic) {
+					currentContext.topic = topic;
+				}
 
-			const sessionId = storeSnapshot.explanationSessionId ?? socketService.getSessionId?.();
+				const sessionId = storeSnapshot.explanationSessionId ?? socketService.getSessionId?.();
 
-			console.log('✋ INTERRUPCIÓN DETECTADA', {
-				question: message,
-				context: currentContext,
-				sessionId
-			});
+				console.log('✋ INTERRUPCIÓN DETECTADA', {
+					question: message,
+					context: currentContext,
+					sessionId
+				});
 
 				clarificationService.prepareInterruption(message, currentContext);
 				socketService.emitInterruptExplanation(message, currentContext, 'brief', sessionId);
@@ -382,14 +377,13 @@
 	function handleInterrupt() {
 		// Pausar la explicación
 		handlePause({ ensurePaused: true, preserveInputs: false });
-		
+
 		// Abrir input de chat para hacer la pregunta de interrupción
 		showChatInput = true;
 		showVoiceInput = false;
 		stopVoiceCapture();
 		clearAutoSendTimer();
 	}
-
 </script>
 
 <div class="floating-controls-container">
@@ -418,24 +412,47 @@
 			aria-label={$explanationStore.isPaused ? 'Reanudar' : 'Pausar'}
 		>
 			{#if $explanationStore.isPaused}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
 					<polygon points="5 3 19 12 5 21 5 3"></polygon>
 				</svg>
 			{:else}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
 					<rect x="6" y="4" width="4" height="16"></rect>
 					<rect x="14" y="4" width="4" height="16"></rect>
 				</svg>
 			{/if}
 		</button>
 
-		<button
-			class="control-icon"
-			onclick={toggleChatInput}
-			aria-label="Hacer pregunta"
-		>
-			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+		<button class="control-icon" onclick={toggleChatInput} aria-label="Hacer pregunta">
+			<svg
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
 			</svg>
 		</button>
 
@@ -445,32 +462,43 @@
 			onclick={toggleVoiceInput}
 			aria-label={showVoiceInput ? 'Cerrar captura de voz' : 'Hacer pregunta por voz'}
 		>
-			{#if isRecording}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<rect x="9" y="3" width="6" height="12" rx="3"></rect>
-					<path d="M12 19v2m0-4a4 4 0 0 0 4-4"></path>
-				</svg>
-			{:else}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M12 1a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-					<path d="M19 10a7 7 0 0 1-14 0"></path>
-					<path d="M12 19v4"></path>
-					<path d="M8 23h8"></path>
-				</svg>
-			{/if}
+			<svg
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class={isRecording ? 'mic-recording' : ''}
+			>
+				<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+				<path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+				<line x1="12" y1="19" x2="12" y2="22" />
+			</svg>
 		</button>
 
-		<button 
-			class="control-icon interrupt-btn" 
+		<button
+			class="control-icon interrupt-btn"
 			onclick={handleInterrupt}
 			disabled={!isExplaining}
 			aria-label="No entiendo esto"
 			title="Interrumpir para hacer una pregunta rápida"
 		>
-			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"></circle>
-				<line x1="12" y1="8" x2="12" y2="12"></line>
-				<line x1="12" y1="16" x2="12.01" y2="16"></line>
+			<svg
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<circle cx="12" cy="12" r="10" />
+				<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+				<path d="M12 17h.01" />
 			</svg>
 		</button>
 
@@ -481,16 +509,34 @@
 			aria-label={voiceEnabled ? 'Desactivar voz' : 'Activar voz'}
 		>
 			{#if voiceEnabled}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-					<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-					<path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+					<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+					<path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
 				</svg>
 			{:else}
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-					<line x1="23" y1="9" x2="17" y2="15"></line>
-					<line x1="17" y1="9" x2="23" y2="15"></line>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+					<line x1="23" y1="9" x2="17" y2="15" />
+					<line x1="17" y1="9" x2="23" y2="15" />
 				</svg>
 			{/if}
 		</button>
@@ -506,9 +552,18 @@
 				onkeydown={(e) => e.key === 'Enter' && handleSendMessage()}
 			/>
 			<button class="send-btn" onclick={() => handleSendMessage()} aria-label="Enviar mensaje">
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<line x1="22" y1="2" x2="11" y2="13"></line>
-					<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="m22 2-7 20-4-9-9-4Z" />
+					<path d="M22 2 11 13" />
 				</svg>
 			</button>
 		</div>
@@ -518,7 +573,7 @@
 <style>
 	.floating-controls-container {
 		position: fixed;
-		bottom: 24px;
+		bottom: 16px;
 		left: 50%;
 		transform: translateX(-50%);
 		z-index: 40;
@@ -526,37 +581,46 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 12px;
+		width: 100%;
+		pointer-events: none;
 	}
 
 	.floating-bar {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 12px 20px;
-		background: rgba(10, 14, 39, 0.85);
+		gap: 6px;
+		padding: 8px 12px;
+		background: rgba(10, 14, 39, 0.9);
 		border: 1px solid rgba(99, 102, 241, 0.4);
 		border-radius: 50px;
 		backdrop-filter: blur(16px);
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.6),
-			0 0 40px rgba(99, 102, 241, 0.3),
+			0 4px 20px rgba(0, 0, 0, 0.5),
+			0 0 25px rgba(99, 102, 241, 0.25),
 			inset 0 1px 0 rgba(99, 102, 241, 0.2);
 		animation: slideUp 0.4s ease-out;
+		pointer-events: auto;
 	}
 
 	.control-icon {
-		width: 44px;
-		height: 44px;
+		width: 42px;
+		height: 42px;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(99, 102, 241, 0.15);
+		background: rgba(99, 102, 241, 0.1);
 		border: 1px solid rgba(99, 102, 241, 0.3);
 		color: #818cf8;
 		cursor: pointer;
-		transition: all 0.3s ease;
+		transition: all 0.2s ease;
 		position: relative;
+		padding: 0;
+	}
+
+	.control-icon svg {
+		width: 20px;
+		height: 20px;
 	}
 
 	.control-icon::before {
@@ -576,10 +640,7 @@
 		border-color: rgba(99, 102, 241, 0.5);
 		transform: scale(1.05);
 		box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
-	}
-
-	.control-icon:hover:not(:disabled)::before {
-		opacity: 1;
+		color: #ffffff;
 	}
 
 	.control-icon:active:not(:disabled) {
@@ -589,98 +650,96 @@
 	.control-icon:disabled {
 		opacity: 0.4;
 		cursor: not-allowed;
+		background: rgba(15, 23, 42, 0.4);
+		border-color: rgba(99, 102, 241, 0.1);
 	}
 
 	.control-icon.voice-active {
-		background: rgba(34, 197, 94, 0.2);
-		border-color: rgba(34, 197, 94, 0.5);
-		color: rgb(34, 197, 94);
-		box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
-	}
-
-	.control-icon.voice-active::before {
-		background: linear-gradient(45deg, rgba(34, 197, 94, 0.4), rgba(74, 222, 128, 0.4));
-		opacity: 1;
+		background: rgba(34, 197, 94, 0.15);
+		border-color: rgba(34, 197, 94, 0.4);
+		color: #4ade80;
+		box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
 	}
 
 	.control-icon.recording {
-		background: rgba(239, 68, 68, 0.2);
+		background: rgba(239, 68, 68, 0.15);
 		border-color: rgba(239, 68, 68, 0.4);
 		color: #f87171;
-		box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
+		box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+		animation: pulse 1.5s ease-in-out infinite;
 	}
 
 	.control-icon.interrupt-btn:not(:disabled) {
-		background: rgba(251, 191, 36, 0.15);
+		background: rgba(251, 191, 36, 0.1);
 		border-color: rgba(251, 191, 36, 0.3);
 		color: #fbbf24;
 	}
 
 	.control-icon.interrupt-btn:hover:not(:disabled) {
-		background: rgba(251, 191, 36, 0.25);
+		background: rgba(251, 191, 36, 0.2);
 		border-color: rgba(251, 191, 36, 0.5);
-		box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
-	}
-
-	.control-icon.interrupt-btn:hover:not(:disabled)::before {
-		background: linear-gradient(45deg, rgba(251, 191, 36, 0.4), rgba(252, 211, 77, 0.4));
+		box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+		color: #fcd34d;
 	}
 
 	.question-bubble {
 		position: absolute;
-		bottom: 88px;
+		bottom: 74px;
 		left: 50%;
 		transform: translateX(-50%);
-		background: rgba(15, 23, 42, 0.92);
+		background: rgba(15, 23, 42, 0.95);
 		border: 1px solid rgba(99, 102, 241, 0.35);
-		border-radius: 16px;
-		padding: 12px 16px;
-		max-width: 420px;
+		border-radius: 20px;
+		padding: 12px 18px;
+		max-width: 90vw;
 		width: max-content;
 		color: #e2e8f0;
 		display: flex;
 		gap: 12px;
 		align-items: center;
 		box-shadow:
-			0 8px 30px rgba(15, 23, 42, 0.4),
-			0 0 24px rgba(99, 102, 241, 0.25);
-		backdrop-filter: blur(18px);
+			0 10px 40px rgba(0, 0, 0, 0.6),
+			0 0 30px rgba(99, 102, 241, 0.2);
+		backdrop-filter: blur(20px);
+		pointer-events: auto;
 	}
 
 	.bubble-text {
-		font-size: 0.9rem;
-		line-height: 1.3;
+		font-size: 0.95rem;
+		line-height: 1.4;
 		white-space: pre-line;
 	}
 
 	.bubble-countdown {
-		min-width: 28px;
-		height: 28px;
+		min-width: 26px;
+		height: 26px;
 		border-radius: 999px;
 		background: rgba(99, 102, 241, 0.2);
 		border: 1px solid rgba(129, 140, 248, 0.55);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-weight: 600;
+		font-weight: 700;
 		color: #c7d2fe;
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 	}
 
 	.chat-input-container {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		padding: 8px 12px;
-		background: rgba(10, 14, 39, 0.9);
+		padding: 6px 8px 6px 16px;
+		background: rgba(10, 14, 39, 0.95);
 		border: 1px solid rgba(99, 102, 241, 0.4);
 		border-radius: 50px;
-		backdrop-filter: blur(16px);
+		backdrop-filter: blur(20px);
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.6),
+			0 10px 40px rgba(0, 0, 0, 0.6),
 			0 0 30px rgba(99, 102, 241, 0.25);
 		animation: slideUp 0.3s ease-out;
-		min-width: 320px;
+		min-width: 300px;
+		max-width: 90vw;
+		pointer-events: auto;
 	}
 
 	.chat-input {
@@ -689,12 +748,12 @@
 		border: none;
 		outline: none;
 		color: #e2e8f0;
-		font-size: 0.875rem;
-		padding: 8px 12px;
+		font-size: 0.95rem;
+		padding: 6px 0;
 	}
 
 	.chat-input::placeholder {
-		color: rgba(203, 213, 225, 0.4);
+		color: rgba(148, 163, 184, 0.6);
 	}
 
 	.send-btn {
@@ -704,16 +763,17 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(99, 102, 241, 0.3);
-		border: 1px solid rgba(99, 102, 241, 0.5);
+		background: rgba(99, 102, 241, 0.2);
+		border: 1px solid rgba(99, 102, 241, 0.4);
 		color: #818cf8;
 		cursor: pointer;
 		transition: all 0.2s ease;
 	}
 
 	.send-btn:hover {
-		background: rgba(99, 102, 241, 0.5);
-		box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
+		background: rgba(99, 102, 241, 0.8);
+		color: white;
+		box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
 		transform: scale(1.05);
 	}
 
@@ -732,23 +792,48 @@
 		}
 	}
 
+	@keyframes pulse {
+		0%,
+		100% {
+			box-shadow: 0 0 18px rgba(239, 68, 68, 0.35);
+			border-color: rgba(239, 68, 68, 0.6);
+		}
+		50% {
+			box-shadow: 0 0 28px rgba(239, 68, 68, 0.7);
+			border-color: rgba(239, 68, 68, 0.9);
+		}
+	}
+
 	@media (max-width: 640px) {
 		.floating-controls-container {
-			bottom: 16px;
+			bottom: 12px;
+			width: 100%;
+			padding: 0 12px;
 		}
 
 		.floating-bar {
-			padding: 10px 16px;
-			gap: 6px;
+			padding: 6px 12px;
+			gap: 8px;
+			width: auto;
+			max-width: 100%;
+			justify-content: space-evenly;
+			border-radius: 20px;
 		}
 
 		.control-icon {
-			width: 40px;
-			height: 40px;
+			width: 44px;
+			height: 44px;
+			background: rgba(99, 102, 241, 0.08);
+		}
+
+		.control-icon svg {
+			width: 22px;
+			height: 22px;
 		}
 
 		.chat-input-container {
-			min-width: 280px;
+			width: 100%;
+			min-width: auto;
 		}
 	}
 </style>

@@ -1,9 +1,11 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { explanationStore } from '$lib/stores';
 	import { createClassRoomController } from '$lib/classRoom';
 	import { normalizeComponentCommand } from '$lib/classRoom/component_commands/index.js';
+	import { speechService } from '$lib/services/speechService';
 
 	// Componentes
 	import CollapsibleSteps from './components/CollapsibleSteps.svelte';
@@ -29,6 +31,7 @@
 	let autoFeedbackShown = $state(false);
 
 	let isExplanationCollapsed = $state(false);
+	let viewQuestionBtnCollapsed = $state(false);
 
 	// Crear controlador
 	const controller = createClassRoomController($page.url.searchParams);
@@ -93,10 +96,88 @@
 		if (explanationFinished && !autoFeedbackShown && !showFeedbackModal) {
 			showFeedbackModal = true;
 			autoFeedbackShown = true;
+			// Restaurar vista al finalizar
+			isExplanationCollapsed = false;
 		}
 	});
 
+	// Auto-colapsar botón de "Ver Pregunta" después de un tiempo
+	$effect(() => {
+		if (hasStarted && !explanationFinished && !isExplanationCollapsed) {
+			viewQuestionBtnCollapsed = false;
+			const timer = setTimeout(() => {
+				viewQuestionBtnCollapsed = true;
+			}, 3000); // 3 segundos antes de minimizar
+			return () => clearTimeout(timer);
+		}
+	});
+
+	// Auto-colapsar al iniciar para modo inmersivo
+	$effect(() => {
+		if (hasStarted && !explanationFinished && renderProgress > 0 && renderProgress < 5) {
+			// Solo colapsar si acaba de empezar
+			if (!isExplanationCollapsed) {
+				isExplanationCollapsed = true;
+			}
+		}
+	});
+
+	// Limpieza al desmontar
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', checkMobile);
+			window.removeEventListener('beforeunload', handleCleanup);
+		}
+		handleCleanup();
+	});
+
+	function handleCleanup() {
+		console.log('🧹 Limpiando recursos de la clase...');
+
+		// 1. Detener servicio principal (si tiene método stop)
+		if (speechService) {
+			speechService.stop?.();
+		}
+
+		// 2. Parada de emergencia de síntesis nativa del navegador
+		if (typeof window !== 'undefined' && window.speechSynthesis) {
+			console.log('🛑 Cancelando síntesis de voz nativa');
+			window.speechSynthesis.cancel();
+		}
+
+		// 3. Parada de librería externa (ResponsiveVoice) si existe
+		// @ts-ignore
+		if (typeof window !== 'undefined' && window.responsiveVoice) {
+			// @ts-ignore
+			window.responsiveVoice.cancel();
+		}
+
+		controller.cleanup(); // Llamar al cleanup del controlador
+	}
+
+	function checkMobile() {
+		// Detectar si es móvil para colapsar explicación
+		if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+			isExplanationCollapsed = true;
+		}
+	}
+
 	onMount(async () => {
+		// Colapsar por defecto en móvil/tablet al cargar
+		checkMobile();
+		if (typeof window !== 'undefined') {
+			window.addEventListener('resize', checkMobile);
+			// Manejar cierre de pestaña/navegación externa
+			window.addEventListener('beforeunload', handleCleanup);
+		}
+
+		// Si no hay datos, volver (protección)
+		const controllerData = controller.getQuestionData();
+		if (!$explanationStore.currentQuestion && (!controllerData || !controllerData.id)) {
+			goto('/home');
+			return;
+		}
+
 		await controller.initialize({
 			onConnecting: () => {
 				isConnecting = true;
@@ -182,82 +263,158 @@
 <div
 	class="h-screen overflow-hidden bg-gradient-to-br from-gray-950/20 via-slate-900/20 to-gray-950/20 text-white"
 >
-	<div class="h-full flex flex-col px-6 py-6">
+	<div class="h-full flex flex-col px-3 py-2 md:px-6 md:py-6">
 		<!-- Pregunta original compacta -->
 		{#if questionData}
 			<!-- Header compacto con indicador de progreso -->
-			<div class="flex-shrink-0 w-full max-w-4xl mx-auto">
-				<div class="flex flex-col items-center justify-center gap-6 py-2">
-					<!-- Título y Botón Volver -->
-					<div class="w-full flex items-center justify-between relative">
+			<!-- Header Colapsable -->
+			<div
+				class="flex-shrink-0 w-full max-w-4xl mx-auto transition-all duration-500 ease-in-out z-30"
+				class:opacity-100={!hasStarted}
+				class:opacity-0={hasStarted && !explanationFinished && isExplanationCollapsed === false}
+				class:h-auto={!hasStarted || explanationFinished || isExplanationCollapsed}
+				class:h-0={hasStarted && !explanationFinished && !isExplanationCollapsed}
+				class:overflow-hidden={hasStarted && !explanationFinished && !isExplanationCollapsed}
+				class:pointer-events-none={hasStarted && !explanationFinished && !isExplanationCollapsed}
+			>
+				<div
+					class="flex flex-col items-center justify-center gap-4 py-2 bg-slate-950/80 backdrop-blur-md md:bg-transparent md:backdrop-filter-none rounded-b-2xl shadow-lg md:shadow-none border-b border-indigo-500/20 md:border-none px-4 pb-4 md:pb-0"
+				>
+					<!-- Título y Botón Volver (Layout Flex seguro sin absolutos peligrosos en móvil) -->
+					<div class="w-full flex items-center justify-between gap-2">
 						<button
 							onclick={handleGoBack}
-							class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm backdrop-blur-sm shadow-sm"
+							class="flex items-center justify-center w-10 h-10 md:w-auto md:h-auto md:px-4 md:py-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-full md:rounded-lg transition-all border border-slate-700 hover:border-indigo-500 text-sm backdrop-blur-sm shadow-sm group"
+							aria-label="Volver"
 						>
-							← Volver
+							<span class="md:hidden">←</span>
+							<span class="hidden md:inline">← Volver</span>
 						</button>
 
 						<h1
-							class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 absolute left-1/2 -translate-x-1/2"
+							class="text-lg md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 text-center flex-1"
 						>
-							Question
+							Pregunta
 						</h1>
 
-						<div class="w-[88px]"></div>
-						<!-- Spacer to balance header -->
+						<!-- Boton fantasma para balancear o menú futuro -->
+						<div class="w-10 md:w-[88px]"></div>
 					</div>
 
-					<!-- Pregunta Principal -->
-					<div class="w-full flex justify-center px-4">
+					<!-- Pregunta con scroll suave -->
+					<div class="w-full flex justify-center">
 						{#if questionData.lengMathPregunta}
 							<div
-								class="bg-slate-900/50 px-6 py-4 rounded-xl border border-slate-700/50 backdrop-blur-sm max-w-full overflow-x-auto shadow-inner"
+								class="bg-slate-900/50 px-4 py-3 rounded-lg border border-slate-700/50 backdrop-blur-sm w-full overflow-x-auto shadow-inner scrollbar-hide"
 							>
-								<MathComponent content={questionData.pregunta} isBlock={false} />
+								<div class="min-w-fit">
+									<MathComponent content={questionData.pregunta} isBlock={false} />
+								</div>
 							</div>
 						{:else}
 							<p
-								class="text-yellow-300 text-xl md:text-2xl italic text-center leading-relaxed drop-shadow-sm max-w-3xl"
+								class="text-yellow-300 text-base md:text-xl italic text-center leading-snug drop-shadow-sm max-w-3xl"
 							>
 								{questionData.pregunta}
 							</p>
 						{/if}
 					</div>
 
-					<!-- Indicador de Progreso de Renderizado -->
-					{#if $explanationStore.render.isRendering && renderProgress < 100}
-						<div class="progress-indicator">
-							<div class="progress-bar" style="width: {renderProgress}%"></div>
-							<span class="progress-text">{renderProgress}%</span>
-						</div>
-					{/if}
-
-					<!-- Respuestas Usuario vs Correcta -->
-					<div class="grid grid-cols-2 gap-4 w-full max-w-[600px]">
+					<!-- Respuestas Compactas -->
+					<div class="grid grid-cols-2 gap-3 w-full">
 						<div
-							class="flex flex-col items-center p-3 bg-red-500/10 border border-red-500/20 rounded-xl backdrop-blur-sm transition-all hover:bg-red-500/15"
+							class="flex flex-col items-center p-2 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm"
 						>
-							<span class="text-xs uppercase tracking-wider text-red-400 font-semibold mb-1"
+							<span class="text-[10px] uppercase tracking-wider text-red-400 font-semibold"
 								>Tu Respuesta</span
 							>
-							<span class="text-gray-200 font-medium text-center"
+							<span class="text-gray-200 font-bold text-center text-sm"
 								>{questionData.respuestaUsuario}</span
 							>
 						</div>
 						<div
-							class="flex flex-col items-center p-3 bg-green-500/10 border border-green-500/20 rounded-xl backdrop-blur-sm transition-all hover:bg-green-500/15"
+							class="flex flex-col items-center p-2 bg-green-500/10 border border-green-500/20 rounded-lg backdrop-blur-sm"
 						>
-							<span class="text-xs uppercase tracking-wider text-green-400 font-semibold mb-1"
+							<span class="text-[10px] uppercase tracking-wider text-green-400 font-semibold"
 								>Correcta</span
 							>
-							<span
-								class="text-gray-200 font-medium text-center text-sm sm:text-base truncate max-w-full"
+							<span class="text-gray-200 font-bold text-center text-sm truncate max-w-full"
 								>{questionData.respuestaCorrecta}</span
 							>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<!-- Botones Flotantes (Solo aparecen cuando el header está oculto) -->
+			{#if hasStarted && !explanationFinished && !isExplanationCollapsed}
+				<div class="absolute top-24 right-4 z-40 flex flex-col gap-3 items-end">
+					<!-- Botón Ver Pregunta (Auto-colapsable) -->
+					<button
+						onclick={() => (isExplanationCollapsed = true)}
+						class="flex items-center justify-center gap-2 bg-slate-800/90 hover:bg-slate-700 text-indigo-300 font-medium rounded-full border border-indigo-500/30 shadow-lg backdrop-blur-sm transition-all duration-500 ease-out overflow-hidden group"
+						class:w-10={viewQuestionBtnCollapsed}
+						class:h-10={viewQuestionBtnCollapsed}
+						class:w-auto={!viewQuestionBtnCollapsed}
+						class:h-auto={!viewQuestionBtnCollapsed}
+						class:px-0={viewQuestionBtnCollapsed}
+						class:px-4={!viewQuestionBtnCollapsed}
+						class:py-2={!viewQuestionBtnCollapsed}
+					>
+						<span
+							class="whitespace-nowrap transition-all duration-300"
+							class:opacity-100={!viewQuestionBtnCollapsed}
+							class:opacity-0={viewQuestionBtnCollapsed}
+							class:w-0={viewQuestionBtnCollapsed}
+							class:hidden={viewQuestionBtnCollapsed}
+						>
+							Ver Pregunta
+						</span>
+						<div class="flex-shrink-0 relative w-5 h-5 flex items-center justify-center">
+							<svg
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								class="absolute transition-all duration-300"
+								class:rotate-180={!isExplanationCollapsed}
+							>
+								<path d="M15 18l-6-6 6-6" />
+							</svg>
+						</div>
+					</button>
+
+					<!-- Botón Volver (Siempre accesible en este modo también) -->
+					<button
+						onclick={handleGoBack}
+						class="flex items-center justify-center w-10 h-10 bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded-full border border-red-500/30 shadow-lg backdrop-blur-sm transition-all"
+						aria-label="Volver"
+					>
+						<svg
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path d="M15 19l-7-7 7-7" />
+						</svg>
+					</button>
+				</div>
+			{/if}
+
+			<!-- Indicador de Progreso Discreto (siempre visible si está renderizando) -->
+			{#if $explanationStore.render.isRendering && renderProgress < 100}
+				<div class="absolute top-0 left-0 w-full h-1 bg-slate-800 z-50">
+					<div
+						class="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] transition-all duration-300"
+						style="width: {renderProgress}%"
+					></div>
+				</div>
+			{/if}
 		{/if}
 
 		<!-- Estados principales -->
@@ -295,19 +452,20 @@
 				{/if}
 
 				<!-- Panel didactico que se auto ajusta -->
-				<div class="flex-1 flex gap-6 min-h-0 mt-4 overflow-hidden relative">
-					<!-- Pizarrón (expande cuando explicación está colapsada) -->
+				<div class="flex flex-1 min-h-0 relative overflow-hidden">
+					<!-- 
+						PIZARRÓN: Ocupa todo el espacio siempre en móvil.
+						En Desktop se ajusta si hay panel lateral.
+					-->
 					<div
-						class="flex flex-col min-h-0 transition-all duration-500 ease-in-out relative z-10"
-						class:flex-1={isExplanationCollapsed}
+						class="flex flex-col min-h-0 bg-slate-900/40 backdrop-blur-sm rounded-xl border border-slate-700/30 transition-all duration-500 relative z-0"
+						class:w-full={true}
+						class:h-full={true}
+						class:lg:mr-4={!isExplanationCollapsed}
 						class:lg:flex-[3]={!isExplanationCollapsed}
-						class:protagonist={isExplanationCollapsed}
+						class:lg:w-auto={!isExplanationCollapsed}
 					>
-						<div
-							class="flex-1 overflow-auto rounded-xl transition-all duration-500"
-							class:shadow-2xl={isExplanationCollapsed}
-							class:shadow-indigo-500_10={isExplanationCollapsed}
-						>
+						<div class="flex-1 w-full h-full overflow-hidden rounded-xl">
 							<Pizarron
 								commands={currentCanvasCommands}
 								currentStep={$explanationStore.currentStep}
@@ -316,49 +474,98 @@
 						</div>
 					</div>
 
-					<!-- Componentes dinámicos -->
+					<!-- Componentes dinámicos (Overlay en móvil, lateral en desktop si hay espacio) -->
 					{#if currentPanelComponentCommands.length > 0}
-						<div class="panel-component-stream h-full">
-							{#each currentPanelComponentCommands as componentCommand, idx (idx)}
-								<ComponentCommandRenderer
-									command={componentCommand}
-									context="panel"
-									onRender={(normalized) =>
-										console.log('🧩 ComponentCommandRenderer render:', normalized)}
-								/>
-							{/each}
-						</div>
-					{/if}
-
-					<!-- Explicación (1/4) - Se oculta cuando está colapsada -->
-					{#if !isExplanationCollapsed}
-						<div class="flex flex-col lg:flex-1 min-h-0 transition-all duration-300">
-							<div class="flex-1 min-h-0">
-								<CollapsibleSteps
-									steps={$explanationStore.steps}
-									currentStep={$explanationStore.currentStep}
-								/>
+						<div
+							class="absolute inset-0 z-10 pointer-events-none lg:pointer-events-auto lg:static lg:h-full"
+						>
+							<div class="w-full h-full pointer-events-auto lg:w-auto">
+								{#each currentPanelComponentCommands as componentCommand, idx (idx)}
+									<ComponentCommandRenderer
+										command={componentCommand}
+										context="panel"
+										onRender={(normalized) =>
+											console.log('🧩 ComponentCommandRenderer render:', normalized)}
+									/>
+								{/each}
 							</div>
 						</div>
 					{/if}
 
-					<!-- Botón de colapso tipo "cachito" -->
+					<!-- 
+						EXPLICACIÓN: 
+						Móvil: Panel Overlay (Bottom Sheet) 
+						Desktop: Columna lateral
+					-->
+					<div
+						class="
+							transition-all duration-500 ease-spring
+							lg:relative lg:flex lg:flex-col lg:min-h-0 lg:border-none lg:bg-transparent lg:shadow-none
+							/* Estilos Móvil (Overlay) */
+							fixed inset-x-0 bottom-0 z-20
+							bg-slate-950/70 backdrop-blur-md
+							border-t border-indigo-500/30 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)]
+							pb-safe-area
+						"
+						class:lg:flex-1={!isExplanationCollapsed}
+						class:lg:w-auto={!isExplanationCollapsed}
+						class:lg:translate-y-0={true}
+						class:lg:opacity-100={!isExplanationCollapsed}
+						class:lg:w-0={isExplanationCollapsed}
+						class:lg:overflow-hidden={isExplanationCollapsed}
+						class:translate-y-full={isExplanationCollapsed}
+						class:translate-y-0={!isExplanationCollapsed}
+						style="height: {isExplanationCollapsed ? '0' : '65vh'};"
+					>
+						<!-- Barra de arrastre (Handle) solo móvil -->
+						<div
+							class="w-full h-6 flex items-center justify-center lg:hidden cursor-grab active:cursor-grabbing border-b border-indigo-500/10 mb-2"
+						>
+							<div class="w-12 h-1.5 bg-indigo-500/40 rounded-full"></div>
+						</div>
+
+						<div class="flex-1 min-h-0 overflow-y-auto px-4 pb-20 lg:pb-0 lg:px-0 scrollbar-hide">
+							<CollapsibleSteps
+								steps={$explanationStore.steps}
+								currentStep={$explanationStore.currentStep}
+							/>
+						</div>
+					</div>
+
+					<!-- Botón flotante para alternar explicación en móvil/desktop -->
 					<button
-						type="button"
 						onclick={toggleExplanationCollapse}
-						class="collapse-tab-main"
-						class:expanded={!isExplanationCollapsed}
+						class="absolute z-30 flex items-center justify-center bg-indigo-600/90 hover:bg-indigo-500 text-white shadow-lg backdrop-blur-sm transition-all duration-300 lg:top-1/2 lg:right-0 lg:-translate-y-1/2 lg:translate-x-1/2 lg:w-8 lg:h-12 lg:rounded-l-lg bottom-24 right-4 w-12 h-12 rounded-full border border-indigo-400/30"
 						aria-label={isExplanationCollapsed ? 'Mostrar explicación' : 'Ocultar explicación'}
 					>
+						<!-- Icono Desktop (Flecha Lateral) -->
 						<svg
-							class="collapse-icon-main"
-							class:rotated={isExplanationCollapsed}
+							class="hidden lg:block w-5 h-5 transition-transform duration-300"
+							class:rotate-180={isExplanationCollapsed}
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
 							stroke-width="2.5"
 						>
 							<path d="M15 18l-6-6 6-6" />
+						</svg>
+
+						<!-- Icono Móvil (Libro/Texto) -->
+						<svg
+							class="lg:hidden w-6 h-6"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							{#if isExplanationCollapsed}
+								<!-- Icono Abrir Libro/Texto -->
+								<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+								<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+							{:else}
+								<!-- Icono Cerrar (X o Flecha abajo) -->
+								<path d="M18 6L6 18M6 6l12 12" />
+							{/if}
 						</svg>
 					</button>
 				</div>

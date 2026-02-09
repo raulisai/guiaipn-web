@@ -73,5 +73,35 @@ export const questionsAPI = {
 				'Authorization': `Bearer ${token}`
 			}
 		});
+	},
+
+	/**
+	 * Envía el examen para su calificación
+	 * @param {string} token - JWT token (opcional si se maneja cookie)
+	 * @param {Array} answers - Lista de respuestas {question_id, user_answer}
+	 * @param {string} userId - ID del usuario
+	 */
+	submitExam: async (token, answers, userId) => {
+		return request('/questions/exam/submit', {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+			body: JSON.stringify({ answers, userId })
+		});
+	},
+
+	/**
+	 * Obtiene las estadísticas del usuario
+	 * @param {string} token - JWT token
+	 * @param {string} userId - ID del usuario
+	 */
+	getUserStats: async (token, userId) => {
+		return request(`/stats/user?userId=${userId}`, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
 	}
 };

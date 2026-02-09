@@ -17,7 +17,7 @@
     let { children } = $props();
     
     // Rutas protegidas que requieren autenticación
-    const protectedRoutes = ['/home', '/materias'];
+    const protectedRoutes = ['/home', '/materias', '/classRoom'];
     
     // Rutas públicas que no deben redirigir (testing, auth, etc.)
     const publicRoutes = ['/test-socket', '/cuenta', '/auth', '/examen'];
@@ -101,7 +101,7 @@
     <div class="container mx-auto flex justify-between items-center px-4">
         <a href={!$user ? '/' : '/home'} class="flex items-center">
             <img
-                src="logoipnburrito.png"
+                src="/logoipnburrito.png"
                 alt="Logo de un burro que representa la guia del IPN"
                 class={`transition-all duration-300 ease-in-out
                             ${scrolled && !isHovered ? 'w-[90px]' : 'w-[110px]'}

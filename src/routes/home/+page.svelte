@@ -3,8 +3,11 @@
 	import { user } from '$lib/stores/authStore';
 	import { goto } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
+	import { Calendar, Zap, Play, ArrowRight, BookOpen, Clock, Award } from 'lucide-svelte';
 
 	import BackgroundStats3D from './components/BackgroundStats3D.svelte';
+	import { questionsAPI } from '$lib/api';
+	import { supabase } from '$lib/services/supabase';
 
 	// Configuración de años disponibles (simulado o real según filtro de texto)
 	const examYears = [
@@ -28,11 +31,53 @@
 		goto(`/examen?${params.toString()}`);
 	}
 
-	onMount(() => {
+	let userStats = null;
+
+	// Configuración de colores por materia
+	const SUBJECT_COLORS = {
+		matematicas: '#3b82f6', // blue
+		fisica: '#8b5cf6', // purple
+		quimica: '#ec4899', // pink
+		biologia: '#10b981', // emerald
+		historia: '#f59e0b', // amber
+		geografia: '#ef4444', // red
+		literatura: '#6366f1', // indigo
+		ingles: '#14b8a6' // teal
+	};
+
+	onMount(async () => {
 		if (!$user) {
 			setTimeout(() => {
 				goto('/cuenta/login');
 			}, 100);
+			return;
+		}
+
+		try {
+			// Obtener sesión para el token
+			const {
+				data: { session }
+			} = await supabase.auth.getSession();
+			if (session) {
+				const stats = await questionsAPI.getUserStats(session.access_token, $user.id);
+				console.log('User Stats:', stats);
+
+				if (stats && stats.mastery_levels) {
+					// Transformar datos para el gráfico 3D
+					// Tomamos las 5 materias principales o las que vengan
+					const mappedSubjects = Object.entries(stats.mastery_levels).map(([subject, score]) => ({
+						name: subject.toUpperCase(),
+						score: Math.round(Number(score)),
+						color: SUBJECT_COLORS[subject] || '#94a3b8'
+					}));
+
+					if (mappedSubjects.length > 0) {
+						userStats = mappedSubjects.slice(0, 5); // Limitar a 5 para el pentágono
+					}
+				}
+			}
+		} catch (error) {
+			console.error('Error fetching stats:', error);
 		}
 	});
 </script>
@@ -50,7 +95,11 @@
 		></div>
 
 		<!-- 3D Stats Component -->
-		<BackgroundStats3D />
+		{#if userStats}
+			<BackgroundStats3D subjects={userStats} />
+		{:else}
+			<BackgroundStats3D />
+		{/if}
 
 		<div class="particles-container absolute inset-0 opacity-30"></div>
 	</div>
@@ -71,67 +120,50 @@
 		</div>
 
 		<!-- Main Actions Grid -->
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 items-stretch perspective-1000">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch perspective-1000">
 			<!-- Year Selection Column -->
 			<div class="space-y-4 md:space-y-6" in:fly={{ y: 50, duration: 1000, delay: 400 }}>
-				<div class="flex items-center gap-3 text-blue-200/80 mb-1 md:mb-2 px-1">
-					<div
-						class="p-1.5 md:p-2 bg-blue-500/10 rounded-lg backdrop-blur-md border border-blue-500/10"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="w-5 h-5 md:w-6 md:h-6 text-blue-400"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-							/>
-						</svg>
+				<div class="flex items-center gap-3 text-blue-200/80 mb-2 px-1">
+					<div class="p-2 bg-blue-500/10 rounded-lg backdrop-blur-md border border-blue-500/10">
+						<Calendar class="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
 					</div>
 					<h2 class="text-lg md:text-xl font-semibold tracking-wide">EDICIONES ANTERIORES</h2>
 				</div>
 
-				<div class="grid grid-cols-3 lg:grid-cols-3 gap-2 md:gap-4">
+				<div class="grid grid-cols-3 gap-3 md:gap-4">
 					{#each examYears as { year, active, label }, i}
 						<button
 							onclick={() => startExam(year)}
-							class="group relative overflow-hidden bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-400/50 p-3 md:p-6 rounded-xl transition-all duration-300 text-left hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] active:scale-95 backdrop-blur-[2px]"
+							class="group relative overflow-hidden bg-white/5 hover:bg-white/10 border border-white/5 hover:border-blue-400/30 p-4 md:p-6 rounded-2xl transition-all duration-300 active:scale-95 text-left hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10 backdrop-blur-sm flex flex-col justify-between min-h-[100px] md:min-h-[120px]"
 							in:fly={{ y: 20, duration: 600, delay: 600 + i * 150 }}
 						>
-							<!-- Folder/Exam Tab Effect -->
-							<div
-								class="absolute top-0 right-0 w-8 h-8 bg-white/5 -mr-4 -mt-4 rotate-45 transform group-hover:bg-blue-500/20 transition-colors"
-							></div>
-
-							<div
-								class="absolute inset-0 bg-gradient-to-b from-blue-500/0 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-							></div>
-
 							{#if label}
 								<span
-									class="absolute top-0 right-0 m-2 text-[8px] md:text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-pulse"
+									class="absolute top-2 right-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-pulse"
 								>
 									{label}
 								</span>
 							{/if}
 
-							<div
-								class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left pt-2"
-							>
+							<div class="mb-2 opacity-50 group-hover:opacity-100 transition-opacity">
+								<BookOpen class="w-5 h-5 text-blue-300" />
+							</div>
+
+							<div class="relative z-10">
 								<span
-									class="block text-blue-300/50 text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-1"
+									class="block text-blue-200/40 text-[9px] font-bold uppercase tracking-wider mb-0.5"
 									>VERSIÓN</span
 								>
 								<span
-									class="block text-xl md:text-3xl font-black text-white group-hover:text-blue-300 transition-colors drop-shadow-md"
+									class="block text-2xl md:text-3xl font-bold text-white group-hover:text-blue-200 transition-colors"
 									>{year}</span
 								>
 							</div>
+
+							<!-- Hover Glow -->
+							<div
+								class="absolute -bottom-4 -right-4 w-16 h-16 bg-blue-500/20 blur-2xl rounded-full group-hover:bg-blue-400/30 transition-colors duration-500"
+							></div>
 						</button>
 					{/each}
 				</div>
@@ -143,90 +175,71 @@
 				in:fly={{ y: 50, duration: 1000, delay: 800 }}
 			>
 				<div
-					class="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl md:rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition duration-500 group-hover:duration-200"
+					class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl md:rounded-3xl blur-md opacity-50 group-hover:opacity-80 transition duration-500 group-hover:duration-200"
 				></div>
 
 				<button
 					onclick={() => startExam('', 10)}
-					class="relative h-full w-full bg-slate-900/40 backdrop-blur-md border border-white/10 p-5 md:p-8 rounded-2xl flex flex-row lg:flex-col justify-between lg:justify-center items-center text-left lg:text-center gap-4 md:gap-6 overflow-hidden hover:bg-slate-800/50 transition-all duration-300 active:scale-[0.98] group hover:border-white/20 hover:shadow-[0_0_40px_rgba(168,85,247,0.15)]"
+					class="relative h-full w-full bg-slate-900/60 backdrop-blur-md border border-white/10 p-5 md:p-8 rounded-2xl flex md:flex-row flex-col items-center gap-6 overflow-hidden transition-all duration-300 active:scale-[0.98] group hover:bg-slate-800/60"
 				>
-					<!-- Exam Paper Lines Effect -->
-					<div
-						class="absolute inset-0 opacity-[0.03] pointer-events-none"
-						style="background-image: linear-gradient(#fff 1px, transparent 1px); background-size: 100% 2rem;"
-					></div>
-
 					<!-- Decoración de fondo -->
 					<div
-						class="absolute top-0 right-0 p-24 bg-purple-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none hidden md:block group-hover:bg-purple-500/20 transition-colors duration-500"
+						class="absolute top-0 right-0 p-32 bg-purple-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none group-hover:bg-purple-500/20 transition-colors duration-500"
 					></div>
 
+					<!-- Icon Wrapper -->
 					<div
-						class="shrink-0 p-3 md:p-5 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 border border-white/10 shadow-lg backdrop-blur-xl"
+						class="shrink-0 p-4 md:p-6 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 border border-white/10 shadow-lg backdrop-blur-xl relative"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="w-8 h-8 md:w-16 md:h-16 text-purple-300"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1.5"
-								d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-							/>
-						</svg>
+						<div class="absolute inset-0 bg-purple-500/20 blur-xl rounded-full"></div>
+						<Zap class="w-8 h-8 md:w-12 md:h-12 text-purple-300 relative z-10" />
 					</div>
 
-					<div class="space-y-1 md:space-y-3 flex-1 relative z-10">
-						<h2
-							class="text-lg md:text-3xl font-black text-white group-hover:text-purple-300 transition-colors tracking-tight"
+					<!-- Text Content -->
+					<div class="flex-1 text-center md:text-left space-y-2 relative z-10 w-full">
+						<div>
+							<h2
+								class="text-2xl md:text-3xl font-black text-white group-hover:text-purple-200 transition-colors tracking-tight flex items-center justify-center md:justify-start gap-2"
+							>
+								TEST RÁPIDO
+								<span
+									class="inline-block md:hidden bg-purple-500/20 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-500/30"
+									>10 min</span
+								>
+							</h2>
+							<p class="text-slate-300/80 text-sm leading-relaxed font-medium mt-1">
+								Generamos un examen <span class="text-purple-300">inteligente</span> personalizado para
+								ti.
+							</p>
+						</div>
+
+						<div
+							class="flex items-center justify-center md:justify-start gap-4 text-xs text-slate-400 font-mono mt-2"
 						>
-							TEST RÁPIDO
-						</h2>
-						<p
-							class="text-slate-300/80 text-xs md:text-sm leading-relaxed hidden sm:block font-medium"
-						>
-							Generamos un examen <span class="text-purple-300">inteligente</span> de 10 preguntas.
-						</p>
-						<p class="text-slate-300/80 text-xs leading-relaxed sm:hidden font-medium">
-							Prueba de <span class="text-purple-300">10 preguntas</span> personalizadas.
-						</p>
+							<div class="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded">
+								<Clock class="w-3 h-3" /> <span>~15 min</span>
+							</div>
+							<div class="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded">
+								<Award class="w-3 h-3" /> <span>+20 pts</span>
+							</div>
+						</div>
 					</div>
 
+					<!-- Action Button -->
 					<div
-						class="shrink-0 px-5 py-2 md:px-10 md:py-4 bg-gradient-to-r from-purple-600/80 to-pink-600/80 hover:from-purple-500 hover:to-pink-500 rounded-xl text-white font-bold text-xs md:text-sm transition-all shadow-lg hover:shadow-purple-500/30 flex items-center justify-center gap-2 tracking-wide backdrop-blur-sm"
+						class="w-full md:w-auto mt-2 md:mt-0 shrink-0 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl text-white font-bold text-sm transition-all shadow-lg hover:shadow-purple-500/40 flex items-center justify-center gap-2 tracking-wide group-hover:translate-x-1"
 					>
-						<span class="hidden sm:inline">INICIAR AHORA</span>
-						<span class="sm:hidden">START</span>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="w-3 h-3 md:w-4 md:h-4"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2.5"
-								d="M13 7l5 5m0 0l-5 5m5-5H6"
-							/>
-						</svg>
+						<span>INICIAR</span>
+						<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" />
 					</div>
 				</button>
 			</div>
 		</div>
 
 		<!-- Footer / Additional Info -->
-		<div
-			class="text-center pt-4 md:pt-8 border-t border-white/5"
-			in:fade={{ duration: 1000, delay: 1000 }}
-		>
+		<div class="text-center pt-8 border-t border-white/5" in:fade={{ duration: 1000, delay: 1000 }}>
 			<div
-				class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm"
+				class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors cursor-pointer"
 			>
 				<span class="relative flex h-2 w-2">
 					<span
@@ -234,8 +247,8 @@
 					></span>
 					<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
 				</span>
-				<p class="text-slate-400 text-[10px] md:text-xs font-medium tracking-wider uppercase">
-					Sistema Online &bull; v2.0.5
+				<p class="text-slate-400 text-xs font-medium tracking-wider uppercase">
+					Sistema Politécnico &bull; v2.1.0
 				</p>
 			</div>
 		</div>
