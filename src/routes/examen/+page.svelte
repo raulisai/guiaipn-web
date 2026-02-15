@@ -1,267 +1,491 @@
 <script lang="ts">
-	import { reactivos } from '$lib/reactivos';
-	import ExamProgress from './Examprogres.svelte';
-	import Estadisticas from './Estadisticas.svelte';
-	import ModalResponse from './ModalResponse.svelte';
-	import ModalFinish from './ModalFinish.svelte';
+	import { reactivos } from '$lib/data';
+	import { examStore } from '$lib/stores/examStore';
+	import { questionsAPI } from '$lib/api';
+	import { supabase } from '$lib/services';
+	import ExamProgress from './componentes/Examprogres.svelte';
+	import ModalFinish from './componentes/ModalFinish.svelte';
+	import QuestionDisplay from './componentes/QuestionDisplay.svelte';
+	import AnswerOptions from './componentes/AnswerOptions.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	const totalQuestions = 4;
-	let answers = $state<{ [key: number]: string }>({});
+	export let data: {
+		subject: string;
+		questionCount: number;
+		useLocal: boolean;
+	};
+
+	const { subject, questionCount, useLocal } = data;
+	const SUBJECT_DETAILS = {
+		matematicas: { display: 'Matemáticas', localKeywords: ['algebra', 'matematicas'] },
+		fisica: { display: 'Física', localKeywords: ['fisica'] },
+		quimica: { display: 'Química', localKeywords: ['quimica'] },
+		biologia: { display: 'Biología', localKeywords: ['biologia'] },
+		historia: { display: 'Historia', localKeywords: ['historia'] },
+		geografia: { display: 'Geografía', localKeywords: ['geografia'] },
+		literatura: { display: 'Literatura', localKeywords: ['literatura'] },
+		ingles: { display: 'Inglés', localKeywords: ['ingles'] }
+	} as const;
+	const subjectKey =
+		subject && subject in SUBJECT_DETAILS ? (subject as keyof typeof SUBJECT_DETAILS) : null;
+	const subjectDetails = subjectKey ? SUBJECT_DETAILS[subjectKey] : undefined;
+	const subjectDisplayName =
+		subjectDetails?.display ??
+		(subject ? subject.charAt(0).toUpperCase() + subject.slice(1) : 'General');
+
 	let respuesta;
-	let currentQuestion = $state(0);
+	let loadingQuestions = true;
+	let warningMessage = '';
+	let localQuestionPool = reactivos;
+	let usingLocalQuestions = false;
 
-	let finish = $state(false); // Estado para controlar el modal de finalización
-	
-	let modalRef ; // Referencia al componente hijo
+	// Animation state variables
+	let isNavigating = false;
+	let animateQuestionLeft = false;
+	let animateAnswersRight = false;
+	let animateProgressOut = false;
+	let animateChartOut = false;
+	let mainContentFading = false;
 
-	let reactivo = $state({
-		id: 'exm2024V1Math04',
-		currentQuestion: '0',
-		pregunta: 'cuanto es 2+2',
-		iscorrectQuestion: false,
-		opciones: [],
-		respuestaCorrecta: 'A'
-	});
-
-	onMount(() => {
-		// Inicializar el temporizador
+	onMount(async () => {
+		examStore.setTotalQuestions(questionCount);
+		await loadQuestionsFromAPI();
 		getQuestionRandom();
 	});
 
-	function finishExam() {
-		finish = true; // Cambia el estado para mostrar el modal de finalización
+	function prepareLocalQuestionPool() {
+		examStore.clearAPIQuestions();
+		usingLocalQuestions = true;
+		let filtered = reactivos;
+		const normalizedSubject = subject?.trim().toLowerCase() ?? '';
+		const keywordList =
+			subjectDetails?.localKeywords ?? (normalizedSubject ? [normalizedSubject] : []);
+
+		if (keywordList.length > 0) {
+			filtered = reactivos.filter((item) => {
+				const base = `${item.id} ${item.pregunta ?? ''}`.toLowerCase();
+				return keywordList.some((keyword) => base.includes(keyword));
+			});
+		}
+
+		if (!filtered.length) {
+			filtered = reactivos;
+			if (normalizedSubject) {
+				warningMessage = `No se encontraron preguntas locales para ${subjectDisplayName}. Usaremos una mezcla general.`;
+			}
+		}
+
+		localQuestionPool = filtered.slice(0, Math.min(questionCount, filtered.length));
+		if (!localQuestionPool.length) {
+			localQuestionPool = filtered;
+		}
+
+		if (localQuestionPool.length < questionCount) {
+			warningMessage =
+				warningMessage ||
+				`Solo hay ${localQuestionPool.length} preguntas locales disponibles para ${subjectDisplayName}.`;
+		}
+
+		examStore.setTotalQuestions(localQuestionPool.length || questionCount);
 	}
 
-	
+	// Cargar preguntas desde la API
+	async function loadQuestionsFromAPI() {
+		try {
+			loadingQuestions = true;
+			usingLocalQuestions = false;
+			warningMessage = '';
 
-	function UpdateResponseOfModal(resp, resCorrect){
-		let opcionSeleccionada = reactivo.opciones.find(opcion => opcion.key === resp);
-		let opcionCorrecta = reactivo.opciones.find(opcion => opcion.key === resCorrect); // Correct answer
-        if (modalRef) {
-            modalRef.updateData(opcionSeleccionada.value, opcionCorrecta.value); // Llama a la función del hijo
-        }
-    }
+			if (useLocal) {
+				warningMessage = 'Usando preguntas locales (modo sin conexión).';
+				prepareLocalQuestionPool();
+				return;
+			}
 
+			// Obtener token de autenticación
+			const {
+				data: { session },
+				error: sessionError
+			} = await supabase.auth.getSession();
+
+			if (sessionError || !session) {
+				console.warn('⚠️ No hay sesión activa, usando preguntas locales');
+				warningMessage = 'No hay sesión activa. Usaremos preguntas locales.';
+				prepareLocalQuestionPool();
+				return;
+			}
+
+			const token = session.access_token;
+			const trimmedSubject = subject?.trim() ?? '';
+			const response = await questionsAPI.getQuestions(token, 1, questionCount, trimmedSubject);
+
+			if (response && response.questions && response.questions.length > 0) {
+				console.log('✅ Preguntas cargadas desde la API:', response.questions.length);
+				const questions = response.questions.slice(0, questionCount);
+				examStore.loadAPIQuestions(questions);
+				examStore.setTotalQuestions(questions.length);
+				usingLocalQuestions = false;
+				if (questions.length < questionCount) {
+					warningMessage = `El servidor devolvió ${questions.length} preguntas para ${subjectDisplayName}.`;
+				}
+			} else {
+				console.warn('⚠️ No se obtuvieron preguntas de la API, usando preguntas locales');
+				warningMessage =
+					'No se pudieron obtener preguntas del servidor. Usaremos preguntas locales.';
+				prepareLocalQuestionPool();
+			}
+		} catch (error) {
+			console.error('❌ Error al cargar preguntas desde la API:', error);
+			warningMessage = 'Ocurrió un error al conectar con el servidor. Usaremos preguntas locales.';
+			prepareLocalQuestionPool();
+		} finally {
+			loadingQuestions = false;
+		}
+	}
+
+	function finishExam() {
+		examStore.finishExam();
+	}
+
+	function navigateToExplanation(resp, resCorrect) {
+		// Prevent multiple navigation attempts
+		if (isNavigating) return;
+		isNavigating = true;
+
+		console.log($examStore.reactivo);
+		let opcionSeleccionada = $examStore.reactivo.opciones.find((opcion) => opcion.key === resp);
+		let opcionCorrecta = $examStore.reactivo.opciones.find((opcion) => opcion.key === resCorrect);
+
+		// Save current question data to localStorage for possible recovery
+		localStorage.setItem('current_question_id', $examStore.reactivo.id);
+		localStorage.setItem('current_question_text', $examStore.reactivo.pregunta);
+		localStorage.setItem('current_user_answer', opcionSeleccionada.value);
+		localStorage.setItem('current_correct_answer', opcionCorrecta.value);
+		localStorage.setItem('current_is_correct', $examStore.reactivo.iscorrectQuestion.toString());
+		localStorage.setItem(
+			'current_is_math_pregunta',
+			($examStore.reactivo.lengMathPregunta || false).toString()
+		);
+		localStorage.setItem(
+			'current_is_math_opciones',
+			($examStore.reactivo.lengMathOpciones || false).toString()
+		);
+
+		// Create URL with query parameters for classroom
+		const queryParams = new URLSearchParams({
+			id: $examStore.reactivo.id,
+			pregunta: $examStore.reactivo.pregunta,
+			respuestaUsuario: opcionSeleccionada.value,
+			respuestaCorrecta: opcionCorrecta.value,
+			iscorrect: $examStore.reactivo.iscorrectQuestion.toString(),
+			lengMathPregunta: ($examStore.reactivo.lengMathPregunta || false).toString(),
+			lengMathOpciones: ($examStore.reactivo.lengMathOpciones || false).toString()
+		});
+		console.log(queryParams.toString());
+
+		// Trigger animations using Svelte reactivity
+		animateQuestionLeft = true;
+		animateAnswersRight = true;
+		animateProgressOut = true;
+		animateChartOut = true;
+		mainContentFading = true;
+
+		// Wait for animations to complete before navigation
+		setTimeout(() => {
+			// Navigate to classroom page with parameters
+			goto(`/classRoom?${queryParams.toString()}`);
+		}, 900);
+	} // When user returns from explanation page, we need to clean up and continue the exam
 	function getQuestionRandom() {
-		let idRandom = Math.floor(Math.random() * 18);
-		currentQuestion = currentQuestion + 1;
+		// Reset UI state
+		if ($examStore.showOptionalImage) {
+			examStore.toggleOptionalImage();
+		}
 
+		// Check if we're returning from explanation page
+		const returnFromExplanation = localStorage.getItem('return_from_explanation');
+		if (returnFromExplanation === 'true') {
+			// Clear the flag
+			localStorage.removeItem('return_from_explanation');
+			// Clear current question data
+			localStorage.removeItem('current_question_id');
+			localStorage.removeItem('current_question_text');
+			localStorage.removeItem('current_user_answer');
+			localStorage.removeItem('current_correct_answer');
+			localStorage.removeItem('current_is_correct');
+			localStorage.removeItem('current_is_math');
 
-		if (currentQuestion > totalQuestions) {
-			finishExam(); // Llama a la función para finalizar el examen
+			// Add a subtle entrance animation when returning from explanation
+			const mainContent = document.querySelector('.text-gray-100') as HTMLElement;
+			if (mainContent) {
+				mainContent.style.opacity = '0';
+				mainContent.style.transition = 'opacity 0.3s ease-in';
+				setTimeout(() => {
+					mainContent.style.opacity = '1';
+				}, 50);
+			}
+		}
+
+		// Increment question counter and check if exam is complete
+		examStore.nextQuestion();
+		if ($examStore.currentQuestion > $examStore.totalQuestions) {
+			finishExam();
 			return;
 		}
 
-		reactivo.respuestaCorrecta = reactivos[idRandom].respuestaCorrecta;
-		reactivo.pregunta = reactivos[idRandom].pregunta;
-		reactivo.opciones = Object.entries(reactivos[idRandom].opciones).map(([key, value]) => ({
-			key,
-			value
-		}));
-		reactivo.currentQuestion = currentQuestion.toString();
-		
-		//console.log(reactivo.opciones);
+		// Use API questions if loaded, otherwise fallback to local reactivos
+		if (!usingLocalQuestions && $examStore.questionsLoaded && $examStore.apiQuestions.length > 0) {
+			// Use question from API by current index
+			const questionIndex = $examStore.currentQuestion - 1;
+			const apiQuestion = $examStore.apiQuestions[questionIndex];
+
+			if (!apiQuestion) {
+				console.error(`API Question with index ${questionIndex} not found.`);
+				const updatedReactivo = { ...$examStore.reactivo };
+				updatedReactivo.pregunta = 'Error al cargar la pregunta.';
+				examStore.setReactivo(updatedReactivo);
+				return;
+			}
+
+			// Extract subject from API question
+			const materia = apiQuestion.subject || 'Desconocida';
+			examStore.updateMateria(materia);
+
+			// Format options from API
+			const formattedOptions = Object.entries(apiQuestion.options).map(([key, value]) => ({
+				key,
+				value: String(value)
+			}));
+
+			// Update the reactivo in the store with API data
+			const updatedReactivo = {
+				id: apiQuestion.id,
+				code: apiQuestion.code,
+				respuestaCorrecta: apiQuestion.correct_answer,
+				pregunta: apiQuestion.question,
+				imgAct: apiQuestion.img_active === true,
+				pathImg: $examStore.apiImg + apiQuestion.code + '.png',
+				currentQuestion: $examStore.currentQuestion.toString(),
+				opciones: formattedOptions,
+				iscorrectQuestion: false,
+				altIMg: 'guia ipn Imagen de reactivo',
+				lengMathPregunta: apiQuestion.leng_math_pregunta,
+				lengMathOpciones: apiQuestion.leng_math_opciones
+			};
+
+			examStore.setReactivo(updatedReactivo);
+		} else {
+			// Fallback to local reactivos
+			const pool = usingLocalQuestions ? localQuestionPool : reactivos;
+			if (!pool.length) {
+				console.error('Reactivos data is empty.');
+				const updatedReactivo = { ...$examStore.reactivo };
+				updatedReactivo.pregunta = 'Error al cargar la pregunta.';
+				examStore.setReactivo(updatedReactivo);
+				return;
+			}
+
+			// Select question from local data
+			let selectedReactivo;
+			let selectedIndex = 0;
+			if (usingLocalQuestions) {
+				selectedIndex = Math.min($examStore.currentQuestion - 1, pool.length - 1);
+				selectedReactivo = pool[selectedIndex];
+			} else {
+				selectedIndex = Math.floor(Math.random() * pool.length);
+				selectedReactivo = pool[selectedIndex];
+			}
+
+			if (!selectedReactivo) {
+				console.error(`Reactivo with index ${selectedIndex} not found.`);
+				const updatedReactivo = { ...$examStore.reactivo };
+				updatedReactivo.pregunta = 'Error al cargar la pregunta.';
+				examStore.setReactivo(updatedReactivo);
+				return;
+			}
+
+			// Update reactivo state with selected question data
+			const { id, resuesta, pregunta, opciones, imgActive, lengMathPregunta, lengMathOpciones } =
+				selectedReactivo;
+
+			// Extract materia from id
+			const materia = id.length > 6 ? id.substring(4, id.length - 2) : 'Desconocida';
+			examStore.updateMateria(materia);
+
+			// Format options
+			const formattedOptions = Object.entries(opciones).map(([key, value]) => ({
+				key,
+				value: String(value)
+			}));
+
+			// Update the reactivo in the store
+			const updatedReactivo = {
+				id,
+				respuestaCorrecta: resuesta,
+				pregunta,
+				imgAct: imgActive === true,
+				pathImg: $examStore.apiImg + id + '.png',
+				currentQuestion: $examStore.currentQuestion.toString(),
+				opciones: formattedOptions,
+				iscorrectQuestion: false,
+				altIMg: 'guia ipn Imagen de reactivo',
+				lengMathPregunta: lengMathPregunta,
+				lengMathOpciones: lengMathOpciones
+			};
+
+			examStore.setReactivo(updatedReactivo);
+		}
 	}
 
+	// Función para alternar la visualización de la imagen opcional
+	function toggleOptionalImage() {
+		examStore.toggleOptionalImage();
+	}
+	// Función para alternar la visualización de la solución
+	function toggleSolution() {
+		examStore.toggleSolution();
+	}
 	function selectOption(resp) {
 		respuesta = resp;
-		//validar la respuesta
-		if (resp === reactivo.respuestaCorrecta) {
-			reactivo.iscorrectQuestion = true;
-			answers[currentQuestion] ="true"; // Store correct answer
-			alert('Correcto!');
-			
+		// Validar la respuesta
+		if (resp === $examStore.reactivo.respuestaCorrecta) {
+			// Actualizar estado para marcar como correcta
+			const updatedReactivo = { ...$examStore.reactivo, iscorrectQuestion: true };
+			examStore.setReactivo(updatedReactivo);
+
+			// Guardar respuesta correcta
+			examStore.saveAnswer($examStore.currentQuestion, true, resp);
 		} else {
-			reactivo.iscorrectQuestion = false;
-			answers[currentQuestion] ="false"; // Store correct answer
-			modalRef.toogleModal(); // Abre el modal
-			UpdateResponseOfModal(resp, reactivo.respuestaCorrecta); // Pass the correct answer
-			
+			// Actualizar estado para marcar como incorrecta
+			const updatedReactivo = { ...$examStore.reactivo, iscorrectQuestion: false };
+			examStore.setReactivo(updatedReactivo);
+
+			// Guardar respuesta incorrecta
+			examStore.saveAnswer($examStore.currentQuestion, false, resp);
+
+			if ($examStore.showSolution) {
+				// Navigate to explanation page
+				navigateToExplanation(resp, $examStore.reactivo.respuestaCorrecta);
+				return; // Don't proceed to next question yet
+			}
 		}
 
+		// Pasar a la siguiente pregunta
 		getQuestionRandom();
 	}
 </script>
 
-<div class="mb-20 mt-36">
-	<div class="max-w-6xl px-6 text-center space-y-8">
-		<h1 class="text-5xl font-bold mb-6 relative cyberpunk-title">
-			<span
-				class="cyberpunk-title text-transparent bg-clip-text texto-rojo"
-			>
-				Examen del IPN
-			</span>
-			<span class="block text-3xl mt-1 text-cyan-300 font-light tracking-widest"
-				>Asistido por IA</span
-			>
-			<div class="absolute -left-2 top-1/2 w-4 h-8 bg-cyan-400/30 blur-sm"></div>
-			<div
-				class="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-cyan-500 to-transparent"
-			></div>
-		</h1>
-
-		<!-- Separador -->
-		<div class="border-t border-white/20 w-24 mx-auto"></div>
-
-		<ExamProgress {currentQuestion} {totalQuestions} {answers} />
-
-		<!-- Pregunta -->
-		<div
-			class="w-full px-6 py-4 rounded-md backdrop-blur-sm
-            border border-white/30 text-white card_color glow-effect"
-		>
-			<div class="question-container ">
-				<div class="question-header">
-					<span class="question-number">Pregunta {reactivo.currentQuestion}</span>
-					<span class="question-badge">Matemáticas</span>
-				</div>
-				<div class="question-content">
-					<svg
-						class="question-icon"
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-						></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg
+<!-- Add a wrapper for positioning bubbles -->
+<div
+	class="text-gray-100 overflow-hidden"
+	class:opacity-30={mainContentFading}
+	class:transition-all={mainContentFading}
+	class:duration-500={mainContentFading}
+>
+	<!-- Main content container - Mobile optimized -->
+	<div
+		class="relative z-10 flex flex-col items-center justify-center min-h-screen container-mobile py-4 sm:py-6"
+	>
+		<div class="w-full max-w-4xl space-y-4 sm:space-y-6">
+			{#if !loadingQuestions}
+				<!-- Question Card - Mobile optimized -->
+				<section
+					class="spacing-mobile sm:p-6 shadow-lg space-y-3 sm:space-y-4 animate-mobile-fade"
+					class:animate-slide-left={animateQuestionLeft}
+				>
+					<!-- Question content and image -->
+					<QuestionDisplay {toggleOptionalImage} {toggleSolution} />
+					<div
+						class="flex-1 min-w-[65%] animate-mobile-fade -mt-28"
+						class:animate-fade-out={animateProgressOut}
 					>
-					<p id="question" class="question-text">{reactivo.pregunta}</p>
+						<ExamProgress
+							currentQuestion={$examStore.currentQuestion}
+							totalQuestions={$examStore.totalQuestions}
+							answers={$examStore.answers}
+						/>
+					</div>
+				</section>
+
+				<!-- Answer options component - Mobile optimized -->
+				<div class="animate-mobile-slide" class:animate-slide-right={animateAnswersRight}>
+					<AnswerOptions {selectOption} />
 				</div>
-			</div>
+
+				{#if $examStore.finish}
+					<ModalFinish answers={$examStore.answers} />
+				{/if}
+			{/if}
 		</div>
-		<!-- Respuesta -->
-		<div class="relative mt-12 mx-auto">
-			<!-- Contenedor de tarjetas -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mx-auto mt-12">
-				{#each reactivo.opciones as respuesta, index}
-					<button
-						class="card card_color glow-effect backdrop-blur-sm border border-white/20 rounded-lg p-4
-                hover:shadow-lg cursor-pointer transition-all duration-300
-                min-h-[100px] flex items-center justify-center"
-						onclick={() => selectOption(respuesta.key)}
-						id="btn-{respuesta.key}"
-						aria-label="Respuesta {respuesta.key}"
-					>
-						<div class="w-full h-full flex flex-col justify-center">
-							<span class="text-white font-bold text-lg mb-1">{respuesta.key}</span>
-							<p class="text-white/90 text-sm sm:text-base line-clamp-3 overflow-hidden">
-								{respuesta.value}
-							</p>
-						</div>
-					</button>
-				{/each}
-			</div>
-		</div>
-		<Estadisticas />
-		<ModalResponse bind:this={modalRef}  pregunta={reactivo.pregunta} id={reactivo.id} iscorrect={reactivo.iscorrectQuestion} />
-		{#if finish}
-		<ModalFinish  {answers}/>
-		{/if}
-	   
-		
 	</div>
-	
-	
-	
 </div>
 
 <style>
-	.card {
-		transition: all 0.3s ease;
-	}
-
-	.question-container {
-		padding: 1.5rem;
-		border-radius: 0.5rem;
-		background-color: rgba(255, 255, 255, 0.05);
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		animation: fadeIn 0.5s ease-out;
-	}
-
-	.question-header {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 1rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		padding-bottom: 0.5rem;
-	}
-
-	.question-number {
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.9);
-	}
-
-	.question-badge {
-		background-color: rgba(59, 130, 246, 0.3);
-		padding: 0.25rem 0.75rem;
-		border-radius: 9999px;
-		font-size: 0.75rem;
-		font-weight: 600;
-	}
-
-	.question-content {
-		display: flex;
-		align-items: flex-start;
-		gap: 1rem;
-	}
-
-	.question-icon {
-		flex-shrink: 0;
-		color: rgba(255, 255, 255, 0.7);
-		margin-top: 0.25rem;
-	}
-
-	.question-text {
-		font-size: 1.25rem;
-		line-height: 1.6;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.95);
-		text-align: left;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(10px);
-		}
-		to {
+	/* New animations for transitions */
+	@keyframes slideLeft {
+		0% {
+			transform: translateX(0);
 			opacity: 1;
-			transform: translateY(0);
+		}
+		100% {
+			transform: translateX(-100px);
+			opacity: 0;
 		}
 	}
 
+	@keyframes slideRight {
+		0% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(100px);
+			opacity: 0;
+		}
+	}
 
-    .animate-text-glow {
-        animation: text-glow 2s ease-in-out infinite alternate;
-    }
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
 
-    .animate-line-glow {
-        animation: line-glow 1.5s ease-in-out infinite;
-    }
+	.animate-slide-left {
+		animation: slideLeft 0.5s ease-out forwards;
+	}
 
-    @keyframes text-glow {
-        from {
-            filter: drop-shadow(0 0 5px rgba(32, 74, 44, 0.3));
-        }
-        to {
-            filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.6));
-        }
-    }
+	.animate-slide-right {
+		animation: slideRight 0.5s ease-out forwards;
+	}
 
-    @keyframes line-glow {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
-    }
+	.animate-fade-out {
+		animation: fadeOut 0.4s ease-out forwards;
+	}
 
-	.texto-rojo {
-	    text-shadow: 0 0 10px #512a2aaa, 0 0 20px #82585855, 0 0 2px #ddc8c8;
-    color: #e30000;
-}
+	/* Add entrance animations for when returning from explanation */
+	@keyframes slideInLeft {
+		0% {
+			transform: translateX(-100px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	@keyframes slideInRight {
+		0% {
+			transform: translateX(100px);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
 </style>
